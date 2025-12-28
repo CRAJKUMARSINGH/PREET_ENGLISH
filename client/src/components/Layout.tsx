@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
+import { SaraswatiLogo } from "./SaraswatiMascot";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -34,10 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col md:flex-row">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b dark:border-slate-800 sticky top-0 z-50">
-        <div className="flex items-center gap-2 font-display font-bold text-xl text-primary">
-          <BookOpen className="h-6 w-6" />
-          <span>Preet English</span>
-        </div>
+        <SaraswatiLogo />
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <button 
@@ -61,11 +59,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <div className="h-full flex flex-col p-6">
-          <div className="flex items-center gap-3 mb-6 text-primary">
-            <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-xl">
-              <BookOpen className="h-6 w-6" />
-            </div>
-            <span className="font-display font-bold text-xl">Preet English</span>
+          {/* Logo with Saraswati */}
+          <div className="mb-6">
+            <SaraswatiLogo />
           </div>
 
           {/* Theme Toggle for Desktop */}

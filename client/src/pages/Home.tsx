@@ -5,6 +5,7 @@ import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { AchievementBadge } from "@/components/AchievementBadge";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
 import { ScenarioCard } from "@/components/ScenarioCard";
+import { SaraswatiMascot } from "@/components/SaraswatiMascot";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
 import { Loader2, Sparkles, Trophy, Target, MessageCircle, Award, Heart } from "lucide-react";
@@ -77,12 +78,31 @@ export default function Home() {
       </div>
 
       <header className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
-          {t("welcome")}
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl">
-          {t("subtitle")}
-        </p>
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          {/* Saraswati Mascot */}
+          <SaraswatiMascot 
+            size="lg" 
+            mood={completedCount > 0 ? 'encouraging' : 'happy'}
+            message={completedCount === 0 
+              ? "नमस्ते! आज से अंग्रेजी सीखना शुरू करें! 🙏" 
+              : completedCount >= 10 
+                ? "शाबाश! आप बहुत अच्छा कर रहे हैं! 🌟"
+                : "बहुत अच्छे! सीखते रहें! 📚"
+            }
+          />
+          
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
+              {t("welcome")}
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              {t("subtitle")}
+            </p>
+            <p className="text-sm text-amber-700 mt-2 font-medium">
+              🙏 माँ सरस्वती की कृपा से ज्ञान प्राप्त करें
+            </p>
+          </div>
+        </div>
       </header>
 
       {/* Gamification Section - Streak & Daily Goal */}

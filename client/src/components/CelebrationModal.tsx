@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Trophy, Star, Sparkles, PartyPopper } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { SaraswatiMascot } from "./SaraswatiMascot";
 
 interface CelebrationModalProps {
   isOpen: boolean;
@@ -17,10 +18,10 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
   useEffect(() => {
     if (isOpen) {
       setShowBalloons(true);
-      // Auto close after 4 seconds
+      // Auto close after 5 seconds
       const timer = setTimeout(() => {
         onClose();
-      }, 4000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [isOpen, onClose]);
@@ -73,14 +74,13 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
 
       {/* Main Modal */}
       <div className="relative bg-white rounded-3xl p-8 md:p-12 max-w-md mx-4 text-center shadow-2xl animate-in zoom-in-95 duration-500">
-        {/* Trophy Icon */}
-        <div className="mb-6 relative">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-lg animate-pulse">
-            <Trophy className="h-10 w-10 text-white" />
-          </div>
-          <div className="absolute -top-2 -right-2 animate-spin">
-            <Star className="h-8 w-8 text-yellow-400" />
-          </div>
+        {/* Saraswati Mascot - Celebrating */}
+        <div className="mb-4">
+          <SaraswatiMascot 
+            size="md" 
+            mood="celebrating"
+            message="बधाई हो! माँ सरस्वती आप पर प्रसन्न हैं! 🎉"
+          />
         </div>
 
         {/* Celebration Text */}
@@ -93,8 +93,8 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
         </p>
 
         {/* Lesson Title */}
-        <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-4 mb-6">
-          <h3 className="font-bold text-primary text-lg">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-6">
+          <h3 className="font-bold text-amber-800 text-lg">
             "{lessonTitle}"
           </h3>
           {hindiTitle && (
@@ -102,6 +102,16 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
               "{hindiTitle}"
             </p>
           )}
+        </div>
+
+        {/* XP Earned */}
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="bg-yellow-100 px-4 py-2 rounded-full">
+            <span className="text-yellow-700 font-bold">+20 XP</span>
+          </div>
+          <div className="bg-orange-100 px-4 py-2 rounded-full">
+            <span className="text-orange-700 font-bold">🔥 स्ट्रीक!</span>
+          </div>
         </div>
 
         {/* Motivational Message */}
@@ -114,7 +124,7 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="bg-gradient-to-r from-primary to-accent text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
         >
           {t("continue_learning")} ✨
         </button>

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
-// Saraswati image URL - Traditional painting of Goddess Saraswati with Veena
-const SARASWATI_IMAGE = "https://i.postimg.cc/htJBJjyc/saraswati.jpg";
+// Local Saraswati image - Traditional painting of Goddess Saraswati with Veena
+const SARASWATI_IMAGE = "/saraswati.jpg";
 
 // Small logo version for header/sidebar
 export function SaraswatiLogo() {

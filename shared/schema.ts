@@ -96,6 +96,92 @@ export const certifications = sqliteTable("certifications", {
   averageScore: integer("average_score").notNull(),
 });
 
+// ============ SIVI-INSPIRED GAMIFICATION FEATURES ============
+
+// User Stats & Streaks
+export const userStats = sqliteTable("user_stats", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull().unique(),
+  xpPoints: integer("xp_points").default(0),
+  level: integer("level").default(1),
+  currentStreak: integer("current_streak").default(0),
+  longestStreak: integer("longest_streak").default(0),
+  lastActiveDate: text("last_active_date"),
+  totalLessonsCompleted: integer("total_lessons_completed").default(0),
+  totalQuizzesPassed: integer("total_quizzes_passed").default(0),
+  totalMinutesLearned: integer("total_minutes_learned").default(0),
+  createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+});
+
+// Achievements/Badges
+export const achievements = sqliteTable("achievements", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  nameHindi: text("name_hindi"),
+  description: text("description").notNull(),
+  descriptionHindi: text("description_hindi"),
+  icon: text("icon").notNull(), // emoji or icon name
+  xpReward: integer("xp_reward").default(50),
+  requirement: text("requirement").notNull(), // JSON: { type: 'lessons_completed', value: 10 }
+  category: text("category").notNull(), // streak, lessons, quiz, social
+});
+
+// User Achievements (unlocked)
+export const userAchievements = sqliteTable("user_achievements", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  achievementId: integer("achievement_id").references(() => achievements.id).notNull(),
+  unlockedAt: text("unlocked_at").default("CURRENT_TIMESTAMP"),
+});
+
+// Daily Goals
+export const dailyGoals = sqliteTable("daily_goals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  date: text("date").notNull(),
+  lessonsTarget: integer("lessons_target").default(3),
+  lessonsCompleted: integer("lessons_completed").default(0),
+  xpTarget: integer("xp_target").default(50),
+  xpEarned: integer("xp_earned").default(0),
+  minutesTarget: integer("minutes_target").default(15),
+  minutesSpent: integer("minutes_spent").default(0),
+  completed: integer("completed", { mode: "boolean" }).default(false),
+});
+
+// Leaderboard (weekly reset)
+export const leaderboard = sqliteTable("leaderboard", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  weekStart: text("week_start").notNull(),
+  xpEarned: integer("xp_earned").default(0),
+  lessonsCompleted: integer("lessons_completed").default(0),
+  rank: integer("rank"),
+});
+
+// Conversation Scenarios (for roleplay practice)
+export const scenarios = sqliteTable("scenarios", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleHindi: text("title_hindi"),
+  description: text("description"),
+  descriptionHindi: text("description_hindi"),
+  category: text("category").notNull(), // job_interview, doctor_visit, restaurant, etc.
+  difficulty: text("difficulty").notNull(),
+  dialogues: text("dialogues").notNull(), // JSON array of dialogue exchanges
+  tips: text("tips"), // JSON array of tips in Hindi
+  xpReward: integer("xp_reward").default(30),
+});
+
+// User Scenario Progress
+export const scenarioProgress = sqliteTable("scenario_progress", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  scenarioId: integer("scenario_id").references(() => scenarios.id).notNull(),
+  completed: integer("completed", { mode: "boolean" }).default(false),
+  score: integer("score"),
+  completedAt: text("completed_at"),
+});
+
 // Relations
 export const lessonsRelations = relations(lessons, ({ many }) => ({
   vocabulary: many(vocabulary),
@@ -150,6 +236,50 @@ export const certificationsRelations = relations(certifications, ({ one }) => ({
   }),
 }));
 
+// Gamification Relations
+export const userStatsRelations = relations(userStats, ({ one }) => ({
+  user: one(users, {
+    fields: [userStats.userId],
+    references: [users.id],
+  }),
+}));
+
+export const userAchievementsRelations = relations(userAchievements, ({ one }) => ({
+  user: one(users, {
+    fields: [userAchievements.userId],
+    references: [users.id],
+  }),
+  achievement: one(achievements, {
+    fields: [userAchievements.achievementId],
+    references: [achievements.id],
+  }),
+}));
+
+export const dailyGoalsRelations = relations(dailyGoals, ({ one }) => ({
+  user: one(users, {
+    fields: [dailyGoals.userId],
+    references: [users.id],
+  }),
+}));
+
+export const leaderboardRelations = relations(leaderboard, ({ one }) => ({
+  user: one(users, {
+    fields: [leaderboard.userId],
+    references: [users.id],
+  }),
+}));
+
+export const scenarioProgressRelations = relations(scenarioProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [scenarioProgress.userId],
+    references: [users.id],
+  }),
+  scenario: one(scenarios, {
+    fields: [scenarioProgress.scenarioId],
+    references: [scenarios.id],
+  }),
+}));
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertLessonSchema = createInsertSchema(lessons).omit({ id: true });
@@ -159,6 +289,13 @@ export const insertQuizSchema = createInsertSchema(quizzes).omit({ id: true });
 export const insertQuizQuestionSchema = createInsertSchema(quizQuestions).omit({ id: true });
 export const insertQuizAttemptSchema = createInsertSchema(quizAttempts).omit({ id: true, startedAt: true });
 export const insertCertificationSchema = createInsertSchema(certifications).omit({ id: true, earnedAt: true });
+export const insertUserStatsSchema = createInsertSchema(userStats).omit({ id: true, createdAt: true });
+export const insertAchievementSchema = createInsertSchema(achievements).omit({ id: true });
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({ id: true, unlockedAt: true });
+export const insertDailyGoalSchema = createInsertSchema(dailyGoals).omit({ id: true });
+export const insertLeaderboardSchema = createInsertSchema(leaderboard).omit({ id: true });
+export const insertScenarioSchema = createInsertSchema(scenarios).omit({ id: true });
+export const insertScenarioProgressSchema = createInsertSchema(scenarioProgress).omit({ id: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -176,3 +313,13 @@ export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type InsertQuizAttempt = z.infer<typeof insertQuizAttemptSchema>;
 export type Certification = typeof certifications.$inferSelect;
 export type InsertCertification = z.infer<typeof insertCertificationSchema>;
+export type UserStats = typeof userStats.$inferSelect;
+export type InsertUserStats = z.infer<typeof insertUserStatsSchema>;
+export type Achievement = typeof achievements.$inferSelect;
+export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+export type UserAchievement = typeof userAchievements.$inferSelect;
+export type DailyGoal = typeof dailyGoals.$inferSelect;
+export type Leaderboard = typeof leaderboard.$inferSelect;
+export type Scenario = typeof scenarios.$inferSelect;
+export type InsertScenario = z.infer<typeof insertScenarioSchema>;
+export type ScenarioProgress = typeof scenarioProgress.$inferSelect;

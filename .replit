@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web", "postgresql-16"]
+modules = ["nodejs-20", "web"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -11,11 +11,14 @@ externalPort = 80
 
 [env]
 PORT = "5000"
+DATABASE_URL = "file:preet_english.db"
+NODE_ENV = "production"
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["node", "./dist/index.cjs"]
-build = ["npm", "run", "build"]
+run = ["sh", "-c", "NODE_ENV=production node ./dist/index.cjs"]
+build = ["sh", "-c", "npm run build && npm run migrate:complete"]
+ignorePorts = false
 
 [workflows]
 runButton = "Project"

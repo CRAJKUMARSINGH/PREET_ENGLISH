@@ -118,4 +118,127 @@
   .animate-float-up {
     animation: float-up 3s ease-in-out infinite;
   }
+
+  /* Confetti Animation */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg) scale(0.5);
+      opacity: 0;
+    }
+  }
+  
+  .animate-confetti-fall {
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  /* Pulse Glow Animation */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(251, 191, 36, 0.8);
+    }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Bounce In Animation */
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out forwards;
+  }
+
+  /* Shake Animation */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Progress Bar Animation */
+  @keyframes progress-fill {
+    from {
+      width: 0%;
+    }
+  }
+  
+  .animate-progress-fill {
+    animation: progress-fill 1s ease-out forwards;
+  }
+
+  /* Sparkle Animation */
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1) rotate(180deg);
+    }
+  }
+  
+  .animate-sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  /* Slide Up Animation */
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out forwards;
+  }
+
+  /* XP Pop Animation */
+  @keyframes xp-pop {
+    0% {
+      transform: scale(0) translateY(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2) translateY(-10px);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) translateY(-20px);
+      opacity: 0;
+    }
+  }
+  
+  .animate-xp-pop {
+    animation: xp-pop 1s ease-out forwards;
+  }
 }

@@ -3,6 +3,7 @@ import { BookOpen, Home, Trophy, User, Menu, X, Languages } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -20,11 +21,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background dark:bg-slate-950 flex flex-col transition-colors duration-300">
       {/* Top Credits Banner */}
-      <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-b border-primary/20 py-2 px-4">
+      <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 dark:from-primary/20 dark:via-accent/20 dark:to-primary/20 border-b border-primary/20 dark:border-primary/30 py-2 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm font-medium text-primary">
+          <p className="text-sm font-medium text-primary dark:text-primary">
             ✨ {t("prepared_by")} <span className="font-bold">Mrs. Premlata Jain, AAO, PWD Udaipur</span> ✨
           </p>
         </div>
@@ -32,15 +33,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
       
       <div className="flex-1 flex flex-col md:flex-row">
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b sticky top-0 z-50">
+      <div className="md:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b dark:border-slate-800 sticky top-0 z-50">
         <div className="flex items-center gap-2 font-display font-bold text-xl text-primary">
           <BookOpen className="h-6 w-6" />
           <span>Preet English</span>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <button 
             onClick={toggleLanguage}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
             title={t("language")}
           >
             <Languages className="h-5 w-5" />
@@ -54,16 +56,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Sidebar Navigation */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-900 border-r dark:border-slate-800 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="h-full flex flex-col p-6">
-          <div className="flex items-center gap-3 mb-10 text-primary">
-            <div className="p-2 bg-primary/10 rounded-xl">
+          <div className="flex items-center gap-3 mb-6 text-primary">
+            <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-xl">
               <BookOpen className="h-6 w-6" />
             </div>
             <span className="font-display font-bold text-xl">Preet English</span>
+          </div>
+
+          {/* Theme Toggle for Desktop */}
+          <div className="mb-6 flex justify-center">
+            <ThemeToggle />
           </div>
 
           <nav className="space-y-2 flex-1">
@@ -77,7 +84,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium",
                       isActive
                         ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        : "text-muted-foreground hover:bg-muted dark:hover:bg-slate-800 hover:text-foreground"
                     )}
                   >
                     <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-muted-foreground")} />
@@ -88,17 +95,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          <div className="mt-auto pt-6 border-t">
+          <div className="mt-auto pt-6 border-t dark:border-slate-800">
             {/* Language Toggle for Desktop */}
             <button 
               onClick={toggleLanguage}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-muted-foreground hover:bg-muted hover:text-foreground mb-4"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-muted-foreground hover:bg-muted dark:hover:bg-slate-800 hover:text-foreground mb-4"
             >
               <Languages className="h-5 w-5" />
               {i18n.language === "en" ? "हिंदी" : "English"}
             </button>
             
-            <div className="bg-gradient-to-br from-primary/10 to-accent/10 p-4 rounded-xl">
+            <div className="bg-gradient-to-br from-primary/10 to-accent/10 dark:from-primary/20 dark:to-accent/20 p-4 rounded-xl">
               <div className="flex items-center gap-2 mb-2 text-primary font-bold">
                 <Trophy className="h-5 w-5 text-accent" />
                 <span>{t("pro_tip")}</span>
@@ -129,9 +136,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </div>
       
       {/* Bottom Credits Footer */}
-      <footer className="bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200 py-4 px-4">
+      <footer className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             🙏 {t("initiative_credit")} <span className="font-semibold text-primary">Mrs. Premlata Jain, AAO, PWD Udaipur</span> | 
             <span className="ml-2">💝 {t("dedication_message")}</span>
           </p>

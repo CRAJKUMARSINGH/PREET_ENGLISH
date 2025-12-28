@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
 import { VocabularyItem } from "@/components/VocabularyItem";
 import { CelebrationModal } from "@/components/CelebrationModal";
@@ -15,7 +14,6 @@ export default function LessonView() {
   const [, params] = useRoute("/lesson/:id");
   const id = params ? parseInt(params.id) : null;
   const { toast } = useToast();
-  const { t } = useTranslation();
   const [showCelebration, setShowCelebration] = useState(false);
 
   const { data: lessonData, isLoading: lessonLoading } = useLesson(id);
@@ -46,8 +44,8 @@ export default function LessonView() {
       onSuccess: () => {
         setShowCelebration(true);
         toast({
-          title: t("completed") + "! 🎉",
-          description: "Great job! Your progress has been saved.",
+          title: "पूर्ण! 🎉",
+          description: "बहुत अच्छा! आपकी प्रगति सहेज ली गई है।",
           duration: 3000,
         });
       }
@@ -68,7 +66,7 @@ export default function LessonView() {
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-6 transition-colors">
             <ArrowLeft className="h-4 w-4 mr-1" />
-            {t("back_to_dashboard")}
+            डैशबोर्ड पर वापस जाएं
           </Link>
 
           <div className="flex items-start justify-between gap-4">
@@ -79,7 +77,8 @@ export default function LessonView() {
                 lessonData.difficulty === "Intermediate" && "bg-blue-100 text-blue-700",
                 lessonData.difficulty === "Advanced" && "bg-purple-100 text-purple-700",
               )}>
-                {t(lessonData.difficulty.toLowerCase())}
+                {lessonData.difficulty === "Beginner" ? "प्रारंभिक" : 
+                 lessonData.difficulty === "Intermediate" ? "मध्यम" : "उच्च"}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 font-display">
                 {lessonData.title}
@@ -124,7 +123,7 @@ export default function LessonView() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
               <span className="bg-primary/10 text-primary p-2 rounded-lg text-sm">ABC</span>
-              {t("key_vocabulary")}
+              मुख्य शब्दावली
             </h2>
             <div className="grid gap-4">
               {vocabulary.map((word) => (
@@ -137,7 +136,7 @@ export default function LessonView() {
         {/* Action Bar */}
         <div className="sticky bottom-6 bg-white/90 backdrop-blur-lg border p-4 rounded-2xl shadow-xl flex items-center justify-between gap-4">
           <div className="text-sm font-medium text-muted-foreground hidden sm:block">
-            {isCompleted ? "You've mastered this lesson!" : "Ready to complete this lesson?"}
+            {isCompleted ? "आपने इस पाठ को पूरा कर लिया है!" : "इस पाठ को पूरा करने के लिए तैयार हैं?"}
           </div>
           
           <button
@@ -155,10 +154,10 @@ export default function LessonView() {
             ) : isCompleted ? (
               <>
                 <CheckCircle className="h-5 w-5" />
-                {t("completed")}
+                पूर्ण
               </>
             ) : (
-              t("mark_complete")
+              "पूर्ण करें"
             )}
           </button>
         </div>

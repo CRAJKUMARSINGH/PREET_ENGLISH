@@ -11,11 +11,13 @@ import { ResourcesSection } from "@/components/ResourcesSection";
 import { TodaysPractice } from "@/components/TodaysPractice";
 import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
 import { ComingSoon } from "@/components/ComingSoon";
+import { VocabularyBuilder } from "@/components/VocabularyBuilder";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
-import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap } from "lucide-react";
+import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { Link } from "wouter";
 
 export default function Home() {
   const { data: lessons, isLoading: lessonsLoading } = useLessons();
@@ -113,6 +115,48 @@ export default function Home() {
       {/* Today's Practice Topic */}
       <section className="mb-8">
         <TodaysPractice />
+      </section>
+
+      {/* Quick Access - Speaking & Vocabulary */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+          🚀 Quick Access - जल्दी शुरू करें
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link href="/speak">
+            <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <Mic className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Speaking Practice</h3>
+                  <p className="text-purple-100">🗣️ बोलने का अभ्यास करें - 25 Topics</p>
+                </div>
+              </div>
+              <p className="mt-3 text-sm text-purple-100">
+                हिंदी में सोचो → English में बोलो
+              </p>
+            </div>
+          </Link>
+          
+          <Link href="/vocabulary">
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <BookOpen className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Vocabulary Builder</h3>
+                  <p className="text-blue-100">📚 शब्दावली निर्माता - 48+ Words</p>
+                </div>
+              </div>
+              <p className="mt-3 text-sm text-blue-100">
+                रोज़मर्रा के शब्द हिंदी अर्थ के साथ
+              </p>
+            </div>
+          </Link>
+        </div>
       </section>
 
       {/* Gamification Section - Streak & Daily Goal */}

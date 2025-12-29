@@ -470,6 +470,122 @@ const speakingTopics = [
     modelAnswer: "The Indian independence movement was led by great leaders like Gandhi, Nehru, and Subhash Chandra Bose. Important movements include the Salt March and Quit India Movement. Freedom is important because it gave us the right to govern ourselves. We should remember the sacrifices made by our freedom fighters.",
     freePrompt: "स्वतंत्रता आंदोलन के बारे में 90 सेकंड बोलें।",
     confidenceTip: "इतिहास को respect के साथ बोलो।"
+  },
+  // Practical Daily Life Topics (from 3depseek.md)
+  {
+    id: 21,
+    title: "Emergency and Health Vocabulary",
+    hindiTitle: "आपातकालीन और स्वास्थ्य शब्दावली",
+    difficulty: "Easy" as const,
+    emoji: "🚑",
+    category: "Health",
+    hindiThoughts: [
+      "Doctor को कैसे बताओगे क्या problem है?",
+      "Emergency में क्या बोलोगे?",
+      "Medicine के बारे में कैसे पूछोगे?",
+      "Hospital में क्या बोलना है?"
+    ],
+    sentenceFrames: [
+      "I am not feeling well. I have ____.",
+      "I need to see a doctor because ____.",
+      "Can you please help me? It's an emergency.",
+      "How often should I take this medicine?"
+    ],
+    modelAnswer: "I am not feeling well. I have a headache and fever. I need to see a doctor because I have been sick for two days. Can you please help me? It's an emergency. How often should I take this medicine?",
+    freePrompt: "Doctor से बात करने का अभ्यास करें (30 सेकंड)।",
+    confidenceTip: "Health के बारे में clearly बोलना जरूरी है।"
+  },
+  {
+    id: 22,
+    title: "Returning or Exchanging an Item",
+    hindiTitle: "सामान वापस करना या बदलना",
+    difficulty: "Easy" as const,
+    emoji: "🛍️",
+    category: "Shopping",
+    hindiThoughts: [
+      "क्या problem है item में?",
+      "Receipt है या नहीं?",
+      "क्या चाहते हो - refund या exchange?",
+      "Politely कैसे बोलोगे?"
+    ],
+    sentenceFrames: [
+      "I would like to return this ____.",
+      "The problem is that ____.",
+      "I have the receipt. Can I get a ____?",
+      "Could you please help me with the exchange?"
+    ],
+    modelAnswer: "I would like to return this shirt. The problem is that the size doesn't fit me. I have the receipt. Can I get a refund or exchange? Could you please help me with the exchange?",
+    freePrompt: "Shop में item return करने का अभ्यास करें (30 सेकंड)।",
+    confidenceTip: "Polite रहो लेकिन clear भी। अपनी बात रखो।"
+  },
+  {
+    id: 23,
+    title: "Airport and Travel Vocabulary",
+    hindiTitle: "एयरपोर्ट और यात्रा शब्दावली",
+    difficulty: "Medium" as const,
+    emoji: "✈️",
+    category: "Travel",
+    hindiThoughts: [
+      "Check-in कैसे करोगे?",
+      "Security पर क्या बोलोगे?",
+      "Flight delay हो तो क्या पूछोगे?",
+      "Baggage के बारे में कैसे पूछोगे?"
+    ],
+    sentenceFrames: [
+      "I would like to check in for flight ____.",
+      "Where is the boarding gate for ____?",
+      "My flight is delayed. When is the next update?",
+      "I cannot find my luggage. Can you help me?"
+    ],
+    modelAnswer: "I would like to check in for flight AI-302 to Mumbai. Where is the boarding gate for this flight? My flight is delayed. When is the next update? I cannot find my luggage. Can you help me?",
+    freePrompt: "Airport पर बातचीत का अभ्यास करें (60 सेकंड)।",
+    confidenceTip: "Travel vocabulary याद रखो - बहुत काम आती है।"
+  },
+  {
+    id: 24,
+    title: "Favorite Place to Relax",
+    hindiTitle: "आराम करने की पसंदीदा जगह",
+    difficulty: "Easy" as const,
+    emoji: "🏖️",
+    category: "Personal",
+    hindiThoughts: [
+      "कहां जाकर relax करते हो?",
+      "वहां क्या करते हो?",
+      "क्यों पसंद है वह जगह?",
+      "कितनी बार जाते हो?"
+    ],
+    sentenceFrames: [
+      "My favorite place to relax is ____.",
+      "I go there to ____.",
+      "I like it because ____.",
+      "I visit this place ____."
+    ],
+    modelAnswer: "My favorite place to relax is a small park near my house. I go there to take a walk and enjoy nature. I like it because it is peaceful and away from noise. I visit this place every evening after work.",
+    freePrompt: "अपनी पसंदीदा आराम की जगह के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "Personal topics पर बोलना easy है - enjoy करो!"
+  },
+  {
+    id: 25,
+    title: "Expressing Inner Emotions",
+    hindiTitle: "अपनी भावनाओं को व्यक्त करना",
+    difficulty: "Easy" as const,
+    emoji: "💔",
+    category: "Personal",
+    hindiThoughts: [
+      "आज कैसा feel कर रहे हो?",
+      "खुश/उदास क्यों हो?",
+      "किसी से share करना है?",
+      "क्या help चाहिए?"
+    ],
+    sentenceFrames: [
+      "Today I am feeling ____.",
+      "I feel this way because ____.",
+      "I want to share that ____.",
+      "It would help me if ____."
+    ],
+    modelAnswer: "Today I am feeling a bit stressed. I feel this way because I have a lot of work to complete. I want to share that I need some support. It would help me if someone could listen to me.",
+    freePrompt: "अपनी feelings के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "Emotions express करना strength है, weakness नहीं।"
   }
 ];
 

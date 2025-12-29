@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import LessonView from "@/pages/LessonView";
 import Profile from "@/pages/Profile";
 import SpeakingPractice from "@/pages/SpeakingPractice";
+import VocabularyPage from "@/pages/VocabularyPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/lesson/:id" component={LessonView} />
       <Route path="/profile" component={Profile} />
       <Route path="/speak" component={SpeakingPractice} />
+      <Route path="/vocabulary" component={VocabularyPage} />
       <Route component={NotFound} />
     </Switch>
   );

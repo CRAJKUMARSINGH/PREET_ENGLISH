@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Trophy, User, Menu, X, Languages } from "lucide-react";
+import { BookOpen, Home, Trophy, User, Menu, X, Languages, Mic } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/", label: t("home"), icon: Home },
+    { href: "/speak", label: "🗣️ Speaking", icon: Mic },
     { href: "/profile", label: t("profile"), icon: User },
   ];
 

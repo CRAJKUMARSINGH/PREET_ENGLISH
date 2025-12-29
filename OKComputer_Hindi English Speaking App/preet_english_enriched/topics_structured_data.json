@@ -1,0 +1,249 @@
+{
+  "easy_topics": [
+    {
+      "id": "daily_routine",
+      "title": "Let's talk about daily routine",
+      "hindi_title": "आइए दैनिक दिनचर्या के बारे में बात करें",
+      "difficulty": "easy",
+      "emoji_theme": "⏰🛏️🚿🍳",
+      "category": "daily_life",
+      "vocabulary": [
+        {
+          "english": "wake up",
+          "hindi": "उठना",
+          "emoji": "⏰",
+          "pronunciation": "uth-na"
+        },
+        {
+          "english": "brush teeth",
+          "hindi": "दांत साफ करना",
+          "emoji": "🪥",
+          "pronunciation": "daant saaf karna"
+        },
+        {
+          "english": "take shower",
+          "hindi": "नहाना",
+          "emoji": "🚿",
+          "pronunciation": "nahana"
+        },
+        {
+          "english": "have breakfast",
+          "hindi": "नाश्ता करना",
+          "emoji": "🍳",
+          "pronunciation": "nashta karna"
+        },
+        {
+          "english": "go to work",
+          "hindi": "काम पर जाना",
+          "emoji": "💼",
+          "pronunciation": "kaam par jaana"
+        },
+        {
+          "english": "come back home",
+          "hindi": "घर वापस आना",
+          "emoji": "🏠",
+          "pronunciation": "ghar waapas aana"
+        },
+        {
+          "english": "dinner",
+          "hindi": "रात का खाना",
+          "emoji": "🍽️",
+          "pronunciation": "raat ka khana"
+        },
+        {
+          "english": "sleep",
+          "hindi": "सोना",
+          "emoji": "😴",
+          "pronunciation": "sona"
+        }
+      ],
+      "conversation": [
+        {
+          "speaker": "A",
+          "english": "What time do you wake up?",
+          "hindi": "आप कितने बजे उठते हैं?",
+          "emoji": "🕕"
+        },
+        {
+          "speaker": "B",
+          "english": "I wake up at 6 AM every day.",
+          "hindi": "मैं हर रोज सुबह 6 बजे उठता हूं।",
+          "emoji": "⏰"
+        },
+        {
+          "speaker": "A",
+          "english": "What's your morning routine?",
+          "hindi": "आपकी सुबह की दिनचर्या क्या है?",
+          "emoji": "🌅"
+        },
+        {
+          "speaker": "B",
+          "english": "First, I brush my teeth, then take a shower, and have breakfast.",
+          "hindi": "पहले मैं दांत साफ करता हूं, फिर नहाता हूं, और नाश्ता करता हूं।",
+          "emoji": "🪥🚿🍳"
+        }
+      ]
+    },
+    {
+      "id": "family_relationships",
+      "title": "Family and Relationships",
+      "hindi_title": "परिवार और रिश्ते",
+      "difficulty": "easy",
+      "emoji_theme": "👨‍👩‍👧‍👦💕",
+      "category": "social",
+      "vocabulary": [
+        {
+          "english": "father",
+          "hindi": "पिता",
+          "emoji": "👨",
+          "pronunciation": "pita"
+        },
+        {
+          "english": "mother",
+          "hindi": "माता/मां",
+          "emoji": "👩",
+          "pronunciation": "maata/maan"
+        },
+        {
+          "english": "brother",
+          "hindi": "भाई",
+          "emoji": "👦",
+          "pronunciation": "bhai"
+        },
+        {
+          "english": "sister",
+          "hindi": "बहन",
+          "emoji": "👧",
+          "pronunciation": "behen"
+        },
+        {
+          "english": "grandfather",
+          "hindi": "दादा/नाना",
+          "emoji": "👴",
+          "pronunciation": "daada/naana"
+        },
+        {
+          "english": "grandmother",
+          "hindi": "दादी/नानी",
+          "emoji": "👵",
+          "pronunciation": "daadi/naani"
+        }
+      ],
+      "conversation": [
+        {
+          "speaker": "A",
+          "english": "Tell me about your family.",
+          "hindi": "अपने परिवार के बारे में बताइए।",
+          "emoji": "👨‍👩‍👧‍👦"
+        },
+        {
+          "speaker": "B",
+          "english": "I have a big family! There are 6 people in my family.",
+          "hindi": "मेरा एक बड़ा परिवार है! मेरे परिवार में 6 लोग हैं।",
+          "emoji": "👨‍👩‍👧‍👦"
+        },
+        {
+          "speaker": "A",
+          "english": "Who are they?",
+          "hindi": "वे कौन हैं?",
+          "emoji": "🤔"
+        },
+        {
+          "speaker": "B",
+          "english": "My father, my mother, my younger brother, my younger sister, my grandfather, and me.",
+          "hindi": "मेरे पिता जी, मेरी माँ जी, मेरा छोटा भाई, मेरी छोटी बहन, मेरे दादा जी, और मैं।",
+          "emoji": "👨👩👦👧👴"
+        }
+      ]
+    }
+  ],
+  "medium_topics": [
+    {
+      "id": "future_of_work",
+      "title": "Let's Chat About the Future of Work",
+      "hindi_title": "कार्य के भविष्य के बारे में बात करें",
+      "difficulty": "medium",
+      "emoji_theme": "🏠💻🌐👥",
+      "category": "professional",
+      "vocabulary": [
+        {
+          "english": "remote work",
+          "hindi": "दूरस्थ कार्य",
+          "emoji": "🏠",
+          "pronunciation": "doorsth kaary"
+        },
+        {
+          "english": "work from home",
+          "hindi": "घर से काम",
+          "emoji": "💻",
+          "pronunciation": "ghar se kaam"
+        },
+        {
+          "english": "digital nomad",
+          "hindi": "डिजिटल नोमाड",
+          "emoji": "🌐",
+          "pronunciation": "digital nomad"
+        },
+        {
+          "english": "hybrid work",
+          "hindi": "हाइब्रिड कार्य",
+          "emoji": "🔄",
+          "pronunciation": "hybrid kaary"
+        },
+        {
+          "english": "work-life balance",
+          "hindi": "कार्य-जीवन संतुलन",
+          "emoji": "⚖️",
+          "pronunciation": "kaary-jeevan santulan"
+        }
+      ],
+      "conversation": [
+        {
+          "speaker": "A",
+          "english": "Do you work from home or go to office?",
+          "hindi": "क्या आप घर से काम करते हैं या ऑफिस जाते हैं?",
+          "emoji": "🏠💼"
+        },
+        {
+          "speaker": "B",
+          "english": "I work remotely three days a week!",
+          "hindi": "मैं हफ्ते में तीन दिन दूरस्थ रूप से काम करता हूं!",
+          "emoji": "💻"
+        },
+        {
+          "speaker": "A",
+          "english": "How do you find remote work?",
+          "hindi": "आपको दूरस्थ कार्य कैसा लगता है?",
+          "emoji": "🤔"
+        },
+        {
+          "speaker": "B",
+          "english": "It's flexible but sometimes isolating. I think hybrid work will become the norm.",
+          "hindi": "यह लचीला है लेकिन कभी-कभी एकाकी लगता है। मुझे लगता है कि हाइब्रिड कार्य सामान्य हो जाएगा।",
+          "emoji": "🔄"
+        }
+      ]
+    }
+  ],
+  "interview_topics": [
+    {
+      "id": "mba_interview",
+      "title": "Practice MBA Interview",
+      "category": "interview_practice",
+      "questions": [
+        {
+          "question": "Tell me about yourself.",
+          "hindi": "अपने बारे में बताइए।",
+          "emoji": "🗣️",
+          "sample_answer": "I'm a software engineer with 4 years of experience. I've led teams and launched successful products."
+        },
+        {
+          "question": "Why do you want an MBA?",
+          "hindi": "आप एमबीए क्यों चाहते हैं?",
+          "emoji": "🤔",
+          "sample_answer": "To transition from technical to strategic roles. I want to understand business holistically."
+        }
+      ]
+    }
+  ]
+}

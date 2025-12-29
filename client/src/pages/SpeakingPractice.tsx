@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { SpeakingTopicCard } from "@/components/SpeakingTopicCard";
-import { Mic, Filter, Search, Sparkles, Target, Briefcase, Globe, Heart } from "lucide-react";
+import { Mic, Search, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Speaking topics data - Think in Hindi, Speak in English approach

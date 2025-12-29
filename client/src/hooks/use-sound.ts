@@ -9,6 +9,7 @@ const SOUNDS = {
   click: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
   streak: 'https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3',
   achievement: 'https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3',
+  error: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3',
 };
 
 type SoundType = keyof typeof SOUNDS;
@@ -32,6 +33,7 @@ export function useSound() {
   const playClick = useCallback(() => playSound('click', 0.3), [playSound]);
   const playStreak = useCallback(() => playSound('streak', 0.5), [playSound]);
   const playAchievement = useCallback(() => playSound('achievement', 0.6), [playSound]);
+  const playError = useCallback(() => playSound('error', 0.4), [playSound]);
 
   return {
     playSound,
@@ -41,5 +43,6 @@ export function useSound() {
     playClick,
     playStreak,
     playAchievement,
+    playError,
   };
 }

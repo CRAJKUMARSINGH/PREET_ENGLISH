@@ -6,9 +6,11 @@ import { AchievementBadge } from "@/components/AchievementBadge";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
 import { ScenarioCard } from "@/components/ScenarioCard";
 import { SaraswatiMascot } from "@/components/SaraswatiMascot";
+import { CertificationCard } from "@/components/CertificationCard";
+import { ResourcesSection } from "@/components/ResourcesSection";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
-import { Loader2, Sparkles, Trophy, Target, MessageCircle, Award, Heart } from "lucide-react";
+import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
@@ -167,6 +169,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Certification Levels Section */}
+      <section className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-xl">
+            <GraduationCap className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold">प्रमाणपत्र स्तर</h2>
+            <p className="text-sm text-muted-foreground">Certification Levels</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CertificationCard 
+            level="beginner"
+            lessonsCompleted={completedCount}
+            totalLessons={totalLessons}
+            quizzesPassed={Math.floor(completedCount / 10)}
+            totalQuizzes={10}
+          />
+          <CertificationCard 
+            level="intermediate"
+            lessonsCompleted={completedCount}
+            totalLessons={totalLessons}
+            quizzesPassed={Math.floor(completedCount / 10)}
+            totalQuizzes={20}
+          />
+          <CertificationCard 
+            level="advanced"
+            lessonsCompleted={completedCount}
+            totalLessons={totalLessons}
+            quizzesPassed={Math.floor(completedCount / 10)}
+            totalQuizzes={30}
+          />
+        </div>
+      </section>
+
       {/* Tabs for Lessons and Scenarios */}
       <div className="flex gap-2 mb-6">
         <button
@@ -257,6 +295,9 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Learning Resources Section */}
+      <ResourcesSection />
 
       {/* Footer Credits */}
       <footer className="mt-16 pt-8 border-t">

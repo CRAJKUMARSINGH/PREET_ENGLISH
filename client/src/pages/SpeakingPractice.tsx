@@ -285,6 +285,191 @@ const speakingTopics = [
     modelAnswer: "In five years, I see myself in a leadership position. This goal is important to me because I want to make a bigger impact. To achieve this, I plan to continuously learn and take on challenging projects. This company can help me by providing growth opportunities.",
     freePrompt: "अपने career goals के बारे में बोलें (60 सेकंड)।",
     confidenceTip: "Realistic goals बताओ। Company से connect करो।"
+  },
+  // Indian Culture Topics (from 2grok.md)
+  {
+    id: 13,
+    title: "Bollywood Movies and Stars",
+    hindiTitle: "बॉलीवुड फिल्में और सितारे",
+    difficulty: "Easy" as const,
+    emoji: "🎬",
+    category: "Indian Culture",
+    hindiThoughts: [
+      "आपकी पसंदीदा फिल्म कौन सी है?",
+      "आपका पसंदीदा actor/actress कौन है?",
+      "वह फिल्म क्यों पसंद है?",
+      "Bollywood का क्या impact है?"
+    ],
+    sentenceFrames: [
+      "My favorite Bollywood movie is ____.",
+      "I like ____ because ____.",
+      "The story is about ____.",
+      "Bollywood movies are popular because ____."
+    ],
+    modelAnswer: "My favorite Bollywood movie is 3 Idiots. I like Aamir Khan because he chooses meaningful roles. The story is about friendship and following your passion. Bollywood movies are popular because they have great music and emotional stories.",
+    freePrompt: "अपनी पसंदीदा Bollywood फिल्म के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "अपनी पसंद के बारे में freely बोलो!"
+  },
+  {
+    id: 14,
+    title: "Cricket and Sports in India",
+    hindiTitle: "क्रिकेट और भारतीय खेल",
+    difficulty: "Easy" as const,
+    emoji: "🏏",
+    category: "Indian Culture",
+    hindiThoughts: [
+      "आपका पसंदीदा खेल कौन सा है?",
+      "पसंदीदा खिलाड़ी कौन है?",
+      "India में cricket इतना popular क्यों है?",
+      "आखिरी match कब देखा?"
+    ],
+    sentenceFrames: [
+      "My favorite sport is ____.",
+      "I admire ____ because ____.",
+      "Cricket is popular in India because ____.",
+      "I last watched a match when ____."
+    ],
+    modelAnswer: "My favorite sport is cricket. I admire Virat Kohli because of his dedication and passion. Cricket is popular in India because it brings people together and creates excitement. I last watched a match during the World Cup.",
+    freePrompt: "Cricket या अपने पसंदीदा खेल के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "Sports के बारे में बात करना easy है - बस enjoy करो!"
+  },
+  {
+    id: 15,
+    title: "Indian Festivals - Diwali & Holi",
+    hindiTitle: "भारतीय त्योहार - दिवाली और होली",
+    difficulty: "Easy" as const,
+    emoji: "🪔",
+    category: "Indian Culture",
+    hindiThoughts: [
+      "दिवाली/होली कैसे मनाते हो?",
+      "क्या special करते हो?",
+      "परिवार के साथ कैसे celebrate करते हो?",
+      "इन त्योहारों का क्या महत्व है?"
+    ],
+    sentenceFrames: [
+      "Diwali is the festival of ____.",
+      "We celebrate by ____.",
+      "The best part is ____.",
+      "These festivals are important because ____."
+    ],
+    modelAnswer: "Diwali is the festival of lights. We celebrate by lighting diyas, bursting crackers, and eating sweets. The best part is when the whole family comes together. These festivals are important because they strengthen our bonds and keep our traditions alive.",
+    freePrompt: "दिवाली या होली के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "त्योहारों की खुशी अपनी आवाज में लाओ!"
+  },
+  {
+    id: 16,
+    title: "Indian Food and Regional Cuisines",
+    hindiTitle: "भारतीय खाना और क्षेत्रीय व्यंजन",
+    difficulty: "Easy" as const,
+    emoji: "🍛",
+    category: "Indian Culture",
+    hindiThoughts: [
+      "आपके region का famous खाना क्या है?",
+      "घर पर क्या बनता है?",
+      "Street food पसंद है?",
+      "Indian food special क्यों है?"
+    ],
+    sentenceFrames: [
+      "In my region, ____ is very famous.",
+      "At home, we usually eat ____.",
+      "My favorite street food is ____.",
+      "Indian food is special because ____."
+    ],
+    modelAnswer: "In my region, Rajasthani dal baati is very famous. At home, we usually eat roti, sabzi, and dal. My favorite street food is pani puri. Indian food is special because of its variety of spices and flavors.",
+    freePrompt: "अपने region के खाने के बारे में 30 सेकंड बोलें।",
+    confidenceTip: "खाने के बारे में बात करना सबको पसंद है!"
+  },
+  {
+    id: 17,
+    title: "Social Media: Pros and Cons",
+    hindiTitle: "सोशल मीडिया: फायदे और नुकसान",
+    difficulty: "Medium" as const,
+    emoji: "📱",
+    category: "Technology",
+    hindiThoughts: [
+      "Social media के फायदे क्या हैं?",
+      "नुकसान क्या हैं?",
+      "आप कितना use करते हो?",
+      "क्या सावधानी रखनी चाहिए?"
+    ],
+    sentenceFrames: [
+      "Social media helps us by ____.",
+      "However, it can also ____.",
+      "I use social media for ____.",
+      "We should be careful about ____."
+    ],
+    modelAnswer: "Social media helps us by connecting with friends and staying updated. However, it can also waste our time and affect mental health. I use social media for learning and entertainment. We should be careful about privacy and screen time.",
+    freePrompt: "Social media के बारे में अपनी राय 60 सेकंड में बताएं।",
+    confidenceTip: "Balanced view रखो - दोनों sides बताओ।"
+  },
+  {
+    id: 18,
+    title: "UPSC Interview Practice",
+    hindiTitle: "UPSC साक्षात्कार अभ्यास",
+    difficulty: "Hard" as const,
+    emoji: "🇮🇳",
+    category: "Interview",
+    hindiThoughts: [
+      "Civil services में क्यों जाना चाहते हो?",
+      "देश के लिए क्या करना चाहते हो?",
+      "आपकी preparation कैसी है?",
+      "Current affairs पर क्या views हैं?"
+    ],
+    sentenceFrames: [
+      "I want to join civil services because ____.",
+      "I believe I can contribute by ____.",
+      "The biggest challenge facing India is ____.",
+      "As an administrator, I would focus on ____."
+    ],
+    modelAnswer: "I want to join civil services because I want to serve the nation at the grassroots level. I believe I can contribute by implementing policies effectively. The biggest challenge facing India is unemployment and education quality. As an administrator, I would focus on transparent governance.",
+    freePrompt: "UPSC interview style में जवाब दें (90 सेकंड)।",
+    confidenceTip: "Confident रहो, देश के बारे में passion दिखाओ।"
+  },
+  {
+    id: 19,
+    title: "Digital Banking in India",
+    hindiTitle: "भारत में डिजिटल बैंकिंग",
+    difficulty: "Medium" as const,
+    emoji: "🏧",
+    category: "Banking & Finance",
+    hindiThoughts: [
+      "UPI क्या है और कैसे use करते हो?",
+      "Digital banking के फायदे क्या हैं?",
+      "क्या risks हैं?",
+      "India में कैसे बदलाव आया है?"
+    ],
+    sentenceFrames: [
+      "Digital banking means ____.",
+      "I use apps like ____ for ____.",
+      "The advantages are ____.",
+      "We should be careful about ____."
+    ],
+    modelAnswer: "Digital banking means doing banking through mobile apps and internet. I use apps like Google Pay and PhonePe for daily payments. The advantages are convenience and instant transfers. We should be careful about sharing OTP and checking transaction details.",
+    freePrompt: "Digital banking के बारे में 60 सेकंड बोलें।",
+    confidenceTip: "Real examples दो - अपना experience बताओ।"
+  },
+  {
+    id: 20,
+    title: "Indian Independence Movement",
+    hindiTitle: "भारतीय स्वतंत्रता आंदोलन",
+    difficulty: "Hard" as const,
+    emoji: "🕊️",
+    category: "History",
+    hindiThoughts: [
+      "कौन से leaders याद हैं?",
+      "कौन सी movements important थीं?",
+      "आज़ादी का क्या महत्व है?",
+      "हमें क्या सीखना चाहिए?"
+    ],
+    sentenceFrames: [
+      "The Indian independence movement was led by ____.",
+      "Important movements include ____.",
+      "Freedom is important because ____.",
+      "We should remember that ____."
+    ],
+    modelAnswer: "The Indian independence movement was led by great leaders like Gandhi, Nehru, and Subhash Chandra Bose. Important movements include the Salt March and Quit India Movement. Freedom is important because it gave us the right to govern ourselves. We should remember the sacrifices made by our freedom fighters.",
+    freePrompt: "स्वतंत्रता आंदोलन के बारे में 90 सेकंड बोलें।",
+    confidenceTip: "इतिहास को respect के साथ बोलो।"
   }
 ];
 

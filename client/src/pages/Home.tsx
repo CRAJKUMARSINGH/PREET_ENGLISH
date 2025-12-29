@@ -8,6 +8,9 @@ import { ScenarioCard } from "@/components/ScenarioCard";
 import { SaraswatiMascot } from "@/components/SaraswatiMascot";
 import { CertificationCard } from "@/components/CertificationCard";
 import { ResourcesSection } from "@/components/ResourcesSection";
+import { TodaysPractice } from "@/components/TodaysPractice";
+import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
+import { ComingSoon } from "@/components/ComingSoon";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
 import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap } from "lucide-react";
@@ -106,6 +109,11 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* Today's Practice Topic */}
+      <section className="mb-8">
+        <TodaysPractice />
+      </section>
 
       {/* Gamification Section - Streak & Daily Goal */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -298,6 +306,27 @@ export default function Home() {
 
       {/* Learning Resources Section */}
       <ResourcesSection />
+
+      {/* Confidence Dashboard & Coming Soon */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <ConfidenceDashboard 
+          confidenceScore={Math.min(40 + completedCount * 2, 100)}
+          topicsCompleted={completedCount}
+          totalTopics={totalLessons}
+          interviewAnswers={Math.floor(completedCount / 5)}
+          speakingMinutes={completedCount * 3}
+          strengths={[
+            "Clear thinking",
+            "Good sentence structure",
+            "Improving vocabulary"
+          ]}
+          focusAreas={[
+            "Speak for longer duration",
+            "Add more examples"
+          ]}
+        />
+        <ComingSoon />
+      </section>
 
       {/* Footer Credits */}
       <footer className="mt-16 pt-8 border-t">

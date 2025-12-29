@@ -8,6 +8,7 @@ import LessonView from "@/pages/LessonView";
 import Profile from "@/pages/Profile";
 import SpeakingPractice from "@/pages/SpeakingPractice";
 import VocabularyPage from "@/pages/VocabularyPage";
+import ConversationsPage from "@/pages/ConversationsPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/profile" component={Profile} />
       <Route path="/speak" component={SpeakingPractice} />
       <Route path="/vocabulary" component={VocabularyPage} />
+      <Route path="/conversations" component={ConversationsPage} />
       <Route component={NotFound} />
     </Switch>
   );

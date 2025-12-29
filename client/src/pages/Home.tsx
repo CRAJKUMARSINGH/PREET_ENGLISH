@@ -12,9 +12,10 @@ import { TodaysPractice } from "@/components/TodaysPractice";
 import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
 import { ComingSoon } from "@/components/ComingSoon";
 import { VocabularyBuilder } from "@/components/VocabularyBuilder";
+import { ConversationPractice } from "@/components/ConversationPractice";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
-import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic } from "lucide-react";
+import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Link } from "wouter";
@@ -122,7 +123,7 @@ export default function Home() {
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
           🚀 Quick Access - जल्दी शुरू करें
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link href="/speak">
             <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-4">
@@ -131,12 +132,9 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">Speaking Practice</h3>
-                  <p className="text-purple-100">🗣️ बोलने का अभ्यास करें - 25 Topics</p>
+                  <p className="text-purple-100">🗣️ बोलने का अभ्यास - 25 Topics</p>
                 </div>
               </div>
-              <p className="mt-3 text-sm text-purple-100">
-                हिंदी में सोचो → English में बोलो
-              </p>
             </div>
           </Link>
           
@@ -148,12 +146,23 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">Vocabulary Builder</h3>
-                  <p className="text-blue-100">📚 शब्दावली निर्माता - 48+ Words</p>
+                  <p className="text-blue-100">📚 शब्दावली - 72+ Words</p>
                 </div>
               </div>
-              <p className="mt-3 text-sm text-blue-100">
-                रोज़मर्रा के शब्द हिंदी अर्थ के साथ
-              </p>
+            </div>
+          </Link>
+
+          <Link href="/conversations">
+            <div className="bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-xl">
+                  <MessagesSquare className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Conversations</h3>
+                  <p className="text-green-100">💬 बातचीत अभ्यास - 6 Dialogues</p>
+                </div>
+              </div>
             </div>
           </Link>
         </div>

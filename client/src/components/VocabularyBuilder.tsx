@@ -36,6 +36,54 @@ const vocabularyData: VocabularyCategory[] = [
     ]
   },
   {
+    id: "greetings",
+    title: "Greetings & Introductions",
+    hindiTitle: "अभिवादन और परिचय",
+    emoji: "👋",
+    words: [
+      { english: "Hello", hindi: "नमस्ते", emoji: "👋", pronunciation: "namaste", example: "Hello, how are you?" },
+      { english: "Good morning", hindi: "सुप्रभात", emoji: "🌅", pronunciation: "suprabhat", example: "Good morning, sir!" },
+      { english: "Good evening", hindi: "शुभ संध्या", emoji: "🌆", pronunciation: "shubh sandhya", example: "Good evening, everyone." },
+      { english: "Nice to meet you", hindi: "आपसे मिलकर खुशी हुई", emoji: "🤝", pronunciation: "aapse milkar khushi hui", example: "Nice to meet you, I'm Raj." },
+      { english: "How are you?", hindi: "आप कैसे हैं?", emoji: "😊", pronunciation: "aap kaise hain?", example: "How are you today?" },
+      { english: "I'm fine", hindi: "मैं ठीक हूं", emoji: "👍", pronunciation: "main theek hoon", example: "I'm fine, thank you." },
+      { english: "Goodbye", hindi: "अलविदा", emoji: "👋", pronunciation: "alvida", example: "Goodbye, see you tomorrow!" },
+      { english: "Thank you", hindi: "धन्यवाद", emoji: "🙏", pronunciation: "dhanyavaad", example: "Thank you for your help." }
+    ]
+  },
+  {
+    id: "office",
+    title: "Office & Workplace",
+    hindiTitle: "कार्यालय और कार्यस्थल",
+    emoji: "💼",
+    words: [
+      { english: "meeting", hindi: "बैठक", emoji: "👥", pronunciation: "baithak", example: "We have a meeting at 10 AM." },
+      { english: "deadline", hindi: "समय सीमा", emoji: "⏰", pronunciation: "samay seema", example: "The deadline is tomorrow." },
+      { english: "colleague", hindi: "सहकर्मी", emoji: "👨‍💼", pronunciation: "sahkarmi", example: "My colleague helped me." },
+      { english: "boss", hindi: "बॉस/मालिक", emoji: "👔", pronunciation: "boss/maalik", example: "My boss is very supportive." },
+      { english: "salary", hindi: "वेतन", emoji: "💰", pronunciation: "vetan", example: "Salary is credited on 1st." },
+      { english: "promotion", hindi: "पदोन्नति", emoji: "📈", pronunciation: "padonnati", example: "I got a promotion!" },
+      { english: "leave", hindi: "छुट्टी", emoji: "🏖️", pronunciation: "chutti", example: "I need leave tomorrow." },
+      { english: "project", hindi: "परियोजना", emoji: "📊", pronunciation: "pariyojana", example: "This project is important." }
+    ]
+  },
+  {
+    id: "emotions",
+    title: "Emotions & Feelings",
+    hindiTitle: "भावनाएं और अनुभूतियां",
+    emoji: "😊",
+    words: [
+      { english: "happy", hindi: "खुश", emoji: "😊", pronunciation: "khush", example: "I am very happy today." },
+      { english: "sad", hindi: "उदास", emoji: "😢", pronunciation: "udaas", example: "She looks sad." },
+      { english: "angry", hindi: "गुस्सा", emoji: "😠", pronunciation: "gussa", example: "Don't be angry." },
+      { english: "excited", hindi: "उत्साहित", emoji: "🤩", pronunciation: "utsaahit", example: "I'm excited about the trip!" },
+      { english: "worried", hindi: "चिंतित", emoji: "😟", pronunciation: "chintit", example: "I'm worried about the exam." },
+      { english: "tired", hindi: "थका हुआ", emoji: "😴", pronunciation: "thaka hua", example: "I feel very tired." },
+      { english: "surprised", hindi: "हैरान", emoji: "😲", pronunciation: "hairaan", example: "I was surprised!" },
+      { english: "nervous", hindi: "घबराया हुआ", emoji: "😰", pronunciation: "ghabraaya hua", example: "I'm nervous about the interview." }
+    ]
+  },
+  {
     id: "family",
     title: "Family Members",
     hindiTitle: "परिवार के सदस्य",
@@ -113,6 +161,38 @@ const vocabularyData: VocabularyCategory[] = [
       { english: "emergency", hindi: "आपातकाल", emoji: "🚨", pronunciation: "aapaatkaal", example: "This is an emergency!" },
       { english: "ambulance", hindi: "एम्बुलेंस", emoji: "🚑", pronunciation: "ambulance", example: "Call an ambulance!" },
       { english: "pharmacy", hindi: "दवाखाना", emoji: "💊", pronunciation: "dawakhaana", example: "Is there a pharmacy nearby?" }
+    ]
+  },
+  {
+    id: "numbers",
+    title: "Numbers & Counting",
+    hindiTitle: "संख्याएं और गिनती",
+    emoji: "🔢",
+    words: [
+      { english: "one", hindi: "एक", emoji: "1️⃣", pronunciation: "ek", example: "I have one book." },
+      { english: "two", hindi: "दो", emoji: "2️⃣", pronunciation: "do", example: "Two cups of tea, please." },
+      { english: "ten", hindi: "दस", emoji: "🔟", pronunciation: "das", example: "I need ten minutes." },
+      { english: "hundred", hindi: "सौ", emoji: "💯", pronunciation: "sau", example: "It costs hundred rupees." },
+      { english: "thousand", hindi: "हज़ार", emoji: "🔢", pronunciation: "hazaar", example: "One thousand people came." },
+      { english: "first", hindi: "पहला", emoji: "🥇", pronunciation: "pehla", example: "This is my first time." },
+      { english: "half", hindi: "आधा", emoji: "½", pronunciation: "aadha", example: "Give me half." },
+      { english: "double", hindi: "दोगुना", emoji: "✖️", pronunciation: "doguna", example: "Double the amount." }
+    ]
+  },
+  {
+    id: "directions",
+    title: "Directions & Places",
+    hindiTitle: "दिशाएं और स्थान",
+    emoji: "🧭",
+    words: [
+      { english: "left", hindi: "बाएं", emoji: "⬅️", pronunciation: "baayen", example: "Turn left here." },
+      { english: "right", hindi: "दाएं", emoji: "➡️", pronunciation: "daayen", example: "Turn right at the signal." },
+      { english: "straight", hindi: "सीधा", emoji: "⬆️", pronunciation: "seedha", example: "Go straight ahead." },
+      { english: "near", hindi: "पास", emoji: "📍", pronunciation: "paas", example: "The shop is near." },
+      { english: "far", hindi: "दूर", emoji: "🏃", pronunciation: "door", example: "It's too far to walk." },
+      { english: "behind", hindi: "पीछे", emoji: "🔙", pronunciation: "peeche", example: "It's behind the building." },
+      { english: "in front of", hindi: "सामने", emoji: "🔜", pronunciation: "saamne", example: "Park in front of the gate." },
+      { english: "next to", hindi: "बगल में", emoji: "↔️", pronunciation: "bagal mein", example: "Sit next to me." }
     ]
   }
 ];

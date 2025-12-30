@@ -13,9 +13,10 @@ import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
 import { ComingSoon } from "@/components/ComingSoon";
 import { VocabularyBuilder } from "@/components/VocabularyBuilder";
 import { ConversationPractice } from "@/components/ConversationPractice";
+import { AITutor } from "@/components/AITutor";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
-import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare } from "lucide-react";
+import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare, Bot } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Link } from "wouter";
@@ -379,6 +380,20 @@ export default function Home() {
           ]}
         />
         <ComingSoon />
+      </section>
+
+      {/* AI Tutor Section */}
+      <section className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-xl">
+            <Bot className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold">AI ट्यूटर से बात करें</h2>
+            <p className="text-sm text-muted-foreground">Practice English with Arya - आर्या से अंग्रेजी का अभ्यास करें</p>
+          </div>
+        </div>
+        <AITutor />
       </section>
 
       {/* Footer Credits */}

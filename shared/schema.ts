@@ -19,6 +19,7 @@ export const lessons = sqliteTable("lessons", {
   difficulty: text("difficulty").notNull(), // Beginner, Intermediate, Advanced
   order: integer("order").notNull(),
   imageUrl: text("image_url"),
+  emojiTheme: text("emoji_theme"),
   // Enhanced fields for Hindi support
   hindiTitle: text("hindi_title"),
   hindiDescription: text("hindi_description"),
@@ -36,6 +37,17 @@ export const vocabulary = sqliteTable("vocabulary", {
   hindiTranslation: text("hindi_translation"),
   hindiPronunciation: text("hindi_pronunciation"),
   audioUrl: text("audio_url"),
+});
+
+// Conversation Lines Table
+export const conversationLines = sqliteTable("conversation_lines", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  lessonId: integer("lesson_id").references(() => lessons.id).notNull(),
+  speaker: text("speaker").notNull(),
+  englishText: text("english_text").notNull(),
+  hindiText: text("hindi_text").notNull(),
+  emoji: text("emoji"),
+  lineOrder: integer("line_order").notNull(),
 });
 
 export const progress = sqliteTable("progress", {
@@ -185,6 +197,7 @@ export const scenarioProgress = sqliteTable("scenario_progress", {
 // Relations
 export const lessonsRelations = relations(lessons, ({ many }) => ({
   vocabulary: many(vocabulary),
+  conversationLines: many(conversationLines),
 }));
 
 export const vocabularyRelations = relations(vocabulary, ({ one }) => ({

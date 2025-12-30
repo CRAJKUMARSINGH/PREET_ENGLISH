@@ -11,7 +11,11 @@
     "db:push": "drizzle-kit push",
     "migrate": "tsx migrate-all-lessons.ts",
     "migrate:full": "tsx migrate-full-lessons.ts",
-    "migrate:complete": "tsx migrate-complete-lessons.ts"
+    "migrate:complete": "tsx migrate-complete-lessons.ts",
+    "backup:db": "tsx scripts/backup-db.ts backup",
+    "backup:list": "tsx scripts/backup-db.ts list",
+    "config": "tsx scripts/backup-db.ts config",
+    "generate:lessons": "tsx generate-lessons.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

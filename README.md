@@ -5,11 +5,12 @@ A comprehensive full-stack English learning application designed specifically fo
 ## ✨ Features
 
 ### 🎓 Learning Experience
-- **1100+ Interactive Lessons** across multiple categories
+- **1625+ Interactive Lessons** across multiple categories
 - **Hindi Translations** with accurate pronunciations
 - **Progressive Difficulty** from Beginner to Advanced
 - **17 Categories** (Greetings, Business, Travel, Technology, etc.)
 - **Vocabulary Management** with contextual definitions
+- **Conversation Practice** with interactive dialogues
 - **Progress Tracking** with completion analytics
 
 ### 🏗️ Technical Architecture
@@ -62,6 +63,7 @@ npm run db:push
 npm run migrate           # Basic 110 lessons (quick start)
 npm run migrate:full      # 520 lessons (comprehensive)
 npm run migrate:complete  # All 1100+ lessons (complete collection)
+npm run generate:lessons   # Generate lessons to reach 1625+ (if needed)
 ```
 
 6. **Start the development server:**

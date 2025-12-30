@@ -1,10 +1,10 @@
 import { db } from "./db";
 import {
-  users, lessons, vocabulary, progress,
+  users, lessons, vocabulary, progress, conversationLines,
   type User, type InsertUser,
   type Lesson, type InsertLesson,
   type Vocabulary, type InsertVocabulary,
-  type Progress
+  type Progress, type ConversationLine, type InsertConversationLine
 } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
 

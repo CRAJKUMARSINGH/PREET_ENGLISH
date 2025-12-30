@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle, Loader2, ChevronLeft, ChevronRight, Home, BookO
 import { Layout } from "@/components/Layout";
 import { VocabularyItem } from "@/components/VocabularyItem";
 import { CelebrationModal } from "@/components/CelebrationModal";
+import { AudioButton } from "@/components/AudioButton";
 import { useLesson, useLessons } from "@/hooks/use-lessons";
 import { useMarkComplete, useProgress } from "@/hooks/use-progress";
 import { useToast } from "@/hooks/use-toast";
@@ -119,13 +120,19 @@ export default function LessonView() {
               
               {/* Hindi Title First - Large */}
               {lessonData.hindiTitle && (
-                <h1 className="text-2xl md:text-3xl font-bold text-primary dark:text-primary mb-2">
-                  {lessonData.hindiTitle}
-                </h1>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-2xl md:text-3xl font-bold text-primary dark:text-primary">
+                    {lessonData.hindiTitle}
+                  </h1>
+                  <AudioButton text={lessonData.hindiTitle} language="hi" size="md" />
+                </div>
               )}
-              <h2 className="text-xl md:text-2xl font-semibold text-slate-700 dark:text-slate-300">
-                {lessonData.title}
-              </h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl md:text-2xl font-semibold text-slate-700 dark:text-slate-300">
+                  {lessonData.title}
+                </h2>
+                <AudioButton text={lessonData.title} language="en" size="md" />
+              </div>
               
               <p className="text-muted-foreground mt-2">
                 {lessonData.description}
@@ -153,11 +160,19 @@ export default function LessonView() {
             transition={{ duration: 0.5 }}
           >
             <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden h-full">
-              <div className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2">
-                <div className="bg-blue-100 dark:bg-blue-800 p-1.5 rounded">
-                  <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <div className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="bg-blue-100 dark:bg-blue-800 p-1.5 rounded">
+                    <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="font-bold text-blue-700 dark:text-blue-400">English Content</h3>
                 </div>
-                <h3 className="font-bold text-blue-700 dark:text-blue-400">English Content</h3>
+                <AudioButton 
+                  text={englishContent.replace(/[#*_`]/g, '').substring(0, 500)} 
+                  language="en" 
+                  size="sm"
+                  showText
+                />
               </div>
               <div className="p-6 prose prose-slate dark:prose-invert max-w-none">
                 <ReactMarkdown>{englishContent}</ReactMarkdown>
@@ -172,11 +187,22 @@ export default function LessonView() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="bg-amber-50 dark:bg-amber-900/10 rounded-2xl shadow-sm border border-amber-200 dark:border-amber-800/30 overflow-hidden h-full">
-              <div className="bg-amber-100 dark:bg-amber-900/30 px-6 py-4 border-b border-amber-200 dark:border-amber-800/30 flex items-center gap-2">
-                <div className="bg-amber-200 dark:bg-amber-800 p-1.5 rounded">
-                  <Languages className="h-4 w-4 text-amber-700 dark:text-amber-400" />
+              <div className="bg-amber-100 dark:bg-amber-900/30 px-6 py-4 border-b border-amber-200 dark:border-amber-800/30 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="bg-amber-200 dark:bg-amber-800 p-1.5 rounded">
+                    <Languages className="h-4 w-4 text-amber-700 dark:text-amber-400" />
+                  </div>
+                  <h3 className="font-bold text-amber-800 dark:text-amber-400">हिंदी व्याख्या (Hindi Explanation)</h3>
                 </div>
-                <h3 className="font-bold text-amber-800 dark:text-amber-400">हिंदी व्याख्या (Hindi Explanation)</h3>
+                {hindiContent && (
+                  <AudioButton 
+                    text={hindiContent.replace(/[#*_`]/g, '').substring(0, 500)} 
+                    language="hi" 
+                    size="sm"
+                    showText
+                    className="text-amber-700 dark:text-amber-400"
+                  />
+                )}
               </div>
               <div className="p-6 prose prose-slate dark:prose-invert max-w-none">
                 {hindiContent ? (

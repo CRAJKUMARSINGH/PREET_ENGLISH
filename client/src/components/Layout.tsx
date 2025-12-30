@@ -1,14 +1,16 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Trophy, User, Menu, X, Languages, Mic, BookText, MessagesSquare } from "lucide-react";
+import { BookOpen, Home, Trophy, User, Menu, X, Languages, Mic, BookText, MessagesSquare, Search } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
 import { SaraswatiLogo } from "./SaraswatiMascot";
+import { GlobalSearch } from "./GlobalSearch";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { t, i18n } = useTranslation();
 
   const toggleLanguage = () => {
@@ -73,6 +75,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           <nav className="space-y-2 flex-1">
+            {/* Search Button */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-muted-foreground hover:bg-muted dark:hover:bg-slate-800 hover:text-foreground mb-4 border border-dashed border-slate-300 dark:border-slate-700"
+            >
+              <Search className="h-5 w-5" />
+              <span>Search...</span>
+              <kbd className="ml-auto px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700 rounded">⌘K</kbd>
+            </button>
+
             {navItems.map((item) => {
               const isActive = location === item.href;
               return (
@@ -93,6 +105,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+
+          {/* Global Search Component */}
+          <GlobalSearch open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
           <div className="mt-auto pt-6 border-t dark:border-slate-800">
             {/* Language Toggle for Desktop */}

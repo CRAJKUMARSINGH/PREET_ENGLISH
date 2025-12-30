@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Mic, MicOff, Play, ChevronDown, ChevronUp, Lightbulb, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mic, MicOff, Play, ChevronDown, ChevronUp, Lightbulb, MessageSquare, RotateCcw, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { VideoScriptComponent } from "./VideoScriptComponent";
 
 interface SpeakingTopicProps {
   id: number;
@@ -30,15 +31,50 @@ export function SpeakingTopicCard({
 }: SpeakingTopicProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [currentStep, setCurrentStep] = useState<'think' | 'frame' | 'speak'>('think');
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [currentStep, setCurrentStep] = useState<'think' | 'frame' | 'speak' | 'feedback'>('think');
 
   const difficultyConfig = {
-    Easy: { color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', emoji: '😊' },
-    Medium: { color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', emoji: '🙂' },
-    Hard: { color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', emoji: '🧠🔥' }
+    Easy: { color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', emoji: '😊', duration: 30 },
+    Medium: { color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', emoji: '🙂', duration: 60 },
+    Hard: { color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', emoji: '🧠🔥', duration: 90 }
   };
 
   const config = difficultyConfig[difficulty];
+
+  // Recording timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= config.duration) {
+            setIsRecording(false);
+            setCurrentStep('feedback');
+            return config.duration;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording, config.duration]);
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      setCurrentStep('feedback');
+    } else {
+      setIsRecording(true);
+      setRecordingTime(0);
+    }
+  };
+
+  const resetPractice = () => {
+    setCurrentStep('think');
+    setIsRecording(false);
+    setRecordingTime(0);
+  };
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all hover:shadow-lg">
@@ -70,7 +106,7 @@ export function SpeakingTopicCard({
         <div className="border-t border-slate-100 dark:border-slate-800">
           {/* Step Tabs */}
           <div className="flex border-b border-slate-100 dark:border-slate-800">
-            {(['think', 'frame', 'speak'] as const).map((step, index) => (
+            {(['think', 'frame', 'speak', 'feedback'] as const).map((step, index) => (
               <button
                 key={step}
                 onClick={() => setCurrentStep(step)}
@@ -81,7 +117,7 @@ export function SpeakingTopicCard({
                     : "text-muted-foreground hover:bg-slate-50 dark:hover:bg-slate-800"
                 )}
               >
-                {index + 1}. {step === 'think' ? '🧠 सोचें' : step === 'frame' ? '🧩 फ्रेम' : '🎤 बोलें'}
+                {index + 1}. {step === 'think' ? '🧠 सोचें' : step === 'frame' ? '🧩 फ्रेम' : step === 'speak' ? '🎤 बोलें' : '🌟 फीडबैक'}
               </button>
             ))}
           </div>
@@ -132,6 +168,15 @@ export function SpeakingTopicCard({
                     <p className="text-slate-700 dark:text-slate-300 italic">"{modelAnswer}"</p>
                   </div>
                 )}
+
+                {/* Video Script Component */}
+                <VideoScriptComponent
+                  topicTitle={title}
+                  hindiInstruction={`आज हम "${hindiTitle}" पर English बोलेंगे।\nडरने की कोई ज़रूरत नहीं है।`}
+                  englishModel={modelAnswer || "Practice speaking about this topic using the sentence frames above."}
+                  hindiBridge={`आप भी इसी structure में बोलिए।\nThink → Frame → Speak.`}
+                  confidenceBoost={confidenceTip}
+                />
                 
                 <button 
                   onClick={() => setCurrentStep('speak')}
@@ -148,10 +193,28 @@ export function SpeakingTopicCard({
                 <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-center">
                   <p className="text-purple-700 dark:text-purple-300 font-medium mb-2">🎤 बोलने का समय!</p>
                   <p className="text-slate-600 dark:text-slate-400 text-sm">{freePrompt}</p>
+                  <p className="text-xs text-muted-foreground mt-2">Target: {config.duration} seconds</p>
+                </div>
+
+                {/* Recording Indicator */}
+                <div className="flex flex-col items-center gap-4">
+                  <div className={cn(
+                    "h-32 w-32 rounded-full flex items-center justify-center text-4xl transition-all",
+                    isRecording ? "bg-red-100 dark:bg-red-900/30 animate-pulse" : "bg-muted"
+                  )}>
+                    {isRecording ? recordingTime : emoji}
+                  </div>
+                  
+                  {isRecording && (
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-500">{recordingTime}s</div>
+                      <div className="text-sm text-muted-foreground">of {config.duration}s</div>
+                    </div>
+                  )}
                 </div>
 
                 <button
-                  onClick={() => setIsRecording(!isRecording)}
+                  onClick={toggleRecording}
                   className={cn(
                     "w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all",
                     isRecording 
@@ -176,6 +239,55 @@ export function SpeakingTopicCard({
                 <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
                   <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mb-1">💡 आत्मविश्वास टिप:</p>
                   <p className="text-slate-700 dark:text-slate-300 text-sm">{confidenceTip}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Feedback */}
+            {currentStep === 'feedback' && (
+              <div className="space-y-4">
+                <div className="text-center py-8">
+                  <div className="text-6xl mb-4">🎉</div>
+                  <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white">बहुत बढ़िया!</h3>
+                  <p className="text-muted-foreground mb-6">
+                    आपने "{title}" पर बोलने का अभ्यास पूरा किया
+                  </p>
+                  
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mb-6">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-xl">
+                      <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{recordingTime}s</div>
+                      <div className="text-sm text-blue-700 dark:text-blue-300">Speaking Time</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-xl">
+                      <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                        <Award className="w-8 h-8 mx-auto" />
+                      </div>
+                      <div className="text-sm text-green-700 dark:text-green-300">Completed</div>
+                    </div>
+                  </div>
+                  
+                  {/* Positive Feedback */}
+                  <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800 mb-6">
+                    <p className="text-amber-700 dark:text-amber-300 font-medium">"{confidenceTip}"</p>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 justify-center">
+                    <button 
+                      onClick={resetPractice}
+                      className="px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all flex items-center gap-2"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      फिर से अभ्यास करें
+                    </button>
+                    <button 
+                      onClick={() => setIsExpanded(false)}
+                      className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

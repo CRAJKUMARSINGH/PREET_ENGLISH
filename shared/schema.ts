@@ -297,6 +297,7 @@ export const scenarioProgressRelations = relations(scenarioProgress, ({ one }) =
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertLessonSchema = createInsertSchema(lessons).omit({ id: true });
 export const insertVocabularySchema = createInsertSchema(vocabulary).omit({ id: true });
+export const insertConversationLineSchema = createInsertSchema(conversationLines).omit({ id: true });
 export const insertProgressSchema = createInsertSchema(progress).omit({ id: true, completedAt: true });
 export const insertQuizSchema = createInsertSchema(quizzes).omit({ id: true });
 export const insertQuizQuestionSchema = createInsertSchema(quizQuestions).omit({ id: true });
@@ -317,6 +318,8 @@ export type Lesson = typeof lessons.$inferSelect;
 export type InsertLesson = z.infer<typeof insertLessonSchema>;
 export type Vocabulary = typeof vocabulary.$inferSelect;
 export type InsertVocabulary = z.infer<typeof insertVocabularySchema>;
+export type ConversationLine = typeof conversationLines.$inferSelect;
+export type InsertConversationLine = z.infer<typeof insertConversationLineSchema>;
 export type Progress = typeof progress.$inferSelect;
 export type Quiz = typeof quizzes.$inferSelect;
 export type InsertQuiz = z.infer<typeof insertQuizSchema>;

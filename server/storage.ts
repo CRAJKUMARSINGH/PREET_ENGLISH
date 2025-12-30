@@ -26,6 +26,9 @@ export interface IStorage {
   // Progress
   getUserProgress(userId: number): Promise<(Progress & { lesson: Lesson })[]>;
   updateProgress(userId: number, lessonId: number, completed: boolean): Promise<Progress>;
+
+  // Search
+  search(query: string): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -103,6 +106,50 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return created;
     }
+  }
+
+  async search(query: string): Promise<any[]> {
+    const lowerQuery = query.toLowerCase();
+    const results: any[] = [];
+
+    // Search lessons
+    const allLessons = await db.select().from(lessons);
+    const matchingLessons = allLessons.filter(lesson =>
+      lesson.title.toLowerCase().includes(lowerQuery) ||
+      lesson.description.toLowerCase().includes(lowerQuery) ||
+      (lesson.hindiTitle && lesson.hindiTitle.includes(query)) ||
+      (lesson.hindiDescription && lesson.hindiDescription.includes(query)) ||
+      lesson.category.toLowerCase().includes(lowerQuery)
+    );
+
+    results.push(...matchingLessons.map(lesson => ({
+      id: lesson.id,
+      type: 'lesson',
+      title: lesson.title,
+      hindiTitle: lesson.hindiTitle,
+      description: lesson.description,
+      category: lesson.category,
+      difficulty: lesson.difficulty
+    })));
+
+    // Search vocabulary
+    const allVocab = await db.select().from(vocabulary);
+    const matchingVocab = allVocab.filter(vocab =>
+      vocab.word.toLowerCase().includes(lowerQuery) ||
+      vocab.definition.toLowerCase().includes(lowerQuery) ||
+      (vocab.hindiTranslation && vocab.hindiTranslation.includes(query))
+    );
+
+    results.push(...matchingVocab.slice(0, 10).map(vocab => ({
+      id: vocab.id,
+      type: 'vocabulary',
+      title: vocab.word,
+      hindiTitle: vocab.hindiTranslation,
+      description: vocab.definition,
+      category: 'Vocabulary'
+    })));
+
+    return results.slice(0, 20); // Limit to 20 results
   }
 }
 

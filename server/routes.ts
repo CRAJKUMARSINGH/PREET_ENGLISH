@@ -59,6 +59,18 @@ export async function registerRoutes(
     res.json(updated);
   });
 
+  // Search endpoint
+  app.get('/api/search', async (req, res) => {
+    const query = req.query.q as string;
+    
+    if (!query || query.length < 3) {
+      return res.json([]);
+    }
+
+    const results = await storage.search(query);
+    res.json(results);
+  });
+
   // Seeding
   await seedDatabase();
 

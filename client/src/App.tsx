@@ -10,6 +10,7 @@ import Profile from "@/pages/Profile";
 import SpeakingPractice from "@/pages/SpeakingPractice";
 import VocabularyPage from "@/pages/VocabularyPage";
 import ConversationsPage from "@/pages/ConversationsPage";
+import Community from "@/pages/Community";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/speak" component={SpeakingPractice} />
       <Route path="/vocabulary" component={VocabularyPage} />
       <Route path="/conversations" component={ConversationsPage} />
+      <Route path="/community" component={Community} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -23,7 +23,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { href: "/speak", label: "🗣️ Speaking", icon: Mic },
     { href: "/vocabulary", label: "📚 Vocabulary", icon: BookText },
     { href: "/conversations", label: "💬 Conversations", icon: MessagesSquare },
-    { href: "/profile", label: t("profile"), icon: User },
+    { href: "/community", label: "👥 Community", icon: User },
+    { href: "/profile", label: t("profile"), icon: Trophy },
   ];
 
   return (

@@ -5,7 +5,7 @@ Allow: /
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://preet-english.yourdeploylink.com/sitemap.xml
+Sitemap: https://preetenglish.netlify.app/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1

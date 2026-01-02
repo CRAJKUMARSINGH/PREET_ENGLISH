@@ -1,6 +1,8 @@
 {
   "name": "preet-english",
   "version": "1.0.0",
+  "description": "🇮🇳 Professional English Learning Platform for Hindi Speakers - LIVE: https://preetenglish.netlify.app/",
+  "homepage": "https://preetenglish.netlify.app/",
   "type": "module",
   "license": "MIT",
   "scripts": {

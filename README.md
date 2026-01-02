@@ -12,7 +12,9 @@ A comprehensive full-stack English learning application designed specifically fo
 
 ## ✨ Live Demo
 
-🔗 **[Try Preet English Now](https://preet-english.yourdeploylink.com)** *(Add your deployed link here)*
+🔗 **[Try Preet English Now - LIVE!](https://preetenglish.netlify.app/)** 
+
+**🌟 Your superior English learning platform is now serving Hindi speakers worldwide!**
 
 ## 📸 Screenshots
 

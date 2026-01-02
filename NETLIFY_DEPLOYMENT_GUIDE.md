@@ -5,6 +5,10 @@
 ### Option 1: Direct Deploy Button (Recommended)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CRAJKUMARSINGH/PREET_ENGLISH)
 
+### 🌟 **LIVE DEMO**: [https://preetenglish.netlify.app/](https://preetenglish.netlify.app/)
+
+**Your app is already deployed and serving users!**
+
 ### Option 2: Manual Deployment
 
 1. **Go to Netlify**: Visit [netlify.com](https://netlify.com) and sign up/login

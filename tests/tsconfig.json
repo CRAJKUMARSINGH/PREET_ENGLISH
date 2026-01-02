@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["./**/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "noEmit": true,
+    "baseUrl": "..",
+    "jsx": "react-jsx",
+    "paths": {
+      "@/components/ErrorBoundary": ["tests/mocks/ErrorBoundary.tsx"],
+      "@/*": ["./client/src/*"],
+      "@shared/*": ["./shared/*"]
+    }
+  }
+}

@@ -12,6 +12,19 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
+const isLocalhost = () => {
+  try {
+    return (
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '0.0.0.0')
+    );
+  } catch {
+    return false;
+  }
+};
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -37,8 +50,8 @@ export class ErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Log to analytics
-    if (import.meta.env.PROD) {
+    // Log to analytics (avoid noisy logs during local development)
+    if (!isLocalhost()) {
       // Send to error tracking service
       console.error('Production error:', {
         error: error.toString(),
@@ -61,6 +74,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const showDevDetails = isLocalhost();
+
       return (
         <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 flex items-center justify-center p-4">
           <div className="max-w-2xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border-2 border-red-200 dark:border-red-800">
@@ -80,7 +95,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </p>
 
             {/* Error Message (Development only) */}
-            {import.meta.env.DEV && this.state.error && (
+            {showDevDetails && this.state.error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
                 <p className="font-mono text-sm text-red-800 dark:text-red-300 mb-2">
                   <strong>Error:</strong> {this.state.error.toString()}

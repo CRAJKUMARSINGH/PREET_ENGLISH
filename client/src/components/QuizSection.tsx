@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CheckCircle, XCircle, Trophy, Star, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSound } from "@/hooks/use-sound";
+import { SupportCard, inferGrammarCategoryFromText, getGrammarEntryForKey, type GrammarCategoryKey } from "@/components/SupportCard";
 
 interface QuizQuestion {
   question: string;
@@ -25,6 +26,12 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
   const [score, setScore] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null));
+  const [lastErrorCategory, setLastErrorCategory] = useState<GrammarCategoryKey | null>(null);
+  const [errorCounts, setErrorCounts] = useState<Record<GrammarCategoryKey, number>>({
+    articles: 0,
+    prepositions: 0,
+    present_continuous: 0,
+  });
   
   const { playSuccess, playError, playCelebration } = useSound();
 
@@ -49,6 +56,16 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
       playSuccess();
     } else {
       playError();
+      const inferred = inferGrammarCategoryFromText(
+        `${question.question} ${question.explanation} ${question.explanationHindi}`
+      );
+      setLastErrorCategory(inferred);
+      if (inferred) {
+        setErrorCounts((prev) => ({
+          ...prev,
+          [inferred]: prev[inferred] + 1,
+        }));
+      }
     }
   };
 
@@ -74,12 +91,20 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
     setScore(0);
     setQuizComplete(false);
     setAnswers(new Array(questions.length).fill(null));
+    setLastErrorCategory(null);
+    setErrorCounts({
+      articles: 0,
+      prepositions: 0,
+      present_continuous: 0,
+    });
   };
 
   const percentage = Math.round((score / questions.length) * 100);
   const passed = percentage >= 70;
 
   if (quizComplete) {
+    const hasErrorSummary = Object.values(errorCounts).some((count) => count > 0);
+
     return (
       <div className="bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl p-8 border shadow-lg">
         <div className="text-center">
@@ -116,7 +141,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
           </div>
 
           {/* Stars based on score */}
-          <div className="flex justify-center gap-2 mb-8">
+          <div className="flex justify-center gap-2 mb-6">
             {[1, 2, 3].map((star) => (
               <Star
                 key={star}
@@ -130,6 +155,35 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
               />
             ))}
           </div>
+
+          {hasErrorSummary && (
+            <div className="mt-4 text-left bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4">
+              <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                आपकी आज की आम गलतियाँ (Your common mistakes today)
+              </h4>
+              <ul className="space-y-2 text-xs text-amber-900 dark:text-amber-50">
+                {(Object.entries(errorCounts) as [GrammarCategoryKey, number][]) 
+                  .filter(([, count]) => count > 0)
+                  .map(([key, count]) => {
+                    const entry = getGrammarEntryForKey(key);
+                    if (!entry) return null;
+                    return (
+                      <li key={key} className="flex flex-col gap-0.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{entry.category}</span>
+                          <span className="text-[11px] text-amber-800/80 dark:text-amber-200/80">
+                            गलतियाँ: {count}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-amber-800/80 dark:text-amber-200/80">
+                          {entry.hindiExplanation}
+                        </p>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+          )}
 
           <div className="flex gap-4 justify-center">
             {!passed && (
@@ -215,7 +269,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
       {/* Explanation */}
       {showResult && (
         <div className={cn(
-          "p-4 rounded-xl mb-6",
+          "p-4 rounded-xl mb-3",
           isCorrect ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800" : "bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800"
         )}>
           <p className="font-medium mb-1">
@@ -223,6 +277,10 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
           </p>
           <p className="text-sm text-muted-foreground">{question.explanationHindi}</p>
         </div>
+      )}
+
+      {showResult && !isCorrect && (
+        <SupportCard categoryKey={lastErrorCategory} />
       )}
 
       {/* Action Button */}

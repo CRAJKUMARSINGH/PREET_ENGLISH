@@ -1,8 +1,28 @@
-import { Volume2 } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import type { Vocabulary } from "@shared/schema";
 import { AudioButton } from "./AudioButton";
+import { pronunciationChallenges } from "@/data/hindiLearningData";
+
+function getPronunciationHint(word: string) {
+  const lower = word.toLowerCase();
+
+  for (const challenge of Object.values(pronunciationChallenges)) {
+    const match = challenge.words.find((w) => w.word.toLowerCase() === lower);
+    if (match) {
+      return {
+        title: challenge.title,
+        hindi: match.hindi,
+        tip: match.tip,
+      };
+    }
+  }
+
+  return null;
+}
 
 export function VocabularyItem({ word }: { word: Vocabulary }) {
+  const pronunciationHint = getPronunciationHint(word.word);
+
   return (
     <div className="bg-secondary/30 rounded-xl p-6 hover:bg-secondary/50 transition-colors border border-transparent hover:border-primary/10">
       <div className="flex flex-col gap-4">
@@ -12,6 +32,15 @@ export function VocabularyItem({ word }: { word: Vocabulary }) {
             <h4 className="text-xl font-bold text-primary font-display">{word.word}</h4>
             <AudioButton text={word.word} language="en" size="sm" />
           </div>
+
+          {pronunciationHint && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 text-amber-800 text-xs font-medium px-3 py-1 border border-amber-200 mb-3">
+              <Lightbulb className="h-3 w-3" />
+              <span>
+                Pronunciation Tip: {pronunciationHint.tip}
+              </span>
+            </div>
+          )}
           
           <p className="text-foreground font-medium mb-3 text-lg">{word.definition}</p>
           

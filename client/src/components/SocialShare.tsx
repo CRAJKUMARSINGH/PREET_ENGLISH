@@ -66,7 +66,7 @@ export function SocialShare({ title, text, url }: SocialShareProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        {navigator.share && (
+        {'share' in navigator && (
           <DropdownMenuItem onClick={handleNativeShare}>
             <Share2 className="h-4 w-4 mr-2" />
             Share...

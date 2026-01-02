@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Trophy, User, Menu, X, Languages, Mic, BookText, MessagesSquare, Search } from "lucide-react";
+import { BookOpen, Home, Trophy, User, Menu, X, Languages, Mic, BookText, MessagesSquare, Search, Brain, Flame, TrendingUp, BookMarked, Gamepad2, Calendar, Library, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -20,11 +20,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/", label: t("home"), icon: Home },
-    { href: "/speak", label: "🗣️ Speaking", icon: Mic },
-    { href: "/vocabulary", label: "📚 Vocabulary", icon: BookText },
-    { href: "/conversations", label: "💬 Conversations", icon: MessagesSquare },
-    { href: "/community", label: "👥 Community", icon: User },
-    { href: "/profile", label: t("profile"), icon: Trophy },
+    { href: "/hindi-learning", label: "🇮🇳 Hindi", icon: BookOpen },
+    { href: "/advanced-hindi", label: "🚀 AI", icon: Brain },
+    { href: "/hindi-mastery", label: "🏆 Mastery", icon: Trophy },
+    { href: "/hindi-fluency", label: "🔥 Fluency", icon: Flame },
+    { href: "/hindi-complete", label: "📊 Progress", icon: TrendingUp },
+    { href: "/hindi-stories", label: "📚 Stories", icon: BookMarked },
+    { href: "/hindi-games", label: "🎮 Games", icon: Gamepad2 },
+    { href: "/hindi-daily", label: "📅 Daily", icon: Calendar },
+    { href: "/hindi-vocabulary", label: "📖 Vocab", icon: Library },
+    { href: "/hindi-conversation", label: "💬 Talk", icon: MessageCircle },
+    { href: "/profile", label: t("profile"), icon: User },
   ];
 
   return (

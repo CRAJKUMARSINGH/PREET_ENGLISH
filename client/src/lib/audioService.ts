@@ -14,11 +14,18 @@ export class AudioService {
   }
 
   private initialize() {
-    // Load voices
-    if (this.synth.getVoices().length === 0) {
-      this.synth.addEventListener('voiceschanged', () => {
+    // Load voices; guard for environments (like tests) where addEventListener may not exist
+    const voices = this.synth.getVoices();
+    if (voices.length === 0) {
+      const synthAny = this.synth as any;
+      if (typeof synthAny.addEventListener === 'function') {
+        synthAny.addEventListener('voiceschanged', () => {
+          this.isInitialized = true;
+        });
+      } else {
+        // Fallback: mark initialized even if we can't subscribe to voice events
         this.isInitialized = true;
-      });
+      }
     } else {
       this.isInitialized = true;
     }
@@ -66,8 +73,10 @@ export class AudioService {
    * Stop current speech
    */
   stop() {
-    if (this.synth.speaking) {
-      this.synth.cancel();
+    // Always request cancel; in some environments `speaking` may not be reliable
+    const synthAny = this.synth as any;
+    if (typeof synthAny.cancel === 'function') {
+      synthAny.cancel();
     }
     this.currentUtterance = null;
   }

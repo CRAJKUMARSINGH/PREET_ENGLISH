@@ -59,6 +59,9 @@ export const progress = sqliteTable("progress", {
 });
 
 // Quiz/Assessment Tables
+// NOTE: These quiz tables are defined for future assessment features.
+// They are not yet wired into server/storage.ts or API routes, but are kept
+// here intentionally as part of the planned data model.
 export const quizzes = sqliteTable("quizzes", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
@@ -98,6 +101,8 @@ export const quizAttempts = sqliteTable("quiz_attempts", {
 });
 
 // Certification Levels
+// NOTE: Certification tracking is a planned feature and the table is currently
+// unused by the live API/storage layer. Kept here to match the product design.
 export const certifications = sqliteTable("certifications", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -109,6 +114,10 @@ export const certifications = sqliteTable("certifications", {
 });
 
 // ============ SIVI-INSPIRED GAMIFICATION FEATURES ============
+// NOTE: The following gamification tables (userStats, achievements,
+// userAchievements, dailyGoals, leaderboard) are not yet exposed via
+// server/routes.ts. They are intentionally present for upcoming work on
+// streaks, XP, achievements, and leaderboards.
 
 // User Stats & Streaks
 export const userStats = sqliteTable("user_stats", {
@@ -171,6 +180,8 @@ export const leaderboard = sqliteTable("leaderboard", {
 });
 
 // Conversation Scenarios (for roleplay practice)
+// NOTE: Scenario data and scenarioProgress are planned to back richer
+// roleplay flows. Currently they are not queried in storage.ts.
 export const scenarios = sqliteTable("scenarios", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),

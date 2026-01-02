@@ -4,6 +4,7 @@ import { CheckCircle, XCircle, Trophy, RotateCcw, ArrowRight } from 'lucide-reac
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { cn } from '@/lib/utils';
+import { SupportCard, inferGrammarCategoryFromText, getGrammarEntryForKey, type GrammarCategoryKey } from '@/components/SupportCard';
 
 interface QuizQuestion {
   id: number;
@@ -22,13 +23,19 @@ interface QuizComponentProps {
   onComplete?: (score: number, percentage: number) => void;
 }
 
-export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: QuizComponentProps) {
+export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: QuizComponentProps): JSX.Element {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState<{ question: number; answer: string; correct: boolean }[]>([]);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [lastErrorCategory, setLastErrorCategory] = useState<GrammarCategoryKey | null>(null);
+  const [errorCounts, setErrorCounts] = useState<Record<GrammarCategoryKey, number>>({
+    articles: 0,
+    prepositions: 0,
+    present_continuous: 0,
+  });
 
   const question = questions[currentQuestion];
   const isLastQuestion = currentQuestion === questions.length - 1;
@@ -45,6 +52,18 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
     const isCorrect = selectedAnswer === question.correctAnswer;
     if (isCorrect) {
       setScore(score + 1);
+      setLastErrorCategory(null);
+    } else {
+      const inferred = inferGrammarCategoryFromText(
+        `${question.question} ${question.explanation} ${question.questionHindi}`
+      );
+      setLastErrorCategory(inferred);
+      if (inferred) {
+        setErrorCounts((prev) => ({
+          ...prev,
+          [inferred]: prev[inferred] + 1,
+        }));
+      }
     }
 
     setAnswers([...answers, {
@@ -74,10 +93,10 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
     setScore(0);
     setAnswers([]);
     setQuizComplete(false);
-  };
-
-  if (quizComplete) {
+    setLastErrorCategory(null);
+    se  if (quizComplete) {
     const passed = percentage >= 70;
+    const hasErrorSummary = Object.values(errorCounts).some((count) => count > 0);
 
     return (
       <motion.div
@@ -138,6 +157,35 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
                 <p className="text-orange-800 dark:text-orange-300 text-center">
                   📖 पाठ को फिर से पढ़ें और दोबारा कोशिश करें। आप कर सकते हैं!
                 </p>
+              </div>
+            )}
+
+            {hasErrorSummary && (
+              <div className="mt-2 text-left bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-2xl p-4">
+                <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                  आपकी आज की आम गलतियाँ (Your common mistakes today)
+                </h4>
+                <ul className="space-y-2 text-xs text-amber-900 dark:text-amber-50">
+                  {(Object.entries(errorCounts) as [GrammarCategoryKey, number][]) 
+                    .filter(([, count]) => count > 0)
+                    .map(([key, count]) => {
+                      const entry = getGrammarEntryForKey(key);
+                      if (!entry) return null;
+                      return (
+                        <li key={key} className="flex flex-col gap-0.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">{entry.category}</span>
+                            <span className="text-[11px] text-amber-800/80 dark:text-amber-200/80">
+                              गलतियाँ: {count}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-amber-800/80 dark:text-amber-200/80">
+                            {entry.hindiExplanation}
+                          </p>
+                        </li>
+                      );
+                    })}
+                </ul>
               </div>
             )}
 
@@ -225,7 +273,7 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={cn(
-                    'p-4 rounded-lg border-2',
+                    'p-4 rounded-lg mb-3 border-2',
                     selectedAnswer === question.correctAnswer
                       ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
                       : 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
@@ -236,6 +284,10 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
                   </p>
                   <p className="text-sm text-muted-foreground">{question.explanation}</p>
                 </motion.div>
+              )}
+
+              {showResult && selectedAnswer !== question.correctAnswer && (
+                <SupportCard categoryKey={lastErrorCategory} />
               )}
 
               <div className="flex gap-3 pt-4">

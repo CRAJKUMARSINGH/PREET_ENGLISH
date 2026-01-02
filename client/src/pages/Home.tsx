@@ -16,6 +16,7 @@ import { ConversationPractice } from "@/components/ConversationPractice";
 import { AITutor } from "@/components/AITutor";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
+import { useUserStats, useDailyGoal, useLeaderboard } from "@/hooks/use-gamification";
 import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare, Bot } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -24,6 +25,9 @@ import { Link } from "wouter";
 export default function Home() {
   const { data: lessons, isLoading: lessonsLoading } = useLessons();
   const { data: progress, isLoading: progressLoading } = useProgress();
+  const { data: userStats } = useUserStats();
+  const { data: dailyGoal } = useDailyGoal();
+  const { data: leaderboard } = useLeaderboard();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'lessons' | 'scenarios'>('lessons');
 
@@ -34,37 +38,56 @@ export default function Home() {
   const totalLessons = lessons?.length || 0;
   const percentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
-  // Mock data for gamification (will be replaced with real API data)
-  const userStats = {
-    currentStreak: 5,
-    longestStreak: 12,
-    xpPoints: 1250,
-    level: 8
-  };
+  // Fallbacks while gamification data is loading or not yet initialized
+  // Coerce API values into non-null numbers for UI components
+  const effectiveUserStats = userStats
+    ? {
+        currentStreak: Number(userStats.currentStreak ?? 0),
+        longestStreak: Number(userStats.longestStreak ?? 0),
+        xpPoints: Number(userStats.xpPoints ?? 0),
+        level: Number(userStats.level ?? 1),
+      }
+    : {
+        currentStreak: 0,
+        longestStreak: 0,
+        xpPoints: 0,
+        level: 1,
+      };
 
-  const dailyGoal = {
-    lessonsTarget: 3,
-    lessonsCompleted: Math.min(completedCount, 3),
-    xpTarget: 50,
-    xpEarned: 35,
-    minutesTarget: 15,
-    minutesSpent: 10
-  };
+  const effectiveDailyGoal = dailyGoal
+    ? {
+        lessonsTarget: Number(dailyGoal.lessonsTarget ?? 3),
+        lessonsCompleted: Number(dailyGoal.lessonsCompleted ?? Math.min(completedCount, 3)),
+        xpTarget: Number(dailyGoal.xpTarget ?? 50),
+        xpEarned: Number(dailyGoal.xpEarned ?? Math.min(completedCount * 5, 50)),
+        minutesTarget: Number(dailyGoal.minutesTarget ?? 15),
+        minutesSpent: Number(dailyGoal.minutesSpent ?? completedCount * 3),
+      }
+    : {
+        lessonsTarget: 3,
+        lessonsCompleted: Math.min(completedCount, 3),
+        xpTarget: 50,
+        xpEarned: Math.min(completedCount * 5, 50),
+        minutesTarget: 15,
+        minutesSpent: completedCount * 3,
+      };
 
   const achievements = [
     { name: 'First Step', nameHindi: 'पहला कदम', description: 'Complete your first lesson', icon: '🎯', xpReward: 10, unlocked: completedCount >= 1 },
-    { name: '3-Day Streak', nameHindi: '3 दिन की स्ट्रीक', description: 'Learn for 3 days in a row', icon: '🔥', xpReward: 30, unlocked: userStats.currentStreak >= 3 },
+    { name: '3-Day Streak', nameHindi: '3 दिन की स्ट्रीक', description: 'Learn for 3 days in a row', icon: '🔥', xpReward: 30, unlocked: effectiveUserStats.currentStreak >= 3 },
     { name: 'Getting Started', nameHindi: 'शुरुआत', description: 'Complete 5 lessons', icon: '📚', xpReward: 25, unlocked: completedCount >= 5 },
     { name: 'Dedicated Learner', nameHindi: 'समर्पित शिक्षार्थी', description: 'Complete 25 lessons', icon: '🌟', xpReward: 100, unlocked: completedCount >= 25 },
   ];
 
-  const leaderboardEntries = [
-    { rank: 1, username: 'राहुल शर्मा', xpEarned: 2450, lessonsCompleted: 45 },
-    { rank: 2, username: 'प्रिया सिंह', xpEarned: 2100, lessonsCompleted: 38 },
-    { rank: 3, username: 'अमित कुमार', xpEarned: 1890, lessonsCompleted: 35 },
-    { rank: 4, username: 'You', xpEarned: userStats.xpPoints, lessonsCompleted: completedCount, isCurrentUser: true },
-    { rank: 5, username: 'नेहा गुप्ता', xpEarned: 1100, lessonsCompleted: 22 },
-  ];
+  const leaderboardEntries = (leaderboard ?? []).map((row, index) => ({
+    rank: index + 1,
+    username: row.user.username,
+    xpEarned: Number(row.xpEarned ?? 0),
+    lessonsCompleted: Number(row.lessonsCompleted ?? 0),
+    isCurrentUser: row.user.id === 1,
+  }));
+
+  const currentUserRank = leaderboardEntries.find((e) => e.isCurrentUser)?.rank;
 
   const scenarios = [
     { id: 1, title: 'Job Interview - Introduction', titleHindi: 'नौकरी इंटरव्यू - परिचय', category: 'job_interview', difficulty: 'Beginner', xpReward: 40, completed: false },
@@ -172,18 +195,18 @@ export default function Home() {
       {/* Gamification Section - Streak & Daily Goal */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <StreakCard 
-          currentStreak={userStats.currentStreak}
-          longestStreak={userStats.longestStreak}
-          xpPoints={userStats.xpPoints}
-          level={userStats.level}
+          currentStreak={effectiveUserStats.currentStreak}
+          longestStreak={effectiveUserStats.longestStreak}
+          xpPoints={effectiveUserStats.xpPoints}
+          level={effectiveUserStats.level}
         />
         <DailyGoalCard 
-          lessonsTarget={dailyGoal.lessonsTarget}
-          lessonsCompleted={dailyGoal.lessonsCompleted}
-          xpTarget={dailyGoal.xpTarget}
-          xpEarned={dailyGoal.xpEarned}
-          minutesTarget={dailyGoal.minutesTarget}
-          minutesSpent={dailyGoal.minutesSpent}
+          lessonsTarget={effectiveDailyGoal.lessonsTarget}
+          lessonsCompleted={effectiveDailyGoal.lessonsCompleted}
+          xpTarget={effectiveDailyGoal.xpTarget}
+          xpEarned={effectiveDailyGoal.xpEarned}
+          minutesTarget={effectiveDailyGoal.minutesTarget}
+          minutesSpent={effectiveDailyGoal.minutesSpent}
         />
       </section>
 
@@ -326,16 +349,20 @@ export default function Home() {
             
             {lessons && lessons.length > 10 && (
               <div className="text-center mt-6">
-                <button className="px-6 py-3 bg-white border rounded-xl font-medium text-primary hover:bg-primary/5 transition-all">
-                  सभी {totalLessons} पाठ देखें →
-                </button>
+                <Link href="/lessons">
+                  <button className="px-6 py-3 bg-white border rounded-xl font-medium text-primary hover:bg-primary/5 transition-all">
+                    सभी {totalLessons} पाठ देखें →
+                  </button>
+                </Link>
               </div>
             )}
           </div>
 
           {/* Leaderboard Sidebar */}
           <div className="lg:col-span-1">
-            <LeaderboardCard entries={leaderboardEntries} currentUserRank={4} />
+            {leaderboardEntries.length > 0 && (
+              <LeaderboardCard entries={leaderboardEntries} currentUserRank={currentUserRank} />
+            )}
           </div>
         </section>
       ) : (

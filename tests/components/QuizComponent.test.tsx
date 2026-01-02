@@ -81,7 +81,7 @@ describe('QuizComponent', () => {
     expect(screen.getByText(/Score: 1\/2/)).toBeInTheDocument();
   });
 
-  it('shows completion screen after all questions', () => {
+  it('shows completion screen after all questions', async () => {
     render(
       <QuizComponent
         lessonId={1}
@@ -95,8 +95,9 @@ describe('QuizComponent', () => {
     fireEvent.click(screen.getByText('Submit Answer'));
     fireEvent.click(screen.getByText(/अगला प्रश्न/));
     
-    // Answer second question
-    fireEvent.click(screen.getByText('True'));
+    // Answer second question (wait for next question to render)
+    const trueOption = await screen.findByText('True');
+    fireEvent.click(trueOption);
     fireEvent.click(screen.getByText('Submit Answer'));
     fireEvent.click(screen.getByText(/देखें परिणाम/));
     

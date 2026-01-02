@@ -9,6 +9,7 @@ import { CelebrationModal } from "@/components/CelebrationModal";
 import { AudioButton } from "@/components/AudioButton";
 import { useLesson, useLessons } from "@/hooks/use-lessons";
 import { useMarkComplete, useProgress } from "@/hooks/use-progress";
+import { useUserStats, useUpdateUserStats, useDailyGoal, useUpdateDailyGoal, useAchievements, useUnlockAchievement } from "@/hooks/use-gamification";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,12 @@ export default function LessonView() {
   const { data: lessonData, isLoading: lessonLoading } = useLesson(id);
   const { data: allLessons } = useLessons();
   const { data: progressList } = useProgress();
+  const { data: userStats } = useUserStats();
+  const { data: dailyGoal } = useDailyGoal();
+  const { data: achievements } = useAchievements();
+  const { mutate: updateUserStats } = useUpdateUserStats();
+  const { mutate: updateDailyGoal } = useUpdateDailyGoal();
+  const { mutate: unlockAchievement } = useUnlockAchievement();
   const { mutate: markComplete, isPending: isMarking } = useMarkComplete();
 
   // Find prev/next lessons
@@ -30,6 +37,23 @@ export default function LessonView() {
   const nextLesson = currentIndex !== -1 && currentIndex < sortedLessons.length - 1 
     ? sortedLessons[currentIndex + 1] 
     : null;
+
+  // Recommended next lesson: first uncompleted lesson in same category after current, else next by order
+  const recommendedNextLesson = (() => {
+    if (!lessonData || sortedLessons.length === 0) return null;
+    const completedIds = new Set((progressList ?? []).filter(p => p.completed).map(p => p.lessonId));
+
+    const sameCategoryNext = sortedLessons.find(l =>
+      l.category === lessonData.category &&
+      l.order > lessonData.order &&
+      !completedIds.has(l.id)
+    );
+    if (sameCategoryNext) return sameCategoryNext;
+
+    // Fallback: first uncompleted lesson after current by order
+    const genericNext = sortedLessons.find(l => l.order > lessonData.order && !completedIds.has(l.id));
+    return genericNext ?? nextLesson;
+  })();
 
   // Scroll to top on load
   useEffect(() => {
@@ -50,8 +74,23 @@ export default function LessonView() {
   const isCompleted = progressList?.some(p => p.lessonId === id && p.completed);
   const progressPercent = sortedLessons.length > 0 ? ((currentIndex + 1) / sortedLessons.length) * 100 : 0;
 
+  const totalCompletedBefore = progressList?.filter(p => p.completed).length || 0;
+
   const handleComplete = () => {
-    if (!id) return;
+    if (!id || !lessonData) return;
+
+    // Compute XP reward based on difficulty
+    const baseXp = (() => {
+      switch (lessonData.difficulty) {
+        case "Advanced":
+          return 20;
+        case "Intermediate":
+          return 15;
+        default:
+          return 10;
+      }
+    })();
+
     markComplete({ lessonId: id, completed: true }, {
       onSuccess: () => {
         setShowCelebration(true);
@@ -60,6 +99,37 @@ export default function LessonView() {
           description: "बहुत अच्छा! आपकी प्रगति सहेज ली गई है।",
           duration: 3000,
         });
+
+        // Update gamification stats (best-effort, ignore if not initialized)
+        if (userStats) {
+          const currentStreak = Number(userStats.currentStreak ?? 0) + 1;
+          const longestStreak = Math.max(Number(userStats.longestStreak ?? 0), currentStreak);
+          updateUserStats({
+            xpPoints: Number(userStats.xpPoints ?? 0) + baseXp,
+            currentStreak,
+            longestStreak,
+            totalLessonsCompleted: Number(userStats.totalLessonsCompleted ?? 0) + 1,
+            totalMinutesLearned: Number(userStats.totalMinutesLearned ?? 0) + 5,
+          });
+        }
+
+        if (dailyGoal) {
+          updateDailyGoal({
+            lessonsCompleted: Number(dailyGoal.lessonsCompleted ?? 0) + 1,
+            xpEarned: Number(dailyGoal.xpEarned ?? 0) + baseXp,
+            minutesSpent: Number(dailyGoal.minutesSpent ?? 0) + 5,
+          });
+        }
+
+        // Unlock "First Steps" achievement on first-ever completed lesson, if present
+        if (totalCompletedBefore === 0 && achievements && achievements.length > 0) {
+          const firstSteps = achievements.find(
+            (a) => a.name === "First Steps" || a.nameHindi === "पहले कदम",
+          );
+          if (firstSteps) {
+            unlockAchievement(firstSteps.id);
+          }
+        }
       }
     });
   };
@@ -264,6 +334,28 @@ export default function LessonView() {
             )}
           </button>
         </div>
+
+        {/* Recommended Next Lesson */}
+        {isCompleted && recommendedNextLesson && (
+          <div className="mb-8 p-4 rounded-2xl border bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
+                अगला सुझावित पाठ (Recommended Next Lesson)
+              </p>
+              <p className="text-base font-medium text-emerald-900 dark:text-emerald-100">
+                {recommendedNextLesson.hindiTitle || recommendedNextLesson.title}
+              </p>
+              <p className="text-xs text-emerald-800/80 dark:text-emerald-300/80 mt-1">
+                श्रेणी: {recommendedNextLesson.category} • स्तर: {recommendedNextLesson.difficulty}
+              </p>
+            </div>
+            <Link href={`/lesson/${recommendedNextLesson.id}`}>
+              <button className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors">
+                अभी शुरू करें
+              </button>
+            </Link>
+          </div>
+        )}
 
         {/* Prev/Next Navigation */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-center justify-between gap-4 mb-8">

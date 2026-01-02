@@ -94,7 +94,9 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
     setAnswers([]);
     setQuizComplete(false);
     setLastErrorCategory(null);
-    se  if (quizComplete) {
+  };
+
+  if (quizComplete) {
     const passed = percentage >= 70;
     const hasErrorSummary = Object.values(errorCounts).some((count) => count > 0);
 

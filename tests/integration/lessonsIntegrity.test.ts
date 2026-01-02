@@ -1,5 +1,4 @@
 import express from 'express';
-import { createServer } from 'http';
 import request from 'supertest';
 import { registerRoutes } from '../../server/routes';
 
@@ -29,8 +28,9 @@ describe('DB-wide lesson integrity via API', () => {
   beforeAll(async () => {
     app = express();
     app.use(express.json());
-    const httpServer = createServer(app);
-    await registerRoutes(httpServer, app);
+    
+    // Register routes without creating HTTP server - supertest will handle this
+    await registerRoutes(null, app);
 
     const listRes = await request(app).get('/api/lessons');
     expect(listRes.status).toBe(200);

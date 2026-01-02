@@ -5,9 +5,9 @@ import { api } from "@shared/routes";
 import { z } from "zod";
 
 export async function registerRoutes(
-  httpServer: Server,
+  httpServer: Server | null,
   app: Express
-): Promise<Server> {
+): Promise<Server | null> {
   
   // Lessons
   app.get(api.lessons.list.path, async (req, res) => {

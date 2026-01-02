@@ -20,8 +20,9 @@
 
 ## Build Configuration
 
-The project includes `netlify.toml` with optimized settings:
+The project includes optimized configuration files:
 
+### `netlify.toml` - Netlify Configuration
 ```toml
 [build]
   publish = "dist/public"
@@ -35,6 +36,16 @@ The project includes `netlify.toml` with optimized settings:
   to = "/index.html"
   status = 200
 ```
+
+### `.gitignore` - Version Control
+- Excludes `node_modules/`, build artifacts, and temporary files
+- Keeps the main database file but ignores backups
+- Optimized for clean deployments
+
+### `.env.example` - Environment Template
+- Shows optional environment variables
+- Copy to `.env` for local development
+- Currently no required environment variables
 
 ## Environment Variables (Optional)
 

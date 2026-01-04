@@ -3,17 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
-import { 
-  BookOpen, 
-  Mic, 
-  MessageCircle, 
-  Trophy, 
-  Target, 
+import {
+  BookOpen,
+  Mic,
+  MessageCircle,
+  Award,
+  Target,
   TrendingUp,
   Heart,
   Star,
   Clock,
-  Award
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -191,7 +190,7 @@ export function HindiLearningDashboard() {
                   {stats.currentStreak} days
                 </p>
               </div>
-              <Trophy className="h-8 w-8 text-orange-500" />
+              <Award className="h-8 w-8 text-orange-500" />
             </div>
             <div className="mt-2 text-xs text-orange-600 dark:text-orange-400">
               Keep it up! • इसे जारी रखें!
@@ -214,8 +213,8 @@ export function HindiLearningDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {modules.map((module) => (
-              <Card 
-                key={module.id} 
+              <Card
+                key={module.id}
                 className={cn(
                   "cursor-pointer transition-all hover:shadow-lg",
                   selectedModule === module.id ? "ring-2 ring-primary" : ""
@@ -267,12 +266,12 @@ export function HindiLearningDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {achievements.map((achievement, index) => (
-              <Card 
+              <Card
                 key={index}
                 className={cn(
                   "transition-all",
-                  achievement.earned 
-                    ? "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-200 dark:border-yellow-800" 
+                  achievement.earned
+                    ? "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-200 dark:border-yellow-800"
                     : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
                 )}
               >
@@ -328,8 +327,8 @@ export function HindiLearningDashboard() {
             </div>
             <TrendingUp className="h-8 w-8 text-indigo-500" />
           </div>
-          <Progress 
-            value={(stats.weeklyProgress / stats.weeklyGoal) * 100} 
+          <Progress
+            value={(stats.weeklyProgress / stats.weeklyGoal) * 100}
             className="mb-2"
           />
           <p className="text-sm text-indigo-600 dark:text-indigo-400">

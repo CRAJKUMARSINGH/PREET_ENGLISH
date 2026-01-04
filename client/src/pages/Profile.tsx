@@ -1,19 +1,57 @@
 import { Layout } from "@/components/Layout";
 import { useProgress } from "@/hooks/use-progress";
-import { User, Award, Calendar, BarChart3, Target, Flame, BookOpen, Heart, Trophy } from "lucide-react";
+import { User, Award, Calendar, BarChart3, Target, Flame, BookOpen, Heart } from "lucide-react";
+import { useMemo } from "react";
+import { ProgressCharts } from "@/components/ProgressCharts";
 
 export default function Profile() {
   const { data: progress } = useProgress();
 
   const completedLessons = progress?.filter(p => p.completed) || [];
   const completedCount = completedLessons.length;
-  
+
   // Mock join date
   const joinDate = new Date().toLocaleDateString('hi-IN', { month: 'long', year: 'numeric' });
 
   // Calculate streak (mock data)
   const currentStreak = Math.min(completedCount, 7);
   const weeklyGoal = Math.min(completedCount, 5);
+
+  const { activityData, categoryData } = useMemo(() => {
+    if (!progress) return { activityData: [], categoryData: [] };
+
+    // 1. Activity Data (Last 7 days)
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return d.toISOString().split('T')[0];
+    }).reverse();
+
+    const activity = last7Days.map(date => {
+      const dayLessons = progress.filter(p => p.completedAt && p.completedAt.startsWith(date));
+      // Assume 100 XP per lesson for now
+      return {
+        date: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
+        xp: dayLessons.length * 100,
+        lessons: dayLessons.length
+      };
+    });
+
+    // 2. Category Data
+    const catMap = new Map<string, number>();
+    progress.filter(p => p.completed).forEach(p => {
+      const cat = p.lesson?.category || 'General';
+      catMap.set(cat, (catMap.get(cat) || 0) + 1);
+    });
+
+    const categories = Array.from(catMap.entries()).map(([name, value], idx) => ({
+      name,
+      value,
+      color: [`#8b5cf6`, `#ea580c`, `#10b981`, `#3b82f6`][idx % 4]
+    }));
+
+    return { activityData: activity, categoryData: categories };
+  }, [progress]);
 
   return (
     <Layout>
@@ -24,7 +62,7 @@ export default function Profile() {
         {/* User Card */}
         <div className="md:col-span-2 bg-white dark:bg-slate-900 rounded-3xl p-8 border shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6">
           <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-primary border-4 border-white shadow-lg">
-             <User className="h-10 w-10" />
+            <User className="h-10 w-10" />
           </div>
           <div className="text-center sm:text-left">
             <h2 className="text-2xl font-bold text-foreground mb-1">विद्यार्थी</h2>
@@ -60,7 +98,7 @@ export default function Profile() {
       {/* Achievement Badges */}
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-yellow-500" />
+          <Award className="h-5 w-5 text-yellow-500" />
           उपलब्धियां (Achievements)
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -91,30 +129,30 @@ export default function Profile() {
         {/* Recent Activity */}
         <section className="bg-white dark:bg-slate-900 rounded-3xl p-8 border shadow-sm">
           <div className="flex items-center gap-2 mb-6 text-foreground font-bold text-xl">
-             <BarChart3 className="h-5 w-5 text-primary" />
-             <h2>सीखने की गतिविधि</h2>
+            <BarChart3 className="h-5 w-5 text-primary" />
+            <h2>सीखने की गतिविधि</h2>
           </div>
-          
+
           <div className="space-y-4">
-             {completedLessons.length > 0 ? (
-               completedLessons.slice(0, 5).map((item) => (
-                 <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <BookOpen className="h-4 w-4 text-primary" />
-                      <span className="font-medium">{item.lesson?.title || 'Lesson'}</span>
-                    </div>
-                    <span className="text-xs text-green-600 dark:text-green-400 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                      ✓ पूर्ण
-                    </span>
-                 </div>
-               ))
-             ) : (
-               <div className="text-center py-8 text-muted-foreground">
-                 <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                 <p>अभी तक कोई गतिविधि नहीं।</p>
-                 <p className="text-sm">अपना पहला पाठ शुरू करें!</p>
-               </div>
-             )}
+            {completedLessons.length > 0 ? (
+              completedLessons.slice(0, 5).map((item) => (
+                <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    <span className="font-medium">{item.lesson?.title || 'Lesson'}</span>
+                  </div>
+                  <span className="text-xs text-green-600 dark:text-green-400 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                    ✓ पूर्ण
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p>अभी तक कोई गतिविधि नहीं।</p>
+                <p className="text-sm">अपना पहला पाठ शुरू करें!</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -129,8 +167,8 @@ export default function Profile() {
             <span className="text-primary">{Math.round((weeklyGoal / 5) * 100)}%</span>
           </div>
           <div className="w-full bg-white dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-6 shadow-sm">
-            <div 
-              className="bg-gradient-to-r from-accent to-primary h-full rounded-full transition-all duration-500" 
+            <div
+              className="bg-gradient-to-r from-accent to-primary h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.min((weeklyGoal / 5) * 100, 100)}%` }}
             />
           </div>
@@ -138,6 +176,13 @@ export default function Profile() {
             हर हफ्ते 5 पाठ पूरा करने से याददाश्त में सुधार होता है। आप बहुत अच्छा कर रहे हैं!
           </p>
         </section>
+      </div>
+
+      <div className="mb-8">
+        <ProgressCharts
+          activityData={activityData}
+          categoryData={categoryData}
+        />
       </div>
 
       {/* Credits Footer */}
@@ -150,6 +195,6 @@ export default function Profile() {
           <Heart className="h-4 w-4 text-red-500 fill-red-500" />
         </div>
       </footer>
-    </Layout>
+    </Layout >
   );
 }

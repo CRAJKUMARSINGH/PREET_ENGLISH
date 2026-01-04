@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  TrendingUp, 
-  Award, 
-  Target, 
+import {
+  TrendingUp,
+  Award,
+  Target,
   Clock,
   BookOpen,
   Mic,
@@ -13,7 +13,6 @@ import {
   Brain,
   Flame,
   Star,
-  Trophy,
   Calendar
 } from 'lucide-react';
 
@@ -85,7 +84,7 @@ export function ProgressDashboard() {
             <div className="text-xs text-blue-600">पाठ पूरे</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <Flame className="w-8 h-8 mx-auto mb-2 text-orange-500" />
@@ -94,7 +93,7 @@ export function ProgressDashboard() {
             <div className="text-xs text-orange-600">दिन की लकीर</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <Star className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
@@ -103,7 +102,7 @@ export function ProgressDashboard() {
             <div className="text-xs text-yellow-600">कुल अंक</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="w-8 h-8 mx-auto mb-2 text-green-500" />
@@ -153,7 +152,7 @@ export function ProgressDashboard() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-500" />
+            <Award className="w-5 h-5 text-yellow-500" />
             Achievements
             <span className="text-sm font-normal text-muted-foreground">
               (उपलब्धियां)
@@ -166,11 +165,10 @@ export function ProgressDashboard() {
             {recentAchievements.map((achievement) => (
               <div
                 key={achievement.id}
-                className={`text-center p-3 rounded-lg border ${
-                  achievement.earned 
-                    ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200' 
-                    : 'bg-gray-50 dark:bg-gray-800 opacity-50'
-                }`}
+                className={`text-center p-3 rounded-lg border ${achievement.earned
+                  ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200'
+                  : 'bg-gray-50 dark:bg-gray-800 opacity-50'
+                  }`}
               >
                 <div className="text-3xl mb-1">{achievement.icon}</div>
                 <div className="text-xs font-medium">{achievement.title}</div>
@@ -202,7 +200,7 @@ export function ProgressDashboard() {
               const height = heights[index];
               return (
                 <div key={day} className="flex flex-col items-center gap-2">
-                  <div 
+                  <div
                     className={`w-8 rounded-t ${height > 0 ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700'}`}
                     style={{ height: `${height}%` }}
                   />

@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Volume2, User, Users, ChevronRight, RotateCcw, CheckCircle, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { dialogues, Dialogue } from "@/data/hindiDialoguesData";
+import { useQuery } from "@tanstack/react-query";
+import { Lesson, ConversationLine } from "@shared/schema";
 
 export function DialoguePractice() {
-  const [selectedDialogue, setSelectedDialogue] = useState<Dialogue | null>(null);
+  const [selectedDialogueId, setSelectedDialogueId] = useState<number | null>(null);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(true);
   const [completedDialogues, setCompletedDialogues] = useState<number[]>([]);
@@ -15,16 +16,27 @@ export function DialoguePractice() {
   const [category, setCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const categories = ["all", "Daily Life", "Restaurant", "Shopping", "Healthcare", "Travel", "Banking", "Professional", "Education", "Social", "Emergency", "Government", "Technology", "Weather", "Hobbies", "Services", "Family", "Entertainment", "Sports", "Health", "Culture", "Housing", "Religion", "Finance", "Food"];
+  const { data: allLessons = [], isLoading } = useQuery<Lesson[]>({
+    queryKey: ["/api/lessons"],
+  });
+
+  const { data: selectedDialogueData, isLoading: isLoadingDialogue } = useQuery<Lesson & { conversationLines: ConversationLine[] }>({
+    queryKey: [`/api/lessons/${selectedDialogueId}`],
+    enabled: !!selectedDialogueId,
+  });
+
+  const dialogues = allLessons.filter(l => l.slug.startsWith('dialogue-'));
 
   const filteredDialogues = dialogues.filter(d => {
-    const matchesDifficulty = difficulty === "all" || d.difficulty === difficulty;
+    const matchesDifficulty = difficulty === "all" || d.difficulty.toLowerCase() === difficulty.toLowerCase();
     const matchesCategory = category === "all" || d.category === category;
     const matchesSearch = d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         d.titleHindi.includes(searchTerm) ||
-                         d.scenario.toLowerCase().includes(searchTerm.toLowerCase());
+      d.hindiTitle?.includes(searchTerm) ||
+      d.description?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesDifficulty && matchesCategory && matchesSearch;
   });
+
+  const categories = ["all", ...Array.from(new Set(dialogues.map(d => d.category)))];
 
   const speakText = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -34,11 +46,11 @@ export function DialoguePractice() {
   };
 
   const nextLine = () => {
-    if (selectedDialogue && currentLineIndex < selectedDialogue.lines.length - 1) {
+    if (selectedDialogueData && currentLineIndex < selectedDialogueData.conversationLines.length - 1) {
       setCurrentLineIndex(currentLineIndex + 1);
-    } else if (selectedDialogue) {
-      if (!completedDialogues.includes(selectedDialogue.id)) {
-        setCompletedDialogues([...completedDialogues, selectedDialogue.id]);
+    } else if (selectedDialogueData) {
+      if (!completedDialogues.includes(selectedDialogueData.id)) {
+        setCompletedDialogues([...completedDialogues, selectedDialogueData.id]);
       }
     }
   };
@@ -47,12 +59,12 @@ export function DialoguePractice() {
     setCurrentLineIndex(0);
   };
 
-  const selectDialogue = (dialogue: Dialogue) => {
-    setSelectedDialogue(dialogue);
+  const selectDialogue = (id: number) => {
+    setSelectedDialogueId(id);
     setCurrentLineIndex(0);
   };
 
-  if (!selectedDialogue) {
+  if (!selectedDialogueId) {
     return (
       <Card className="border-2 border-blue-200 dark:border-blue-800">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
@@ -109,7 +121,7 @@ export function DialoguePractice() {
             {filteredDialogues.map((dialogue) => (
               <div
                 key={dialogue.id}
-                onClick={() => selectDialogue(dialogue)}
+                onClick={() => selectDialogue(dialogue.id)}
                 className="p-4 border-2 rounded-xl cursor-pointer hover:border-blue-400 transition-all bg-white dark:bg-slate-800"
               >
                 <div className="flex items-center justify-between mb-2">
@@ -120,21 +132,19 @@ export function DialoguePractice() {
                       <CheckCircle className="h-4 w-4 text-green-500" />
                     )}
                   </div>
-                  <Badge className={`${
-                    dialogue.difficulty === "beginner" ? "bg-green-500" :
-                    dialogue.difficulty === "intermediate" ? "bg-yellow-500" : "bg-red-500"
-                  }`}>
-                    {dialogue.difficulty === "beginner" ? "शुरुआती" :
-                     dialogue.difficulty === "intermediate" ? "मध्यम" : "उन्नत"}
+                  <Badge className={`${dialogue.difficulty.toLowerCase() === "beginner" ? "bg-green-500" :
+                      dialogue.difficulty.toLowerCase() === "intermediate" ? "bg-yellow-500" : "bg-red-500"
+                    }`}>
+                    {dialogue.difficulty.toLowerCase() === "beginner" ? "शुरुआती" :
+                      dialogue.difficulty.toLowerCase() === "intermediate" ? "मध्यम" : "उन्नत"}
                   </Badge>
                 </div>
                 <p className="text-sm text-blue-600 dark:text-blue-400 font-hindi mb-1">
-                  {dialogue.titleHindi}
+                  {dialogue.hindiTitle}
                 </p>
-                <p className="text-sm text-muted-foreground">{dialogue.scenario}</p>
+                <p className="text-sm text-muted-foreground">{dialogue.description}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <Badge variant="outline">{dialogue.category}</Badge>
-                  <Badge variant="outline">{dialogue.lines.length} वाक्य</Badge>
                 </div>
               </div>
             ))}
@@ -150,8 +160,12 @@ export function DialoguePractice() {
     );
   }
 
-  const currentLine = selectedDialogue.lines[currentLineIndex];
-  const isLastLine = currentLineIndex === selectedDialogue.lines.length - 1;
+  if (isLoadingDialogue || !selectedDialogueData) {
+    return <div className="p-12 text-center animate-pulse">संवाद लोड हो रहा है...</div>;
+  }
+
+  const currentLine = selectedDialogueData.conversationLines[currentLineIndex];
+  const isLastLine = currentLineIndex === selectedDialogueData.conversationLines.length - 1;
 
   return (
     <Card className="border-2 border-blue-200 dark:border-blue-800">
@@ -159,19 +173,19 @@ export function DialoguePractice() {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
             <MessageCircle className="h-6 w-6" />
-            {selectedDialogue.title}
+            {selectedDialogueData.title}
           </CardTitle>
-          <Button variant="outline" size="sm" onClick={() => setSelectedDialogue(null)}>
+          <Button variant="outline" size="sm" onClick={() => setSelectedDialogueId(null)}>
             वापस जाएं
           </Button>
         </div>
         <p className="text-sm text-blue-600 dark:text-blue-400 font-hindi">
-          {selectedDialogue.titleHindi} - {selectedDialogue.scenarioHindi}
+          {selectedDialogueData.hindiTitle}
         </p>
         <div className="flex items-center gap-2 mt-2">
-          <Badge>{selectedDialogue.category}</Badge>
+          <Badge>{selectedDialogueData.category}</Badge>
           <Badge variant="outline">
-            {currentLineIndex + 1} / {selectedDialogue.lines.length}
+            {currentLineIndex + 1} / {selectedDialogueData.conversationLines.length}
           </Badge>
           <Button
             variant="ghost"
@@ -187,40 +201,33 @@ export function DialoguePractice() {
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
             className="bg-blue-600 h-2 rounded-full transition-all"
-            style={{ width: `${((currentLineIndex + 1) / selectedDialogue.lines.length) * 100}%` }}
+            style={{ width: `${((currentLineIndex + 1) / selectedDialogueData.conversationLines.length) * 100}%` }}
           />
         </div>
 
         {/* Current Dialogue Line */}
         <div className="space-y-4">
-          <div className={`p-4 rounded-xl ${
-            currentLine.speaker === selectedDialogue.lines[0].speaker
+          <div className={`p-4 rounded-xl ${currentLine.speaker === selectedDialogueData.conversationLines[0].speaker
               ? "bg-blue-100 dark:bg-blue-900/30 ml-0 mr-12"
               : "bg-green-100 dark:bg-green-900/30 ml-12 mr-0"
-          }`}>
+            }`}>
             <div className="flex items-center gap-2 mb-2">
               <User className="h-4 w-4" />
               <span className="font-bold">{currentLine.speaker}</span>
-              <span className="text-sm text-muted-foreground font-hindi">
-                ({currentLine.speakerHindi})
-              </span>
             </div>
-            
-            <p className="text-lg font-medium mb-2">{currentLine.english}</p>
-            
+
+            <p className="text-lg font-medium mb-2">{currentLine.englishText}</p>
+
             {showTranslation && (
               <p className="text-blue-700 dark:text-blue-300 font-hindi mb-2">
-                {currentLine.hindi}
+                {currentLine.hindiText}
               </p>
             )}
-            
+
             <div className="flex items-center gap-2 mt-3">
-              <Button size="sm" onClick={() => speakText(currentLine.english)}>
+              <Button size="sm" onClick={() => speakText(currentLine.englishText || "")}>
                 <Volume2 className="h-4 w-4 mr-1" /> सुनें
               </Button>
-              <span className="text-xs text-muted-foreground italic">
-                {currentLine.pronunciation}
-              </span>
             </div>
           </div>
         </div>
@@ -230,9 +237,9 @@ export function DialoguePractice() {
           <div className="space-y-2 opacity-60">
             <p className="text-sm font-medium text-muted-foreground">पिछली बातचीत:</p>
             <div className="max-h-32 overflow-y-auto space-y-1">
-              {selectedDialogue.lines.slice(0, currentLineIndex).map((line, idx) => (
+              {selectedDialogueData.conversationLines.slice(0, currentLineIndex).map((line, idx) => (
                 <div key={idx} className="text-sm p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                  <span className="font-medium">{line.speaker}:</span> {line.english}
+                  <span className="font-medium">{line.speaker}:</span> {line.englishText}
                 </div>
               ))}
             </div>

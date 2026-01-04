@@ -4,22 +4,37 @@ import { SpeakingTopicCard } from "@/components/SpeakingTopicCard";
 import { Mic, Search, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { speakingTopics } from '@/data/speakingTopics';
+import { useQuery } from "@tanstack/react-query";
+import { SpeakingTopic } from "@shared/schema";
 
 export default function SpeakingPractice() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { data: speakingTopics = [], isLoading } = useQuery<SpeakingTopic[]>({
+    queryKey: ["/api/speaking-topics"],
+  });
+
   const categories = Array.from(new Set(speakingTopics.map(t => t.category)));
-  
+
   const filteredTopics = speakingTopics.filter(topic => {
     const matchesDifficulty = selectedDifficulty === 'all' || topic.difficulty === selectedDifficulty;
     const matchesCategory = selectedCategory === 'all' || topic.category === selectedCategory;
     const matchesSearch = topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         topic.hindiTitle.includes(searchQuery);
+      topic.hindiTitle?.includes(searchQuery);
     return matchesDifficulty && matchesCategory && matchesSearch;
   });
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -129,7 +144,12 @@ export default function SpeakingPractice() {
       {/* Topics Grid */}
       <div className="space-y-4">
         {filteredTopics.map((topic) => (
-          <SpeakingTopicCard key={topic.id} {...topic} />
+          <SpeakingTopicCard
+            key={topic.id}
+            {...topic}
+            hindiThoughts={topic.hindiThoughts || []}
+            sentenceFrames={topic.sentenceFrames || []}
+          />
         ))}
 
         {filteredTopics.length === 0 && (

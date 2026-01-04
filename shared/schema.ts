@@ -36,6 +36,8 @@ export const vocabulary = sqliteTable("vocabulary", {
   // Enhanced fields for Hindi support
   hindiTranslation: text("hindi_translation"),
   hindiPronunciation: text("hindi_pronunciation"),
+  exampleHindi: text("example_hindi"),
+  usageHindi: text("usage_hindi"),
   audioUrl: text("audio_url"),
 });
 
@@ -72,6 +74,7 @@ export const quizzes = sqliteTable("quizzes", {
   passingScore: integer("passing_score").default(70), // percentage
   timeLimit: integer("time_limit"), // in minutes, null = no limit
   order: integer("order").notNull(),
+  lessonId: integer("lesson_id").references(() => lessons.id),
 });
 
 export const quizQuestions = sqliteTable("quiz_questions", {
@@ -169,6 +172,35 @@ export const dailyGoals = sqliteTable("daily_goals", {
   completed: integer("completed", { mode: "boolean" }).default(false),
 });
 
+// Community Activity Feed
+export const activityFeed = sqliteTable("activity_feed", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  type: text("type").notNull(), // 'ACHIEVEMENT', 'LESSON_COMPLETE', 'STORY_COMPLETE', 'GOAL_MET'
+  referenceId: integer("reference_id"), // Achievement ID, Lesson ID, etc.
+  content: text("content"), // Optional message or formatted text
+  createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+});
+
+// Content Ratings & Feedback
+export const contentRatings = sqliteTable("content_ratings", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  contentType: text("content_type").notNull(), // 'LESSON', 'STORY'
+  contentId: integer("content_id").notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  review: text("review"),
+  createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+});
+
+export const activityFeedRelations = relations(activityFeed, ({ one }) => ({
+  user: one(users, { fields: [activityFeed.userId], references: [users.id] }),
+}));
+
+export const contentRatingsRelations = relations(contentRatings, ({ one }) => ({
+  user: one(users, { fields: [contentRatings.userId], references: [users.id] }),
+}));
+
 // Leaderboard (weekly reset)
 export const leaderboard = sqliteTable("leaderboard", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -186,8 +218,12 @@ export const scenarios = sqliteTable("scenarios", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
   titleHindi: text("title_hindi"),
-  description: text("description"),
+  description: text("description").notNull(),
   descriptionHindi: text("description_hindi"),
+  yourRole: text("your_role"),
+  yourRoleHindi: text("your_role_hindi"),
+  partnerRole: text("partner_role"),
+  partnerRoleHindi: text("partner_role_hindi"),
   category: text("category").notNull(), // job_interview, doctor_visit, restaurant, etc.
   difficulty: text("difficulty").notNull(),
   dialogues: text("dialogues").notNull(), // JSON array of dialogue exchanges
@@ -203,6 +239,70 @@ export const scenarioProgress = sqliteTable("scenario_progress", {
   completed: integer("completed", { mode: "boolean" }).default(false),
   score: integer("score"),
   completedAt: text("completed_at"),
+});
+
+// ============ PHASE 3: CONTENT & PEDAGOGY tables ============
+
+// Vocabulary Progress (SRS)
+export const vocabularyProgress = sqliteTable("vocabulary_progress", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  vocabularyId: integer("vocabulary_id").references(() => vocabulary.id).notNull(),
+  interval: integer("interval").default(0), // days
+  easeFactor: integer("ease_factor").default(250), // 2.5 * 100
+  repetition: integer("repetition").default(0),
+  nextReviewDate: text("next_review_date").notNull(),
+  lastReviewedAt: text("last_reviewed_at").default("CURRENT_TIMESTAMP"),
+});
+
+// Interactive Stories
+export const stories = sqliteTable("stories", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleHindi: text("title_hindi"),
+  description: text("description").notNull(),
+  descriptionHindi: text("description_hindi"),
+  content: text("content").notNull(), // Markdown with parallel markers or JSON
+  contentHindi: text("content_hindi"),
+  imageUrl: text("image_url"),
+  difficulty: text("difficulty").notNull(), // Beginner, Intermediate, Advanced
+  category: text("category").notNull(),
+  order: integer("order").notNull().default(0),
+  vocabulary: text("vocabulary"), // JSON array of terminology
+  xpReward: integer("xp_reward").default(50),
+});
+
+// Listening Lessons
+export const listenings = sqliteTable("listenings", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  titleHindi: text("title_hindi"),
+  description: text("description").notNull(),
+  descriptionHindi: text("description_hindi"),
+  difficulty: text("difficulty").notNull(),
+  category: text("category").notNull(),
+  audioText: text("audio_text").notNull(),
+  audioTextHindi: text("audio_text_hindi"),
+  duration: text("duration"),
+  questions: text("questions").notNull(), // JSON array of questions
+  vocabulary: text("vocabulary"), // JSON array of vocabulary
+  order: integer("order").notNull().default(0),
+});
+
+// Speaking Topics
+export const speakingTopics = sqliteTable("speaking_topics", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  hindiTitle: text("hindi_title"),
+  difficulty: text("difficulty").notNull(),
+  emoji: text("emoji"),
+  category: text("category").notNull(),
+  hindiThoughts: text("hindi_thoughts"), // JSON array
+  sentenceFrames: text("sentence_frames"), // JSON array
+  modelAnswer: text("model_answer"),
+  freePrompt: text("free_prompt"),
+  confidenceTip: text("confidence_tip"),
+  order: integer("order").notNull().default(0),
 });
 
 // Relations
@@ -304,6 +404,17 @@ export const scenarioProgressRelations = relations(scenarioProgress, ({ one }) =
   }),
 }));
 
+export const vocabularyProgressRelations = relations(vocabularyProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [vocabularyProgress.userId],
+    references: [users.id],
+  }),
+  word: one(vocabulary, {
+    fields: [vocabularyProgress.vocabularyId],
+    references: [vocabulary.id],
+  }),
+}));
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertLessonSchema = createInsertSchema(lessons).omit({ id: true });
@@ -321,6 +432,12 @@ export const insertDailyGoalSchema = createInsertSchema(dailyGoals).omit({ id: t
 export const insertLeaderboardSchema = createInsertSchema(leaderboard).omit({ id: true });
 export const insertScenarioSchema = createInsertSchema(scenarios).omit({ id: true });
 export const insertScenarioProgressSchema = createInsertSchema(scenarioProgress).omit({ id: true });
+export const insertVocabularyProgressSchema = createInsertSchema(vocabularyProgress).omit({ id: true, lastReviewedAt: true });
+export const insertStorySchema = createInsertSchema(stories).omit({ id: true });
+export const insertListeningSchema = createInsertSchema(listenings).omit({ id: true });
+export const insertSpeakingTopicSchema = createInsertSchema(speakingTopics).omit({ id: true });
+export const insertActivityFeedSchema = createInsertSchema(activityFeed).omit({ id: true, createdAt: true });
+export const insertContentRatingSchema = createInsertSchema(contentRatings).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -350,3 +467,15 @@ export type Leaderboard = typeof leaderboard.$inferSelect;
 export type Scenario = typeof scenarios.$inferSelect;
 export type InsertScenario = z.infer<typeof insertScenarioSchema>;
 export type ScenarioProgress = typeof scenarioProgress.$inferSelect;
+export type VocabularyProgress = typeof vocabularyProgress.$inferSelect;
+export type InsertVocabularyProgress = z.infer<typeof insertVocabularyProgressSchema>;
+export type Story = typeof stories.$inferSelect;
+export type InsertStory = z.infer<typeof insertStorySchema>;
+export type Listening = typeof listenings.$inferSelect;
+export type InsertListening = z.infer<typeof insertListeningSchema>;
+export type SpeakingTopic = typeof speakingTopics.$inferSelect;
+export type InsertSpeakingTopic = z.infer<typeof insertSpeakingTopicSchema>;
+export type ActivityFeed = typeof activityFeed.$inferSelect;
+export type InsertActivityFeed = z.infer<typeof insertActivityFeedSchema>;
+export type ContentRating = typeof contentRatings.$inferSelect;
+export type InsertContentRating = z.infer<typeof insertContentRatingSchema>;

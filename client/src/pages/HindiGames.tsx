@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Gamepad2, Shuffle, PenLine, Mic, Trophy, Star, Target } from "lucide-react";
+import { Gamepad2, Shuffle, PenLine, Mic, Award, Star, Target } from "lucide-react";
 import { GrammarMatchGame } from "@/components/HindiGames/GrammarMatchGame";
 import { WordScramble } from "@/components/HindiGames/WordScramble";
 import { FillBlanks } from "@/components/HindiGames/FillBlanks";
@@ -121,7 +121,7 @@ export default function HindiGames() {
         <Card className="border-2 border-yellow-200 dark:border-yellow-800">
           <CardContent className="p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Trophy className="h-6 w-6 text-yellow-600" />
+              <Award className="h-6 w-6 text-yellow-600" />
               <h3 className="font-bold text-yellow-700 dark:text-yellow-300">
                 उपलब्धियाँ (Achievements)
               </h3>

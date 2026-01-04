@@ -5,8 +5,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://reactjs.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Made with ❤️ in India](https://img.shields.io/badge/Made%20with%20%E2%9D%A4%EF%B8%8F%20in-India-orange.svg)](https://en.wikipedia.org/wiki/India)
-![Preet English Banner](https://via.placeholder.com/1200x600/4F46E5/FFFFFF?text=Preet+English+-+Learn+English+with+Hindi+Support)  
-*(Replace with custom banner featuring Saraswati mascot)*
+
 
 A comprehensive full-stack English learning application designed specifically for Hindi speakers, featuring interactive lessons, progress tracking, gamification, and advanced speaking practice.
 
@@ -18,19 +17,8 @@ A comprehensive full-stack English learning application designed specifically fo
 
 ## 📸 Screenshots
 
-### Dashboard & Progress Tracking
-![Dashboard](https://via.placeholder.com/1200x800/4F46E5/FFFFFF?text=Dashboard+with+Gamification)
+*(Screenshots of the application will be added here. Run the app locally to see the beautiful UI in action!)*
 
-### Lesson Page with Hindi Translations
-![Lesson View](https://via.placeholder.com/1200x800/10B981/FFFFFF?text=Split-View+Lesson+Page)
-
-### Speaking Practice with Video Guide
-![Speaking Practice](https://via.placeholder.com/1200x800/F59E0B/FFFFFF?text=4-Step+Speaking+Practice)
-
-### Mobile View - Vocabulary & Categories
-![Mobile View](https://via.placeholder.com/600x1200/8B5CF6/FFFFFF?text=Mobile+Responsive+Design)
-
-*(Tip: Replace these placeholders with actual screenshots from your app!)*
 
 ## ✨ Features
 
@@ -258,7 +246,6 @@ NODE_ENV=production
 - 📊 **Advanced Analytics** dashboard
 - 🌐 **Multi-language Support** (add more Indian languages)
 
-<<<<<<< HEAD
 ## 🏷️ GitHub Topics
 
 Add these topics to your repository for better discoverability:
@@ -276,8 +263,6 @@ Add these topics to your repository for better discoverability:
 - `vocabulary-builder`
 - `hindi-to-english`
 
-=======
->>>>>>> 86f3e6f4325f409756632003c48a399ed7e6b4e7
 ## 🤝 Contributing
 
 We welcome contributions! Especially:
@@ -294,7 +279,6 @@ We welcome contributions! Especially:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-<<<<<<< HEAD
 ### Contribution Guidelines:
 - Follow the existing code style and patterns
 - Add TypeScript types for new components
@@ -327,8 +311,6 @@ npm run dev
 - 📊 **Analytics**: Improve tracking and insights
 - 🔊 **Audio**: Add pronunciation features
 
-=======
->>>>>>> 86f3e6f4325f409756632003c48a399ed7e6b4e7
 ## 🌟 Show Your Support
 
 Give a ⭐️ if this project helped you or if you like the idea!
@@ -376,23 +358,6 @@ To add your own screenshots:
 3. Create a `/screenshots` folder in your repo
 4. Upload images and update README links
 
-<<<<<<< HEAD
-=======
-## 🏷️ GitHub Topics
-
-Add these topics to your repository for better discoverability:
-- `english-learning`
-- `hindi`
-- `language-app`
-- `react`
-- `typescript`
-- `education`
-- `fullstack`
-- `gamification`
-- `learning-platform`
-- `india`
-
->>>>>>> 86f3e6f4325f409756632003c48a399ed7e6b4e7
 ## 📦 Release Notes
 
 ### v1.0.0 (Current)
@@ -404,11 +369,8 @@ Add these topics to your repository for better discoverability:
 - ✅ Dark mode support
 - ✅ Mobile responsive design
 - ✅ Saraswati mascot integration
-<<<<<<< HEAD
 - ✅ Error boundaries for better UX
 - ✅ SEO optimization with meta tags
-=======
->>>>>>> 86f3e6f4325f409756632003c48a399ed7e6b4e7
 
 ---
 
@@ -421,8 +383,4 @@ AAO, PWD Udaipur
 
 **Happy Learning! 🎓✨**
 
-<<<<<<< HEAD
 *Making English accessible to every Hindi speaker in India* 🇮🇳
-=======
-*Making English accessible to every Hindi speaker in India* 🇮🇳
->>>>>>> 86f3e6f4325f409756632003c48a399ed7e6b4e7

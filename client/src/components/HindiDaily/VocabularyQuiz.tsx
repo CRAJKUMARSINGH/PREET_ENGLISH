@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, CheckCircle, XCircle, RotateCcw, Trophy, Clock, Zap } from "lucide-react";
+import { Brain, CheckCircle, XCircle, RotateCcw, Award, Clock, Zap } from "lucide-react";
 
 interface QuizQuestion {
   id: number;
@@ -14,96 +14,126 @@ interface QuizQuestion {
 }
 
 const quizQuestions: QuizQuestion[] = [
-  { id: 1, word: "Abundant", hindi: "प्रचुर", options: [
-    { text: "Scarce", textHindi: "दुर्लभ" },
-    { text: "Plentiful", textHindi: "प्रचुर" },
-    { text: "Empty", textHindi: "खाली" },
-    { text: "Small", textHindi: "छोटा" }
-  ], correctIndex: 1, category: "Adjectives" },
-  { id: 2, word: "Brave", hindi: "बहादुर", options: [
-    { text: "Cowardly", textHindi: "कायर" },
-    { text: "Weak", textHindi: "कमज़ोर" },
-    { text: "Courageous", textHindi: "साहसी" },
-    { text: "Scared", textHindi: "डरा हुआ" }
-  ], correctIndex: 2, category: "Adjectives" },
-  { id: 3, word: "Commence", hindi: "शुरू करना", options: [
-    { text: "End", textHindi: "समाप्त" },
-    { text: "Stop", textHindi: "रुकना" },
-    { text: "Begin", textHindi: "शुरू" },
-    { text: "Pause", textHindi: "रुकावट" }
-  ], correctIndex: 2, category: "Verbs" },
-  { id: 4, word: "Diminish", hindi: "कम होना", options: [
-    { text: "Increase", textHindi: "बढ़ना" },
-    { text: "Grow", textHindi: "बढ़ना" },
-    { text: "Expand", textHindi: "फैलना" },
-    { text: "Decrease", textHindi: "घटना" }
-  ], correctIndex: 3, category: "Verbs" },
-  { id: 5, word: "Enormous", hindi: "विशाल", options: [
-    { text: "Tiny", textHindi: "छोटा" },
-    { text: "Huge", textHindi: "विशाल" },
-    { text: "Small", textHindi: "छोटा" },
-    { text: "Little", textHindi: "थोड़ा" }
-  ], correctIndex: 1, category: "Adjectives" },
-  { id: 6, word: "Frequently", hindi: "अक्सर", options: [
-    { text: "Rarely", textHindi: "कभी-कभी" },
-    { text: "Never", textHindi: "कभी नहीं" },
-    { text: "Often", textHindi: "अक्सर" },
-    { text: "Sometimes", textHindi: "कभी-कभी" }
-  ], correctIndex: 2, category: "Adverbs" },
-  { id: 7, word: "Genuine", hindi: "असली", options: [
-    { text: "Fake", textHindi: "नकली" },
-    { text: "False", textHindi: "झूठा" },
-    { text: "Authentic", textHindi: "प्रामाणिक" },
-    { text: "Artificial", textHindi: "कृत्रिम" }
-  ], correctIndex: 2, category: "Adjectives" },
-  { id: 8, word: "Hazardous", hindi: "खतरनाक", options: [
-    { text: "Safe", textHindi: "सुरक्षित" },
-    { text: "Dangerous", textHindi: "खतरनाक" },
-    { text: "Secure", textHindi: "सुरक्षित" },
-    { text: "Protected", textHindi: "संरक्षित" }
-  ], correctIndex: 1, category: "Adjectives" },
-  { id: 9, word: "Imitate", hindi: "नकल करना", options: [
-    { text: "Create", textHindi: "बनाना" },
-    { text: "Invent", textHindi: "आविष्कार" },
-    { text: "Copy", textHindi: "नकल" },
-    { text: "Originate", textHindi: "उत्पन्न" }
-  ], correctIndex: 2, category: "Verbs" },
-  { id: 10, word: "Jubilant", hindi: "उल्लासित", options: [
-    { text: "Sad", textHindi: "दुखी" },
-    { text: "Joyful", textHindi: "खुश" },
-    { text: "Angry", textHindi: "गुस्सा" },
-    { text: "Depressed", textHindi: "उदास" }
-  ], correctIndex: 1, category: "Adjectives" },
-  { id: 11, word: "Keen", hindi: "उत्सुक", options: [
-    { text: "Uninterested", textHindi: "उदासीन" },
-    { text: "Bored", textHindi: "ऊबा हुआ" },
-    { text: "Eager", textHindi: "उत्सुक" },
-    { text: "Lazy", textHindi: "आलसी" }
-  ], correctIndex: 2, category: "Adjectives" },
-  { id: 12, word: "Luminous", hindi: "चमकदार", options: [
-    { text: "Dark", textHindi: "अंधेरा" },
-    { text: "Dim", textHindi: "धुंधला" },
-    { text: "Bright", textHindi: "चमकदार" },
-    { text: "Dull", textHindi: "फीका" }
-  ], correctIndex: 2, category: "Adjectives" },
-  { id: 13, word: "Magnificent", hindi: "शानदार", options: [
-    { text: "Ordinary", textHindi: "साधारण" },
-    { text: "Splendid", textHindi: "शानदार" },
-    { text: "Plain", textHindi: "सादा" },
-    { text: "Simple", textHindi: "सरल" }
-  ], correctIndex: 1, category: "Adjectives" },
-  { id: 14, word: "Neglect", hindi: "उपेक्षा करना", options: [
-    { text: "Care for", textHindi: "देखभाल" },
-    { text: "Ignore", textHindi: "अनदेखा" },
-    { text: "Attend", textHindi: "ध्यान देना" },
-    { text: "Nurture", textHindi: "पोषण" }
-  ], correctIndex: 1, category: "Verbs" },
-  { id: 15, word: "Optimistic", hindi: "आशावादी", options: [
-    { text: "Pessimistic", textHindi: "निराशावादी" },
-    { text: "Hopeful", textHindi: "आशावान" },
-    { text: "Negative", textHindi: "नकारात्मक" },
-    { text: "Doubtful", textHindi: "संदेहपूर्ण" }
-  ], correctIndex: 1, category: "Adjectives" },
+  {
+    id: 1, word: "Abundant", hindi: "प्रचुर", options: [
+      { text: "Scarce", textHindi: "दुर्लभ" },
+      { text: "Plentiful", textHindi: "प्रचुर" },
+      { text: "Empty", textHindi: "खाली" },
+      { text: "Small", textHindi: "छोटा" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
+  {
+    id: 2, word: "Brave", hindi: "बहादुर", options: [
+      { text: "Cowardly", textHindi: "कायर" },
+      { text: "Weak", textHindi: "कमज़ोर" },
+      { text: "Courageous", textHindi: "साहसी" },
+      { text: "Scared", textHindi: "डरा हुआ" }
+    ], correctIndex: 2, category: "Adjectives"
+  },
+  {
+    id: 3, word: "Commence", hindi: "शुरू करना", options: [
+      { text: "End", textHindi: "समाप्त" },
+      { text: "Stop", textHindi: "रुकना" },
+      { text: "Begin", textHindi: "शुरू" },
+      { text: "Pause", textHindi: "रुकावट" }
+    ], correctIndex: 2, category: "Verbs"
+  },
+  {
+    id: 4, word: "Diminish", hindi: "कम होना", options: [
+      { text: "Increase", textHindi: "बढ़ना" },
+      { text: "Grow", textHindi: "बढ़ना" },
+      { text: "Expand", textHindi: "फैलना" },
+      { text: "Decrease", textHindi: "घटना" }
+    ], correctIndex: 3, category: "Verbs"
+  },
+  {
+    id: 5, word: "Enormous", hindi: "विशाल", options: [
+      { text: "Tiny", textHindi: "छोटा" },
+      { text: "Huge", textHindi: "विशाल" },
+      { text: "Small", textHindi: "छोटा" },
+      { text: "Little", textHindi: "थोड़ा" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
+  {
+    id: 6, word: "Frequently", hindi: "अक्सर", options: [
+      { text: "Rarely", textHindi: "कभी-कभी" },
+      { text: "Never", textHindi: "कभी नहीं" },
+      { text: "Often", textHindi: "अक्सर" },
+      { text: "Sometimes", textHindi: "कभी-कभी" }
+    ], correctIndex: 2, category: "Adverbs"
+  },
+  {
+    id: 7, word: "Genuine", hindi: "असली", options: [
+      { text: "Fake", textHindi: "नकली" },
+      { text: "False", textHindi: "झूठा" },
+      { text: "Authentic", textHindi: "प्रामाणिक" },
+      { text: "Artificial", textHindi: "कृत्रिम" }
+    ], correctIndex: 2, category: "Adjectives"
+  },
+  {
+    id: 8, word: "Hazardous", hindi: "खतरनाक", options: [
+      { text: "Safe", textHindi: "सुरक्षित" },
+      { text: "Dangerous", textHindi: "खतरनाक" },
+      { text: "Secure", textHindi: "सुरक्षित" },
+      { text: "Protected", textHindi: "संरक्षित" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
+  {
+    id: 9, word: "Imitate", hindi: "नकल करना", options: [
+      { text: "Create", textHindi: "बनाना" },
+      { text: "Invent", textHindi: "आविष्कार" },
+      { text: "Copy", textHindi: "नकल" },
+      { text: "Originate", textHindi: "उत्पन्न" }
+    ], correctIndex: 2, category: "Verbs"
+  },
+  {
+    id: 10, word: "Jubilant", hindi: "उल्लासित", options: [
+      { text: "Sad", textHindi: "दुखी" },
+      { text: "Joyful", textHindi: "खुश" },
+      { text: "Angry", textHindi: "गुस्सा" },
+      { text: "Depressed", textHindi: "उदास" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
+  {
+    id: 11, word: "Keen", hindi: "उत्सुक", options: [
+      { text: "Uninterested", textHindi: "उदासीन" },
+      { text: "Bored", textHindi: "ऊबा हुआ" },
+      { text: "Eager", textHindi: "उत्सुक" },
+      { text: "Lazy", textHindi: "आलसी" }
+    ], correctIndex: 2, category: "Adjectives"
+  },
+  {
+    id: 12, word: "Luminous", hindi: "चमकदार", options: [
+      { text: "Dark", textHindi: "अंधेरा" },
+      { text: "Dim", textHindi: "धुंधला" },
+      { text: "Bright", textHindi: "चमकदार" },
+      { text: "Dull", textHindi: "फीका" }
+    ], correctIndex: 2, category: "Adjectives"
+  },
+  {
+    id: 13, word: "Magnificent", hindi: "शानदार", options: [
+      { text: "Ordinary", textHindi: "साधारण" },
+      { text: "Splendid", textHindi: "शानदार" },
+      { text: "Plain", textHindi: "सादा" },
+      { text: "Simple", textHindi: "सरल" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
+  {
+    id: 14, word: "Neglect", hindi: "उपेक्षा करना", options: [
+      { text: "Care for", textHindi: "देखभाल" },
+      { text: "Ignore", textHindi: "अनदेखा" },
+      { text: "Attend", textHindi: "ध्यान देना" },
+      { text: "Nurture", textHindi: "पोषण" }
+    ], correctIndex: 1, category: "Verbs"
+  },
+  {
+    id: 15, word: "Optimistic", hindi: "आशावादी", options: [
+      { text: "Pessimistic", textHindi: "निराशावादी" },
+      { text: "Hopeful", textHindi: "आशावान" },
+      { text: "Negative", textHindi: "नकारात्मक" },
+      { text: "Doubtful", textHindi: "संदेहपूर्ण" }
+    ], correctIndex: 1, category: "Adjectives"
+  },
 ];
 
 export function VocabularyQuiz() {
@@ -149,7 +179,7 @@ export function VocabularyQuiz() {
     setSelectedAnswer(index);
     setShowResult(true);
     setQuestionsAnswered(questionsAnswered + 1);
-    
+
     if (index === currentQuestion.correctIndex) {
       const timeBonus = Math.floor(timeLeft / 3);
       setScore(score + 10 + timeBonus);
@@ -191,7 +221,7 @@ export function VocabularyQuiz() {
               <span>तेज़ उत्तर = बोनस अंक</span>
             </div>
             <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-              <Trophy className="h-5 w-5 mx-auto text-yellow-600 mb-1" />
+              <Award className="h-5 w-5 mx-auto text-yellow-600 mb-1" />
               <span>स्ट्रीक बनाएं</span>
             </div>
           </div>
@@ -209,14 +239,14 @@ export function VocabularyQuiz() {
       <Card className="border-2 border-rose-200 dark:border-rose-800">
         <CardHeader className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20">
           <CardTitle className="flex items-center gap-2 text-rose-700 dark:text-rose-300">
-            <Trophy className="h-6 w-6" />
+            <Award className="h-6 w-6" />
             परिणाम (Results)
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 text-center space-y-6">
           <div className="text-6xl font-bold text-rose-600">{score}</div>
           <div className="text-xl">अंक (Points)</div>
-          
+
           <Badge className={`text-lg py-2 px-4 ${percentage >= 70 ? 'bg-green-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-orange-500'}`}>
             {percentage >= 70 ? '🎉 उत्कृष्ट!' : percentage >= 40 ? '👍 अच्छा!' : '📚 और अभ्यास करें!'}
           </Badge>
@@ -261,15 +291,14 @@ export function VocabularyQuiz() {
               key={index}
               onClick={() => handleAnswer(index)}
               disabled={showResult}
-              className={`p-4 rounded-xl border-2 text-left transition-all ${
-                showResult
+              className={`p-4 rounded-xl border-2 text-left transition-all ${showResult
                   ? index === currentQuestion.correctIndex
                     ? "bg-green-100 border-green-500 text-green-700"
                     : index === selectedAnswer
-                    ? "bg-red-100 border-red-500 text-red-700"
-                    : "bg-slate-50 border-slate-200"
+                      ? "bg-red-100 border-red-500 text-red-700"
+                      : "bg-slate-50 border-slate-200"
                   : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-rose-400"
-              }`}
+                }`}
             >
               <span className="font-medium">{option.text}</span>
               <span className="text-orange-600 dark:text-orange-400 font-hindi text-sm block">
@@ -281,11 +310,10 @@ export function VocabularyQuiz() {
 
         {/* Result */}
         {showResult && (
-          <div className={`p-4 rounded-xl border-2 flex items-center gap-3 ${
-            selectedAnswer === currentQuestion.correctIndex
+          <div className={`p-4 rounded-xl border-2 flex items-center gap-3 ${selectedAnswer === currentQuestion.correctIndex
               ? "bg-green-50 border-green-300"
               : "bg-red-50 border-red-300"
-          }`}>
+            }`}>
             {selectedAnswer === currentQuestion.correctIndex ? (
               <>
                 <CheckCircle className="h-6 w-6 text-green-600" />

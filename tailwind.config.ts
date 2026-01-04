@@ -10,76 +10,80 @@ export default {
         md: ".375rem", /* 6px */
         sm: ".1875rem", /* 3px */
       },
-      colors: {
-        // Flat / base colors (regular buttons)
-        background: "hsl(var(--background) / <alpha-value>)",
-        foreground: "hsl(var(--foreground) / <alpha-value>)",
-        border: "hsl(var(--border) / <alpha-value>)",
-        input: "hsl(var(--input) / <alpha-value>)",
-        card: {
-          DEFAULT: "hsl(var(--card) / <alpha-value>)",
-          foreground: "hsl(var(--card-foreground) / <alpha-value>)",
-          border: "hsl(var(--card-border) / <alpha-value>)",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
-          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
-          border: "hsl(var(--popover-border) / <alpha-value>)",
-        },
+        colors: {
+        // Hulu + Mysivi Inspired "Premium Comfort" Palette
+        background: "hsl(220 15% 6%)", // Deep dark background
+        foreground: "hsl(220 10% 95%)", // White-ish text
+        
+        // Brand Colors
         primary: {
-          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
-          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
-          border: "var(--primary-border)",
+          DEFAULT: "hsl(142 70% 50%)", // Hulu Green-ish (Vibrant)
+          foreground: "hsl(220 15% 6%)", // Dark text on green
+          hover: "hsl(142 70% 45%)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
-          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
-          border: "var(--secondary-border)",
+          DEFAULT: "hsl(217 30% 18%)", // Dark Blue/Grey for cards
+          foreground: "hsl(220 10% 95%)",
+        },
+        
+        // Semantics
+        destructive: {
+          DEFAULT: "hsl(0 80% 60%)",
+          foreground: "hsl(0 0% 100%)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
-          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
-          border: "var(--muted-border)",
+          DEFAULT: "hsl(217 15% 25%)",
+          foreground: "hsl(215 15% 70%)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
-          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
-          border: "var(--accent-border)",
+          DEFAULT: "hsl(142 70% 50%)", 
+          foreground: "hsl(220 15% 6%)",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
-          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
-          border: "var(--destructive-border)",
+        
+        // UI Components
+        card: {
+          DEFAULT: "hsl(220 20% 10%)", // Slightly lighter than bg
+          foreground: "hsl(220 10% 95%)",
+          border: "hsl(217 20% 20%)",
         },
-        ring: "hsl(var(--ring) / <alpha-value>)",
+        popover: {
+          DEFAULT: "hsl(220 20% 10%)",
+          foreground: "hsl(220 10% 95%)",
+        },
+        border: "hsl(217 20% 20%)",
+        input: "hsl(217 20% 15%)",
+        ring: "hsl(142 70% 50%)",
+        
+        // Chart / Data Viz
         chart: {
-          "1": "hsl(var(--chart-1) / <alpha-value>)",
-          "2": "hsl(var(--chart-2) / <alpha-value>)",
-          "3": "hsl(var(--chart-3) / <alpha-value>)",
-          "4": "hsl(var(--chart-4) / <alpha-value>)",
-          "5": "hsl(var(--chart-5) / <alpha-value>)",
+          "1": "hsl(142 70% 50%)",
+          "2": "hsl(190 80% 50%)",
+          "3": "hsl(280 60% 60%)",
+          "4": "hsl(35 90% 60%)",
+          "5": "hsl(0 80% 60%)",
         },
+        
         sidebar: {
-          ring: "hsl(var(--sidebar-ring) / <alpha-value>)",
-          DEFAULT: "hsl(var(--sidebar) / <alpha-value>)",
-          foreground: "hsl(var(--sidebar-foreground) / <alpha-value>)",
-          border: "hsl(var(--sidebar-border) / <alpha-value>)",
+          DEFAULT: "hsl(220 20% 8%)",
+          foreground: "hsl(220 10% 90%)",
+          primary: "hsl(142 70% 50%)",
+          "primary-foreground": "hsl(220 15% 6%)",
+          accent: "hsl(217 20% 15%)",
+          "accent-foreground": "hsl(220 10% 95%)",
+          border: "hsl(217 20% 15%)",
+          ring: "hsl(142 70% 50%)",
         },
-        "sidebar-primary": {
-          DEFAULT: "hsl(var(--sidebar-primary) / <alpha-value>)",
-          foreground: "hsl(var(--sidebar-primary-foreground) / <alpha-value>)",
-          border: "var(--sidebar-primary-border)",
-        },
-        "sidebar-accent": {
-          DEFAULT: "hsl(var(--sidebar-accent) / <alpha-value>)",
-          foreground: "hsl(var(--sidebar-accent-foreground) / <alpha-value>)",
-          border: "var(--sidebar-accent-border)"
+
+        // Legacy/Special
+        saffron: { // Kept for Indian context if needed, but muted
+          DEFAULT: "hsl(35 90% 50%)",
+          foreground: "hsl(220 15% 6%)",
         },
         status: {
-          online: "rgb(34 197 94)",
-          away: "rgb(245 158 11)",
-          busy: "rgb(239 68 68)",
-          offline: "rgb(156 163 175)",
+          online: "hsl(142 70% 50%)",
+          away: "hsl(35 90% 50%)",
+          busy: "hsl(0 80% 60%)",
+          offline: "hsl(217 15% 50%)",
         },
       },
       fontFamily: {

@@ -1,4 +1,4 @@
-import { Award, Star, Trophy, BookOpen, Target, Zap } from "lucide-react";
+import { Award, Star, BookOpen, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CertificationCardProps {
@@ -9,9 +9,9 @@ interface CertificationCardProps {
   totalQuizzes: number;
 }
 
-export function CertificationCard({ 
-  level, 
-  lessonsCompleted, 
+export function CertificationCard({
+  level,
+  lessonsCompleted,
   totalLessons,
   quizzesPassed,
   totalQuizzes
@@ -51,7 +51,7 @@ export function CertificationCard({
 
   const config = levelConfig[level];
   const Icon = config.icon;
-  
+
   const lessonProgress = Math.min((lessonsCompleted / config.requiredLessons) * 100, 100);
   const quizProgress = Math.min((quizzesPassed / config.requiredQuizzes) * 100, 100);
   const overallProgress = (lessonProgress + quizProgress) / 2;
@@ -66,8 +66,8 @@ export function CertificationCard({
       {/* Badge Icon */}
       <div className={cn(
         "w-16 h-16 rounded-2xl flex items-center justify-center mb-4",
-        isUnlocked 
-          ? `bg-gradient-to-br ${config.color} shadow-lg` 
+        isUnlocked
+          ? `bg-gradient-to-br ${config.color} shadow-lg`
           : "bg-slate-200 dark:bg-slate-700"
       )}>
         {isUnlocked ? (
@@ -94,7 +94,7 @@ export function CertificationCard({
             <span className="font-medium">{lessonsCompleted}/{config.requiredLessons}</span>
           </div>
           <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
                 isUnlocked ? `bg-gradient-to-r ${config.color}` : "bg-slate-400"
@@ -110,7 +110,7 @@ export function CertificationCard({
             <span className="font-medium">{quizzesPassed}/{config.requiredQuizzes}</span>
           </div>
           <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
                 isUnlocked ? `bg-gradient-to-r ${config.color}` : "bg-slate-400"

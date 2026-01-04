@@ -4,6 +4,9 @@ import {
   quizzes, quizQuestions, quizAttempts,
   userStats, achievements, userAchievements, dailyGoals, leaderboard,
   scenarios, scenarioProgress, certifications,
+  vocabularyProgress, stories,
+  listenings, speakingTopics,
+  activityFeed, contentRatings,
   type User, type InsertUser,
   type Lesson, type InsertLesson,
   type Vocabulary, type InsertVocabulary,
@@ -18,9 +21,19 @@ import {
   type Leaderboard,
   type Scenario, type InsertScenario,
   type ScenarioProgress,
-  type Certification, type InsertCertification
+  type Certification, type InsertCertification,
+  type VocabularyProgress, type InsertVocabularyProgress,
+  type Story, type InsertStory,
+  type Listening, type InsertListening,
+  type SpeakingTopic, type InsertSpeakingTopic,
+  type ActivityFeed, type InsertActivityFeed,
+  type ContentRating, type InsertContentRating
 } from "@shared/schema";
+import session from "express-session";
+import createMemoryStore from "memorystore";
 import { eq, and } from "drizzle-orm";
+
+const MemoryStore = createMemoryStore(session);
 
 export interface IStorage {
   // Users
@@ -35,6 +48,7 @@ export interface IStorage {
 
   // Vocabulary
   getVocabularyForLesson(lessonId: number): Promise<Vocabulary[]>;
+  getVocabularyByCategory(category: string): Promise<Vocabulary[]>;
   createVocabulary(vocab: InsertVocabulary): Promise<Vocabulary>;
 
   // Progress
@@ -52,6 +66,7 @@ export interface IStorage {
   createQuizQuestion(question: InsertQuizQuestion): Promise<QuizQuestion>;
   submitQuizAttempt(attempt: InsertQuizAttempt): Promise<QuizAttempt>;
   getUserQuizAttempts(userId: number, quizId?: number): Promise<QuizAttempt[]>;
+  getQuizByLessonId(lessonId: number): Promise<Quiz | undefined>;
 
   // Gamification
   getUserStats(userId: number): Promise<UserStats | undefined>;
@@ -75,6 +90,33 @@ export interface IStorage {
   // Certifications
   getUserCertifications(userId: number): Promise<Certification[]>;
   createCertification(certification: InsertCertification): Promise<Certification>;
+
+  // SRS & Stories (Phase 3)
+  getVocabularyProgress(userId: number, vocabularyId: number): Promise<VocabularyProgress | undefined>;
+  updateVocabularyProgress(userId: number, vocabularyId: number, progress: Partial<VocabularyProgress>): Promise<VocabularyProgress>;
+  getVocabularyDueForReview(userId: number, date: string): Promise<(VocabularyProgress & { vocabulary: Vocabulary })[]>;
+  getStories(): Promise<Story[]>;
+  getStory(id: number): Promise<Story | undefined>;
+  createStory(story: InsertStory): Promise<Story>;
+
+  // Listenings
+  getListenings(): Promise<Listening[]>;
+  getListening(id: number): Promise<Listening | undefined>;
+  createListening(listening: InsertListening): Promise<Listening>;
+
+  // Speaking Topics
+  getSpeakingTopics(): Promise<SpeakingTopic[]>;
+  getSpeakingTopic(id: number): Promise<SpeakingTopic | undefined>;
+  createSpeakingTopic(topic: InsertSpeakingTopic): Promise<SpeakingTopic>;
+
+  // Activity Feed & Ratings (Phase 4)
+  getActivityFeed(): Promise<(ActivityFeed & { user: User })[]>;
+  createActivityEntry(entry: InsertActivityFeed): Promise<ActivityFeed>;
+  getContentRatings(contentType: string, contentId: number): Promise<(ContentRating & { user: User })[]>;
+  createContentRating(rating: InsertContentRating): Promise<ContentRating>;
+  getPublicUsers(): Promise<User[]>;
+
+  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -97,12 +139,14 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(lessons).orderBy(lessons.order);
   }
 
-  async getLesson(id: number): Promise<(Lesson & { vocabulary: Vocabulary[] }) | undefined> {
+  async getLesson(id: number): Promise<(Lesson & { vocabulary: Vocabulary[]; conversationLines: ConversationLine[] }) | undefined> {
     const [lesson] = await db.select().from(lessons).where(eq(lessons.id, id));
     if (!lesson) return undefined;
 
     const vocab = await db.select().from(vocabulary).where(eq(vocabulary.lessonId, id));
-    return { ...lesson, vocabulary: vocab };
+    const lines = await db.select().from(conversationLines).where(eq(conversationLines.lessonId, id)).orderBy(conversationLines.lineOrder);
+
+    return { ...lesson, vocabulary: vocab, conversationLines: lines };
   }
 
   async createLesson(insertLesson: InsertLesson): Promise<Lesson> {
@@ -112,6 +156,25 @@ export class DatabaseStorage implements IStorage {
 
   async getVocabularyForLesson(lessonId: number): Promise<Vocabulary[]> {
     return await db.select().from(vocabulary).where(eq(vocabulary.lessonId, lessonId));
+  }
+
+  async getVocabularyByCategory(category: string): Promise<Vocabulary[]> {
+    return await db.select({
+      id: vocabulary.id,
+      lessonId: vocabulary.lessonId,
+      word: vocabulary.word,
+      pronunciation: vocabulary.pronunciation,
+      definition: vocabulary.definition,
+      example: vocabulary.example,
+      hindiTranslation: vocabulary.hindiTranslation,
+      hindiPronunciation: vocabulary.hindiPronunciation,
+      exampleHindi: vocabulary.exampleHindi,
+      usageHindi: vocabulary.usageHindi,
+      audioUrl: vocabulary.audioUrl,
+    })
+      .from(vocabulary)
+      .innerJoin(lessons, eq(vocabulary.lessonId, lessons.id))
+      .where(eq(lessons.category, category));
   }
 
   async createVocabulary(vocab: InsertVocabulary): Promise<Vocabulary> {
@@ -128,7 +191,7 @@ export class DatabaseStorage implements IStorage {
       .from(progress)
       .innerJoin(lessons, eq(progress.lessonId, lessons.id))
       .where(eq(progress.userId, userId));
-    
+
     return results.map(r => ({ ...r.progress, lesson: r.lesson }));
   }
 
@@ -212,7 +275,7 @@ export class DatabaseStorage implements IStorage {
       .from(quizQuestions)
       .where(eq(quizQuestions.quizId, id))
       .orderBy(quizQuestions.order);
-    
+
     return { ...quiz, questions };
   }
 
@@ -269,7 +332,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserStats(userId: number, statsUpdate: Partial<UserStats>): Promise<UserStats> {
     const [existing] = await db.select().from(userStats).where(eq(userStats.userId, userId));
-    
+
     if (existing) {
       const [updated] = await db
         .update(userStats)
@@ -304,7 +367,7 @@ export class DatabaseStorage implements IStorage {
       .from(userAchievements)
       .innerJoin(achievements, eq(userAchievements.achievementId, achievements.id))
       .where(eq(userAchievements.userId, userId));
-    
+
     return results.map(r => ({ ...r.userAchievement, achievement: r.achievement }));
   }
 
@@ -355,10 +418,10 @@ export class DatabaseStorage implements IStorage {
       .from(leaderboard)
       .innerJoin(users, eq(leaderboard.userId, users.id));
 
-    const results = weekStart 
+    const results = weekStart
       ? await baseQuery.where(eq(leaderboard.weekStart, weekStart)).orderBy(leaderboard.xpEarned)
       : await baseQuery.orderBy(leaderboard.xpEarned);
-    
+
     return results.map(r => ({ ...r.leaderboard, user: r.user }));
   }
 
@@ -401,9 +464,9 @@ export class DatabaseStorage implements IStorage {
     } else {
       const [created] = await db
         .insert(scenarioProgress)
-        .values({ 
-          userId, 
-          scenarioId, 
+        .values({
+          userId,
+          scenarioId,
           ...progressUpdate,
           completedAt: progressUpdate.completed ? new Date().toISOString() : null
         })
@@ -421,7 +484,7 @@ export class DatabaseStorage implements IStorage {
       .from(scenarioProgress)
       .innerJoin(scenarios, eq(scenarioProgress.scenarioId, scenarios.id))
       .where(eq(scenarioProgress.userId, userId));
-    
+
     return results.map(r => ({ ...r.progress, scenario: r.scenario }));
   }
 
@@ -439,6 +502,165 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return newCertification;
+  }
+
+  // SRS & Stories (Phase 3)
+  async getVocabularyProgress(userId: number, vocabularyId: number): Promise<VocabularyProgress | undefined> {
+    const [progress] = await db.select().from(vocabularyProgress).where(
+      and(
+        eq(vocabularyProgress.userId, userId),
+        eq(vocabularyProgress.vocabularyId, vocabularyId)
+      )
+    );
+    return progress;
+  }
+
+  async updateVocabularyProgress(userId: number, vocabularyId: number, update: Partial<VocabularyProgress>): Promise<VocabularyProgress> {
+    const existing = await this.getVocabularyProgress(userId, vocabularyId);
+    if (!existing) {
+      const [inserted] = await db.insert(vocabularyProgress).values({
+        userId,
+        vocabularyId,
+        nextReviewDate: update.nextReviewDate || new Date().toISOString(),
+        ...update,
+      } as any).returning();
+      return inserted;
+    }
+
+    const [updated] = await db.update(vocabularyProgress)
+      .set(update)
+      .where(
+        and(
+          eq(vocabularyProgress.userId, userId),
+          eq(vocabularyProgress.vocabularyId, vocabularyId)
+        )
+      )
+      .returning();
+    return updated;
+  }
+
+  async getVocabularyDueForReview(userId: number, date: string): Promise<(VocabularyProgress & { vocabulary: Vocabulary })[]> {
+    const results = await db.select({
+      progress: vocabularyProgress,
+      vocabulary: vocabulary
+    })
+      .from(vocabularyProgress)
+      .innerJoin(vocabulary, eq(vocabularyProgress.vocabularyId, vocabulary.id))
+      .where(eq(vocabularyProgress.userId, userId));
+
+    return results
+      .filter(r => r.progress.nextReviewDate <= date)
+      .map(r => ({ ...r.progress, vocabulary: r.vocabulary }));
+  }
+
+  async getStories(): Promise<Story[]> {
+    return db.select().from(stories).orderBy(stories.order);
+  }
+
+  async getStory(id: number): Promise<Story | undefined> {
+    const [story] = await db.select().from(stories).where(eq(stories.id, id));
+    return story;
+  }
+
+  async createStory(insertStory: InsertStory): Promise<Story> {
+    const [story] = await db.insert(stories).values(insertStory).returning();
+    return story;
+  }
+
+  // Listenings
+  async getListenings(): Promise<Listening[]> {
+    return await db.select().from(listenings).orderBy(listenings.order);
+  }
+
+  async getListening(id: number): Promise<Listening | undefined> {
+    const [lesson] = await db.select().from(listenings).where(eq(listenings.id, id));
+    return lesson;
+  }
+
+  async createListening(insertListening: InsertListening): Promise<Listening> {
+    const [lesson] = await db.insert(listenings).values(insertListening).returning();
+    return lesson;
+  }
+
+  // Speaking Topics
+  async getSpeakingTopics(): Promise<SpeakingTopic[]> {
+    return await db.select().from(speakingTopics).orderBy(speakingTopics.order);
+  }
+
+  async getSpeakingTopic(id: number): Promise<SpeakingTopic | undefined> {
+    const [topic] = await db.select().from(speakingTopics).where(eq(speakingTopics.id, id));
+    return topic;
+  }
+
+  async createSpeakingTopic(insertSpeakingTopic: InsertSpeakingTopic): Promise<SpeakingTopic> {
+    const [topic] = await db.insert(speakingTopics).values(insertSpeakingTopic).returning();
+    return topic;
+  }
+
+  async getQuizByLessonId(lessonId: number): Promise<Quiz | undefined> {
+    const [quiz] = await db.select().from(quizzes).where(eq(quizzes.lessonId, lessonId));
+    return quiz;
+  }
+
+  // Activity Feed & Ratings (Phase 4)
+  async getActivityFeed(): Promise<(ActivityFeed & { user: User })[]> {
+    const results = await db.select({
+      id: activityFeed.id,
+      userId: activityFeed.userId,
+      type: activityFeed.type,
+      referenceId: activityFeed.referenceId,
+      content: activityFeed.content,
+      createdAt: activityFeed.createdAt,
+      user: users
+    })
+      .from(activityFeed)
+      .innerJoin(users, eq(activityFeed.userId, users.id))
+      .orderBy(activityFeed.createdAt);
+
+    return results;
+  }
+
+  async createActivityEntry(entry: InsertActivityFeed): Promise<ActivityFeed> {
+    const [newEntry] = await db.insert(activityFeed).values(entry).returning();
+    return newEntry;
+  }
+
+  async getContentRatings(contentType: string, contentId: number): Promise<(ContentRating & { user: User })[]> {
+    const results = await db.select({
+      id: contentRatings.id,
+      userId: contentRatings.userId,
+      contentType: contentRatings.contentType,
+      contentId: contentRatings.contentId,
+      rating: contentRatings.rating,
+      review: contentRatings.review,
+      createdAt: contentRatings.createdAt,
+      user: users
+    })
+      .from(contentRatings)
+      .innerJoin(users, eq(contentRatings.userId, users.id))
+      .where(and(
+        eq(contentRatings.contentType, contentType),
+        eq(contentRatings.contentId, contentId)
+      ));
+
+    return results;
+  }
+
+  async createContentRating(rating: InsertContentRating): Promise<ContentRating> {
+    const [newRating] = await db.insert(contentRatings).values(rating).returning();
+    return newRating;
+  }
+
+  async getPublicUsers(): Promise<User[]> {
+    return await db.select().from(users).limit(5);
+  }
+
+  sessionStore: session.Store;
+
+  constructor() {
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000,
+    });
   }
 }
 

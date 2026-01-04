@@ -1,47 +1,90 @@
 import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle, Loader2, ChevronLeft, ChevronRight, Home, BookOpen, Languages, Heart } from "lucide-react";
+import type { Quiz as QuizType } from "@shared/schema";
 import { Layout } from "@/components/Layout";
 import { VocabularyItem } from "@/components/VocabularyItem";
 import { CelebrationModal } from "@/components/CelebrationModal";
+import { RatingDialog } from "@/components/RatingDialog";
 import { AudioButton } from "@/components/AudioButton";
 import { useLesson, useLessons } from "@/hooks/use-lessons";
 import { useMarkComplete, useProgress } from "@/hooks/use-progress";
+import { SpeechEvaluator } from "@/components/SpeechEvaluator";
 import { useUserStats, useUpdateUserStats, useDailyGoal, useUpdateDailyGoal, useAchievements, useUnlockAchievement } from "@/hooks/use-gamification";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Quiz } from "@/components/Quiz";
+import { SEO } from "@/components/SEO";
+import { useAnalytics } from "@/hooks/use-analytics";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function LessonView() {
   const [, params] = useRoute("/lesson/:id");
   const id = params ? parseInt(params.id) : null;
   const { toast } = useToast();
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
   const { data: lessonData, isLoading: lessonLoading } = useLesson(id);
   const { data: allLessons } = useLessons();
-  const { data: progressList } = useProgress();
+  const { data: progress } = useProgress();
   const { data: userStats } = useUserStats();
   const { data: dailyGoal } = useDailyGoal();
+  const queryClient = useQueryClient();
+  const { trackEvent } = useAnalytics();
+  const [quizOpen, setQuizOpen] = useState(false);
+
+  useEffect(() => {
+    if (lessonData) {
+      trackEvent("lesson_start", { lessonId: lessonData.id, title: lessonData.title });
+    }
+  }, [lessonData, trackEvent]);
   const { data: achievements } = useAchievements();
   const { mutate: updateUserStats } = useUpdateUserStats();
   const { mutate: updateDailyGoal } = useUpdateDailyGoal();
   const { mutate: unlockAchievement } = useUnlockAchievement();
   const { mutate: markComplete, isPending: isMarking } = useMarkComplete();
 
+  // Fetch Quiz for this lesson
+  const { data: quiz, isLoading: quizLoading } = useQuery<QuizType>({
+    queryKey: ['lesson-quiz', id],
+    queryFn: async () => {
+      if (!id) return null;
+      const res = await fetch(`/api/lessons/${id}/quiz`);
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error("Failed to load quiz");
+      return res.json();
+    },
+    enabled: !!id,
+    retry: false,
+  });
+
+  const [showQuiz, setShowQuiz] = useState(false);
+
+  // If quiz exists, we only mark complete when quiz is passed
+  const handleQuizComplete = (score: number, passed: boolean) => {
+    if (passed) {
+      setQuizOpen(false);
+      trackEvent("quiz_complete", { lessonId: lessonData?.id, score });
+      handleComplete(); // Auto-mark complete on pass
+    }
+  };
+
   // Find prev/next lessons
   const sortedLessons = allLessons?.sort((a, b) => a.order - b.order) || [];
   const currentIndex = sortedLessons.findIndex(l => l.id === id);
   const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex !== -1 && currentIndex < sortedLessons.length - 1 
-    ? sortedLessons[currentIndex + 1] 
+  const nextLesson = currentIndex !== -1 && currentIndex < sortedLessons.length - 1
+    ? sortedLessons[currentIndex + 1]
     : null;
 
   // Recommended next lesson: first uncompleted lesson in same category after current, else next by order
   const recommendedNextLesson = (() => {
     if (!lessonData || sortedLessons.length === 0) return null;
-    const completedIds = new Set((progressList ?? []).filter(p => p.completed).map(p => p.lessonId));
+    const completedIds = new Set((progress ?? []).filter(p => p.completed).map(p => p.lessonId));
 
     const sameCategoryNext = sortedLessons.find(l =>
       l.category === lessonData.category &&
@@ -70,14 +113,23 @@ export default function LessonView() {
     );
   }
 
-  const { vocabulary } = lessonData;
-  const isCompleted = progressList?.some(p => p.lessonId === id && p.completed);
+  const { vocabulary, conversationLines } = lessonData;
+  const isCompleted = progress?.some(p => p.lessonId === id && p.completed);
   const progressPercent = sortedLessons.length > 0 ? ((currentIndex + 1) / sortedLessons.length) * 100 : 0;
 
-  const totalCompletedBefore = progressList?.filter(p => p.completed).length || 0;
+  const totalCompletedBefore = progress?.filter(p => p.completed).length || 0;
 
   const handleComplete = () => {
     if (!id || !lessonData) return;
+
+    // Confetti effect on completion
+    import('canvas-confetti').then(confetti => {
+      confetti.default({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    });
 
     // Compute XP reward based on difficulty
     const baseXp = (() => {
@@ -141,16 +193,32 @@ export default function LessonView() {
 
   return (
     <Layout>
+      <SEO
+        title={lessonData?.title || "Lesson"}
+        description={lessonData?.content || "Learn English with Hindi support."}
+        ogType="article"
+      />
       <CelebrationModal
         isOpen={showCelebration}
-        onClose={() => setShowCelebration(false)}
+        onClose={() => {
+          setShowCelebration(false);
+          setShowRating(true);
+        }}
         lessonTitle={lessonData?.title || ""}
         hindiTitle={lessonData?.hindiTitle || undefined}
       />
-      
+
+      <RatingDialog
+        isOpen={showRating}
+        onClose={() => setShowRating(false)}
+        contentType="LESSON"
+        contentId={id || 0}
+        contentTitle={lessonData?.title || ""}
+      />
+
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-slate-200 dark:bg-slate-800 z-50">
-        <motion.div 
+        <motion.div
           className="h-full bg-gradient-to-r from-primary to-accent"
           initial={{ width: 0 }}
           animate={{ width: `${progressPercent}%` }}
@@ -158,12 +226,11 @@ export default function LessonView() {
         />
       </div>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Navigation & Header */}
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-6 transition-colors">
             <ArrowLeft className="h-4 w-4 mr-1" />
-            डैशबोर्ड पर वापस जाएं
           </Link>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/50 pb-6">
@@ -178,8 +245,8 @@ export default function LessonView() {
                   lessonData.difficulty === "Intermediate" && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
                   lessonData.difficulty === "Advanced" && "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
                 )}>
-                  {lessonData.difficulty === "Beginner" ? "प्रारंभिक" : 
-                   lessonData.difficulty === "Intermediate" ? "मध्यम" : "उच्च"}
+                  {lessonData.difficulty === "Beginner" ? "प्रारंभिक" :
+                    lessonData.difficulty === "Intermediate" ? "मध्यम" : "उच्च"}
                 </span>
                 {isCompleted && (
                   <span className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
@@ -187,7 +254,7 @@ export default function LessonView() {
                   </span>
                 )}
               </div>
-              
+
               {/* Hindi Title First - Large */}
               {lessonData.hindiTitle && (
                 <div className="flex items-center gap-3 mb-2">
@@ -203,18 +270,18 @@ export default function LessonView() {
                 </h2>
                 <AudioButton text={lessonData.title} language="en" size="md" />
               </div>
-              
+
               <p className="text-muted-foreground mt-2">
                 {lessonData.description}
               </p>
             </div>
-            
+
             {lessonData.imageUrl && (
               <div className="hidden md:block w-32 h-32 rounded-2xl overflow-hidden shadow-md shrink-0">
-                <img 
-                  src={lessonData.imageUrl} 
+                <img
+                  src={lessonData.imageUrl}
                   alt={lessonData.title}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
               </div>
             )}
@@ -224,7 +291,7 @@ export default function LessonView() {
         {/* Split View Content - English & Hindi Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* English Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -237,9 +304,9 @@ export default function LessonView() {
                   </div>
                   <h3 className="font-bold text-blue-700 dark:text-blue-400">English Content</h3>
                 </div>
-                <AudioButton 
-                  text={englishContent.replace(/[#*_`]/g, '').substring(0, 500)} 
-                  language="en" 
+                <AudioButton
+                  text={englishContent.replace(/[#*_`]/g, '').substring(0, 500)}
+                  language="en"
                   size="sm"
                   showText
                 />
@@ -251,7 +318,7 @@ export default function LessonView() {
           </motion.div>
 
           {/* Hindi Explanation */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -265,9 +332,9 @@ export default function LessonView() {
                   <h3 className="font-bold text-amber-800 dark:text-amber-400">हिंदी व्याख्या (Hindi Explanation)</h3>
                 </div>
                 {hindiContent && (
-                  <AudioButton 
-                    text={hindiContent.replace(/[#*_`]/g, '').substring(0, 500)} 
-                    language="hi" 
+                  <AudioButton
+                    text={hindiContent.replace(/[#*_`]/g, '').substring(0, 500)}
+                    language="hi"
                     size="sm"
                     showText
                     className="text-amber-700 dark:text-amber-400"
@@ -292,7 +359,7 @@ export default function LessonView() {
 
         {/* Vocabulary Section */}
         {vocabulary && vocabulary.length > 0 && (
-          <motion.section 
+          <motion.section
             className="mb-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -310,29 +377,118 @@ export default function LessonView() {
           </motion.section>
         )}
 
-        {/* Complete Button */}
-        <div className="mb-8">
-          <button
-            onClick={handleComplete}
-            disabled={isCompleted || isMarking}
-            className={cn(
-              "w-full px-8 py-4 rounded-xl font-bold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 text-lg",
-              isCompleted 
-                ? "bg-green-100 text-green-700 border-green-200 cursor-default dark:bg-green-900/30 dark:text-green-400" 
-                : "bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-            )}
+        {/* Dialogue / Roleplay Section */}
+        {conversationLines && conversationLines.length > 0 && (
+          <motion.section
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            {isMarking ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : isCompleted ? (
-              <>
-                <CheckCircle className="h-5 w-5" />
-                पाठ पूर्ण हो गया! ✅
-              </>
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <span className="bg-primary/10 text-primary p-2 rounded-lg text-sm">🗣️</span>
+              बातचीत / संवाद (Conversation)
+            </h2>
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              {conversationLines.map((line, idx) => (
+                <div
+                  key={line.id}
+                  className={cn(
+                    "p-6 flex flex-col sm:flex-row gap-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors",
+                    line.speaker === 'Speaker A' || idx % 2 === 0 ? "bg-slate-50/50 dark:bg-slate-900" : "bg-white dark:bg-slate-950"
+                  )}
+                >
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shrink-0",
+                      line.speaker === 'Speaker A' || idx % 2 === 0
+                        ? "bg-primary/10 text-primary"
+                        : "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
+                    )}>
+                      {line.emoji || (line.speaker === 'Speaker A' ? 'A' : 'B')}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-xs font-bold uppercase text-muted-foreground tracking-wider">{line.speaker}</span>
+                        <AudioButton text={line.englishText} language="en" size="sm" />
+                      </div>
+                      <p className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-1 leading-relaxed">
+                        {line.englishText}
+                      </p>
+                      <p className="text-sm text-muted-foreground font-hindi">
+                        {line.hindiText}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Speech Practice Area */}
+                  <div className="sm:ml-auto flex items-center pt-2 sm:pt-0 pl-14 sm:pl-0">
+                    <SpeechEvaluator
+                      targetText={line.englishText}
+                      className="shrink-0"
+                      onComplete={(score) => {
+                        if (score >= 80) {
+                          toast({
+                            title: "Excellent! 🎉",
+                            description: "+5 XP for great pronunciation",
+                            duration: 2000,
+                          });
+                          if (userStats) {
+                            updateUserStats({
+                              xpPoints: Number(userStats.xpPoints || 0) + 5
+                            });
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* Complete Button */}
+        {/* Complete Button / Quiz Section */}
+        <div className="mb-8">
+          {quiz && !isCompleted ? (
+            !showQuiz ? (
+              <div className="text-center p-8 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <h3 className="text-xl font-bold mb-4">Ready to test your knowledge?</h3>
+                <p className="text-muted-foreground mb-6">Take a quick quiz to complete this lesson.</p>
+                <button
+                  onClick={() => setShowQuiz(true)}
+                  className="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all"
+                >
+                  Start Quiz
+                </button>
+              </div>
             ) : (
-              "✨ पाठ पूर्ण करें (Mark Complete)"
-            )}
-          </button>
+              <Quiz quizId={quiz.id} onComplete={handleQuizComplete} />
+            )
+          ) : (
+            <button
+              onClick={handleComplete}
+              disabled={isCompleted || isMarking || (!!quiz && !isCompleted)}
+              className={cn(
+                "w-full px-8 py-4 rounded-xl font-bold transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 text-lg",
+                isCompleted
+                  ? "bg-green-100 text-green-700 border-green-200 cursor-default dark:bg-green-900/30 dark:text-green-400"
+                  : "bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
+              )}
+            >
+              {isMarking ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : isCompleted ? (
+                <>
+                  <CheckCircle className="h-5 w-5" />
+                  पाठ पूर्ण हो गया! ✅
+                </>
+              ) : (
+                "✨ पाठ पूर्ण करें (Mark Complete)"
+              )}
+            </button>
+          )}
         </div>
 
         {/* Recommended Next Lesson */}

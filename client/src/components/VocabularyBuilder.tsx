@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSpeech } from "@/hooks/use-speech";
 import { Volume2, BookOpen, Star, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -198,16 +199,12 @@ const vocabularyData: VocabularyCategory[] = [
 ];
 
 export function VocabularyBuilder() {
+  const { speak } = useSpeech();
   const [expandedCategory, setExpandedCategory] = useState<string | null>("daily_routine");
   const [learnedWords, setLearnedWords] = useState<Set<string>>(new Set());
 
   const speakWord = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
-    }
+    speak({ text, lang: 'en-US', rate: 0.8 });
   };
 
   const toggleLearned = (wordId: string) => {
@@ -234,7 +231,7 @@ export function VocabularyBuilder() {
             <p className="text-blue-100">शब्दावली निर्माता</p>
           </div>
         </div>
-        
+
         {/* Progress */}
         <div className="bg-white/20 rounded-xl p-3">
           <div className="flex justify-between text-sm mb-2">
@@ -242,7 +239,7 @@ export function VocabularyBuilder() {
             <span>{learnedCount} / {totalWords} words</span>
           </div>
           <div className="h-2 bg-white/30 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-white rounded-full transition-all duration-500"
               style={{ width: `${(learnedCount / totalWords) * 100}%` }}
             />
@@ -282,14 +279,14 @@ export function VocabularyBuilder() {
                 {category.words.map((word, index) => {
                   const wordId = `${category.id}-${index}`;
                   const isLearned = learnedWords.has(wordId);
-                  
+
                   return (
-                    <div 
+                    <div
                       key={index}
                       className={cn(
                         "p-3 rounded-xl border transition-all",
-                        isLearned 
-                          ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800" 
+                        isLearned
+                          ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
                           : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
                       )}
                     >
@@ -299,7 +296,7 @@ export function VocabularyBuilder() {
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-semibold text-slate-900 dark:text-white">{word.english}</span>
-                              <button 
+                              <button
                                 onClick={() => speakWord(word.english)}
                                 className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
                               >
@@ -319,8 +316,8 @@ export function VocabularyBuilder() {
                           onClick={() => toggleLearned(wordId)}
                           className={cn(
                             "p-2 rounded-full transition-all",
-                            isLearned 
-                              ? "bg-green-500 text-white" 
+                            isLearned
+                              ? "bg-green-500 text-white"
                               : "bg-slate-200 dark:bg-slate-700 text-slate-400 hover:bg-yellow-100 hover:text-yellow-500"
                           )}
                         >

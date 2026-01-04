@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Mic, Volume2, CheckCircle, XCircle, RotateCcw, Trophy, Star } from "lucide-react";
+import { Mic, Volume2, CheckCircle, XCircle, RotateCcw, Award, Star } from "lucide-react";
 
 interface SpellingWord {
   word: string;
@@ -90,7 +90,7 @@ export function SpellingBee() {
     if (!currentWord) return;
     setShowResult(true);
     setWordsAttempted(wordsAttempted + 1);
-    
+
     if (userInput.toLowerCase().trim() === currentWord.word.toLowerCase()) {
       const points = difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15;
       setScore(score + points);
@@ -154,7 +154,7 @@ export function SpellingBee() {
                 <Volume2 className="h-5 w-5 mr-2" /> वाक्य सुनें
               </Button>
             </div>
-            
+
             <div className="text-orange-600 dark:text-orange-400 font-hindi text-xl">
               हिंदी: {currentWord.hindi}
             </div>
@@ -177,11 +177,10 @@ export function SpellingBee() {
 
         {/* Result */}
         {showResult && (
-          <div className={`p-4 rounded-xl border-2 ${
-            isCorrect
+          <div className={`p-4 rounded-xl border-2 ${isCorrect
               ? "bg-green-50 dark:bg-green-900/20 border-green-300"
               : "bg-red-50 dark:bg-red-900/20 border-red-300"
-          }`}>
+            }`}>
             <div className="flex items-center gap-2 mb-2">
               {isCorrect ? (
                 <>

@@ -1,4 +1,4 @@
-import { Trophy, Medal, Award } from "lucide-react";
+import { Medal, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeaderboardEntry {
@@ -18,7 +18,7 @@ export function LeaderboardCard({ entries, currentUserRank }: LeaderboardCardPro
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Trophy className="h-5 w-5 text-yellow-500" />;
+        return <Award className="h-5 w-5 text-yellow-500" />;
       case 2:
         return <Medal className="h-5 w-5 text-gray-400" />;
       case 3:
@@ -47,7 +47,7 @@ export function LeaderboardCard({ entries, currentUserRank }: LeaderboardCardPro
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="bg-purple-100 p-2 rounded-xl">
-            <Trophy className="h-6 w-6 text-purple-600" />
+            <Award className="h-6 w-6 text-purple-600" />
           </div>
           <div>
             <h3 className="font-bold text-lg">लीडरबोर्ड</h3>
@@ -74,7 +74,7 @@ export function LeaderboardCard({ entries, currentUserRank }: LeaderboardCardPro
             <div className="w-8 h-8 flex items-center justify-center">
               {getRankIcon(entry.rank)}
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <p className={cn(
                 "font-medium truncate",
@@ -87,7 +87,7 @@ export function LeaderboardCard({ entries, currentUserRank }: LeaderboardCardPro
                 {entry.lessonsCompleted} पाठ पूरे
               </p>
             </div>
-            
+
             <div className="text-right">
               <p className="font-bold text-lg">{entry.xpEarned.toLocaleString()}</p>
               <p className="text-xs text-muted-foreground">XP</p>

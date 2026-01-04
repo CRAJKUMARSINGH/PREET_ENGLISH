@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { LessonCard } from "@/components/LessonCard";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
-import { Loader2, Filter } from "lucide-react";
+import { Loader2, Filter, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AllLessons() {
@@ -12,6 +12,7 @@ export default function AllLessons() {
 
   const [difficultyFilter, setDifficultyFilter] = useState<"all" | "Beginner" | "Intermediate" | "Advanced">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const isLoading = lessonsLoading || progressLoading;
 
@@ -24,7 +25,10 @@ export default function AllLessons() {
       difficultyFilter === "all" || lesson.difficulty === difficultyFilter;
     const matchesCategory =
       categoryFilter === "all" || lesson.category === categoryFilter;
-    return matchesDifficulty && matchesCategory;
+    const matchesSearch =
+      lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (lesson.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+    return matchesDifficulty && matchesCategory && matchesSearch;
   });
 
   return (
@@ -42,6 +46,17 @@ export default function AllLessons() {
             <span>Level और Category से फ़िल्टर करें</span>
           </div>
         </header>
+
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search lessons by title or content... (पाठ खोजें)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-2xl py-4 pl-12 pr-4 focus:border-primary transition-all outline-none text-lg shadow-sm"
+          />
+        </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
@@ -62,10 +77,10 @@ export default function AllLessons() {
                   {level === "all"
                     ? "सभी स्तर"
                     : level === "Beginner"
-                    ? "Beginner"
-                    : level === "Intermediate"
-                    ? "Intermediate"
-                    : "Advanced"}
+                      ? "Beginner"
+                      : level === "Intermediate"
+                        ? "Intermediate"
+                        : "Advanced"}
                 </button>
               )
             )}

@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Theater, Volume2, Send, CheckCircle, XCircle, Lightbulb, RotateCcw } from "lucide-react";
-import { rolePlayScenarios, getScenariosByDifficulty, getScenariosByCategory, getCategories, type RolePlayScenario } from "@/data/hindiRolePlayData";
+import { useQuery } from "@tanstack/react-query";
+import { Scenario } from "@shared/schema";
 
 export function RolePlaySimulator() {
-  const [selectedScenario, setSelectedScenario] = useState<RolePlayScenario | null>(null);
+  const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
   const [currentExchange, setCurrentExchange] = useState(0);
   const [userInput, setUserInput] = useState("");
   const [showHint, setShowHint] = useState(false);
@@ -17,12 +18,14 @@ export function RolePlaySimulator() {
   const [difficulty, setDifficulty] = useState("all");
   const [category, setCategory] = useState("all");
 
-  const categories = ["all", ...getCategories()];
+  const { data: scenarios = [], isLoading } = useQuery<Scenario[]>({
+    queryKey: ["/api/scenarios"],
+  });
 
-  const getFilteredScenarios = (): RolePlayScenario[] => {
-    let filtered = rolePlayScenarios;
+  const getFilteredScenarios = (): Scenario[] => {
+    let filtered = scenarios;
     if (difficulty !== "all") {
-      filtered = filtered.filter(s => s.difficulty === difficulty);
+      filtered = filtered.filter(s => s.difficulty.toLowerCase() === difficulty.toLowerCase());
     }
     if (category !== "all") {
       filtered = filtered.filter(s => s.category === category);
@@ -31,6 +34,9 @@ export function RolePlaySimulator() {
   };
 
   const filteredScenarios = getFilteredScenarios();
+  const categories = ["all", ...Array.from(new Set(scenarios.map(s => s.category)))];
+
+  const parsedExchanges = selectedScenario ? JSON.parse(selectedScenario.dialogues) : [];
 
   const speakText = (text: string) => {
     speechSynthesis.cancel();
@@ -41,20 +47,20 @@ export function RolePlaySimulator() {
   };
 
   const checkResponse = () => {
-    if (!selectedScenario || !userInput.trim()) return;
-    
-    const exchange = selectedScenario.exchanges[currentExchange];
+    if (!selectedScenario || !userInput.trim() || !parsedExchanges.length) return;
+
+    const exchange = parsedExchanges[currentExchange];
     const userWords = userInput.toLowerCase().split(/\s+/);
-    const isCorrect = exchange.expectedResponses.some(expected => 
+    const isCorrect = exchange.expectedResponses.some((expected: string) =>
       userWords.some(word => word.includes(expected.toLowerCase()))
     );
-    
+
     setFeedback(isCorrect ? "correct" : "incorrect");
-    
+
     if (isCorrect) {
       setScore(score + (showHint ? 5 : 10));
       setTimeout(() => {
-        if (currentExchange < selectedScenario.exchanges.length - 1) {
+        if (currentExchange < parsedExchanges.length - 1) {
           setCurrentExchange(currentExchange + 1);
           setUserInput("");
           setFeedback(null);
@@ -91,7 +97,7 @@ export function RolePlaySimulator() {
         <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
           <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
             <Theater className="h-6 w-6" />
-            भूमिका अभिनय (Role Play) - {rolePlayScenarios.length}+ परिदृश्य
+            भूमिका अभिनय (Role Play)
           </CardTitle>
           <p className="text-sm text-purple-600 dark:text-purple-400">
             वास्तविक परिस्थितियों में अंग्रेजी बोलने का अभ्यास करें - हिंदी भाषियों के लिए
@@ -133,15 +139,15 @@ export function RolePlaySimulator() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-bold">{scenario.title}</span>
-                  <Badge className={getDifficultyColor(scenario.difficulty)}>
-                    {scenario.difficulty === "beginner" ? "शुरुआती" :
-                     scenario.difficulty === "intermediate" ? "मध्यम" : "उन्नत"}
+                  <Badge className={getDifficultyColor(scenario.difficulty.toLowerCase())}>
+                    {scenario.difficulty.toLowerCase() === "beginner" ? "शुरुआती" :
+                      scenario.difficulty.toLowerCase() === "intermediate" ? "मध्यम" : "उन्नत"}
                   </Badge>
                 </div>
                 <p className="text-sm text-purple-600 dark:text-purple-400 font-hindi mb-2">
                   {scenario.titleHindi}
                 </p>
-                <p className="text-sm text-muted-foreground mb-2">{scenario.situationHindi}</p>
+                <p className="text-sm text-muted-foreground mb-2">{scenario.descriptionHindi}</p>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline">आप: {scenario.yourRoleHindi}</Badge>
                   <Badge variant="outline">साथी: {scenario.partnerRoleHindi}</Badge>
@@ -157,9 +163,9 @@ export function RolePlaySimulator() {
 
   // Completed View
   if (completed) {
-    const maxScore = selectedScenario.exchanges.length * 10;
+    const maxScore = parsedExchanges.length * 10;
     const percentage = Math.round((score / maxScore) * 100);
-    
+
     return (
       <Card className="border-2 border-purple-200 dark:border-purple-800">
         <CardContent className="p-8 text-center">
@@ -171,7 +177,7 @@ export function RolePlaySimulator() {
           </p>
           <div className="text-3xl font-bold text-purple-600 mb-2">{score} / {maxScore}</div>
           <p className="text-lg mb-6">सटीकता: {percentage}%</p>
-          
+
           {percentage >= 80 && (
             <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 rounded-lg">
               <p className="text-green-700 dark:text-green-300">
@@ -179,7 +185,7 @@ export function RolePlaySimulator() {
               </p>
             </div>
           )}
-          
+
           <div className="flex gap-3 justify-center">
             <Button variant="outline" onClick={() => setSelectedScenario(null)}>
               अन्य परिदृश्य
@@ -193,7 +199,7 @@ export function RolePlaySimulator() {
     );
   }
 
-  const exchange = selectedScenario.exchanges[currentExchange];
+  const exchange = parsedExchanges[currentExchange];
 
   // Role Play View
   return (
@@ -213,15 +219,15 @@ export function RolePlaySimulator() {
           <Badge variant="outline">{selectedScenario.category}</Badge>
           <Badge variant="outline">स्कोर: {score}</Badge>
           <Badge variant="outline">
-            {currentExchange + 1} / {selectedScenario.exchanges.length}
+            {currentExchange + 1} / {parsedExchanges.length}
           </Badge>
         </div>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         {/* Situation */}
         <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-          <p className="text-sm"><strong>परिस्थिति:</strong> {selectedScenario.situationHindi}</p>
-          <p className="text-xs text-muted-foreground mt-1">{selectedScenario.situation}</p>
+          <p className="text-sm"><strong>परिस्थिति:</strong> {selectedScenario.descriptionHindi}</p>
+          <p className="text-xs text-muted-foreground mt-1">{selectedScenario.description}</p>
         </div>
 
         {/* Partner's Dialogue */}
@@ -275,13 +281,13 @@ export function RolePlaySimulator() {
             <p className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
               💡 संकेत:
             </p>
-            {exchange.hints.map((hint, idx) => (
+            {exchange.hints.map((hint: string, idx: number) => (
               <p key={idx} className="text-sm text-yellow-600 dark:text-yellow-400">
                 • {hint}
               </p>
             ))}
             <div className="pt-2 border-t border-yellow-200">
-              {exchange.hintsHindi.map((hint, idx) => (
+              {exchange.hintsHindi.map((hint: string, idx: number) => (
                 <p key={idx} className="text-sm text-yellow-700 dark:text-yellow-300 font-hindi">
                   • {hint}
                 </p>
@@ -292,11 +298,10 @@ export function RolePlaySimulator() {
 
         {/* Feedback */}
         {feedback && (
-          <div className={`p-4 rounded-xl ${
-            feedback === "correct"
-              ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300"
-              : "bg-red-100 dark:bg-red-900/30 border-2 border-red-300"
-          }`}>
+          <div className={`p-4 rounded-xl ${feedback === "correct"
+            ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300"
+            : "bg-red-100 dark:bg-red-900/30 border-2 border-red-300"
+            }`}>
             {feedback === "correct" ? (
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
@@ -325,7 +330,7 @@ export function RolePlaySimulator() {
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-purple-600 h-2 rounded-full transition-all"
-            style={{ width: `${((currentExchange + 1) / selectedScenario.exchanges.length) * 100}%` }}
+            style={{ width: `${((currentExchange + 1) / parsedExchanges.length) * 100}%` }}
           />
         </div>
       </CardContent>

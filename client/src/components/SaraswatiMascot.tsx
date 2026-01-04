@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 const SARASWATI_IMAGE = "/saraswati.jpg";
 
 // Small logo version for header/sidebar
-export function SaraswatiLogo() {
+export function SaraswatiLogo({ className }: { className?: string }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className={cn("flex items-center gap-3", className)}>
       <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-400 p-0.5">
         <div className="w-full h-full rounded-lg overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50">
-          <img 
+          <img
             src={SARASWATI_IMAGE}
             alt="माँ सरस्वती"
             className="w-full h-full object-cover"
@@ -40,8 +40,8 @@ interface SaraswatiMascotProps {
   showCredit?: boolean;
 }
 
-export function SaraswatiMascot({ 
-  size = 'md', 
+export function SaraswatiMascot({
+  size = 'md',
   mood = 'happy',
   message,
   className,
@@ -82,7 +82,7 @@ export function SaraswatiMascot({
       )}>
         <div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50">
           {/* Traditional Saraswati Image */}
-          <img 
+          <img
             src={SARASWATI_IMAGE}
             alt="माँ सरस्वती - Goddess of Knowledge"
             className="w-full h-full object-cover"
@@ -90,11 +90,11 @@ export function SaraswatiMascot({
               e.currentTarget.style.display = 'none';
             }}
           />
-          
+
           {/* Shimmer Effect */}
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse" />
         </div>
-        
+
         {/* Golden Corner Decorations */}
         <div className="absolute top-0 left-0 w-4 h-4 bg-amber-300 rounded-br-full shadow-inner" />
         <div className="absolute top-0 right-0 w-4 h-4 bg-amber-300 rounded-bl-full shadow-inner" />

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MessageSquare, Volume2, Search, Star, CheckCircle, Copy } from "lucide-react";
-import { commonPhrases, getPhrasesByCategory, getPhrasesByDifficulty, searchPhrases, getCategories, type CommonPhrase } from "@/data/hindiCommonPhrasesData";
+import { useQuery } from "@tanstack/react-query";
+import { Vocabulary } from "@shared/schema";
 
 export function CommonPhrases() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,27 +16,45 @@ export function CommonPhrases() {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-  const categories = ["all", ...getCategories()];
+  const { data: commonPhrases = [], isLoading } = useQuery<Vocabulary[]>({
+    queryKey: ["/api/vocabulary/category/Common Phrases"],
+  });
 
-  const getFilteredPhrases = (): CommonPhrase[] => {
+  const getCategories = () => {
+    // We don't have sub-categories in the DB the same way as before, 
+    // but the seed script prepended them to the title of the lesson.
+    // However, the vocabulary doesn't know its sub-category. 
+    // For now, let's just use all words as a single list or add sub-categories back if needed.
+    // Actually, in seed script:
+    // title: `Essential Phrases: ${category}`,
+    // So the category is in the lesson title.
+    return Array.from(new Set(commonPhrases.map(p => "General"))); // Placeholder
+  };
+
+  const categories = ["all"];
+
+  const getFilteredPhrases = (): Vocabulary[] => {
     let filtered = commonPhrases;
-    
+
     if (searchTerm) {
-      filtered = searchPhrases(searchTerm);
+      filtered = filtered.filter(p =>
+        p.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.hindiTranslation?.includes(searchTerm) ||
+        p.definition.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    
+
+    // Category filtering is disabled for now since it's not in the DB
+    /*
     if (selectedCategory !== "all") {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
-    
-    if (selectedDifficulty !== "all") {
-      filtered = filtered.filter(p => p.difficulty === selectedDifficulty);
-    }
-    
+    */
+
     if (showFavoritesOnly) {
       filtered = filtered.filter(p => favorites.includes(p.id));
     }
-    
+
     return filtered;
   };
 
@@ -56,8 +75,8 @@ export function CommonPhrases() {
     }
   };
 
-  const copyPhrase = (phrase: CommonPhrase) => {
-    navigator.clipboard.writeText(`${phrase.english}\n${phrase.hindi}`);
+  const copyPhrase = (phrase: Vocabulary) => {
+    navigator.clipboard.writeText(`${phrase.word}\n${phrase.hindiTranslation}`);
     setCopiedId(phrase.id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -156,12 +175,8 @@ export function CommonPhrases() {
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge className={getCategoryColor(phrase.category)}>
-                    {phrase.category}
-                  </Badge>
-                  <Badge className={getDifficultyColor(phrase.difficulty)}>
-                    {phrase.difficulty === "beginner" ? "शुरुआती" :
-                     phrase.difficulty === "intermediate" ? "मध्यम" : "उन्नत"}
+                  <Badge className="bg-green-100 text-green-700">
+                    Common Phrase
                   </Badge>
                 </div>
                 <div className="flex gap-1">
@@ -170,11 +185,10 @@ export function CommonPhrases() {
                     variant="ghost"
                     onClick={() => toggleFavorite(phrase.id)}
                   >
-                    <Star className={`h-4 w-4 ${
-                      favorites.includes(phrase.id) 
-                        ? "fill-yellow-500 text-yellow-500" 
-                        : "text-gray-400"
-                    }`} />
+                    <Star className={`h-4 w-4 ${favorites.includes(phrase.id)
+                      ? "fill-yellow-500 text-yellow-500"
+                      : "text-gray-400"
+                      }`} />
                   </Button>
                   <Button
                     size="sm"
@@ -189,27 +203,27 @@ export function CommonPhrases() {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-bold">{phrase.english}</p>
+                  <p className="text-lg font-bold">{phrase.word}</p>
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => speakPhrase(phrase.english)}
+                    onClick={() => speakPhrase(phrase.word)}
                   >
                     <Volume2 className="h-4 w-4" />
                   </Button>
                 </div>
                 <p className="text-green-700 dark:text-green-300 font-hindi text-lg">
-                  {phrase.hindi}
+                  {phrase.hindiTranslation}
                 </p>
                 <p className="text-sm text-muted-foreground italic">
                   🔊 {phrase.pronunciation}
                 </p>
                 <div className="pt-2 border-t mt-2 space-y-1">
                   <p className="text-sm text-muted-foreground">
-                    <strong>उपयोग:</strong> {phrase.usageHindi}
+                    <strong>उपयोग:</strong> {phrase.usageHindi || phrase.definition}
                   </p>
                   <p className="text-sm text-blue-600 dark:text-blue-400">
                     <strong>उदाहरण:</strong> {phrase.example}

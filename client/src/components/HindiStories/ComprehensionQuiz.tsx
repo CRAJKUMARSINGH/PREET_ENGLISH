@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { HelpCircle, CheckCircle, XCircle, RotateCcw, Trophy } from "lucide-react";
+import { HelpCircle, CheckCircle, XCircle, RotateCcw, Award } from "lucide-react";
 
 interface Question {
   id: number;
@@ -129,10 +129,10 @@ export function ComprehensionQuiz() {
 
   const handleNext = () => {
     if (selectedAnswer === null || !selectedQuiz) return;
-    
+
     const newAnswers = [...answers, selectedAnswer];
     setAnswers(newAnswers);
-    
+
     if (selectedAnswer === selectedQuiz.questions[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
@@ -194,7 +194,7 @@ export function ComprehensionQuiz() {
       <Card className="border-2 border-blue-200 dark:border-blue-800">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
           <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
-            <Trophy className="h-6 w-6" />
+            <Award className="h-6 w-6" />
             परिणाम (Results)
           </CardTitle>
         </CardHeader>
@@ -206,7 +206,7 @@ export function ComprehensionQuiz() {
           <div className="text-lg text-muted-foreground">
             You got {score} out of {selectedQuiz.questions.length} correct!
           </div>
-          
+
           {percentage >= 80 && (
             <Badge className="text-lg py-2 px-4 bg-green-500">🎉 बहुत बढ़िया! Excellent!</Badge>
           )}
@@ -264,11 +264,10 @@ export function ComprehensionQuiz() {
             <button
               key={idx}
               onClick={() => handleAnswer(idx)}
-              className={`p-4 rounded-xl border-2 text-left transition-all ${
-                selectedAnswer === idx
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
-                  : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
-              }`}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${selectedAnswer === idx
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                }`}
             >
               <span className="font-medium">{option.text}</span>
               <span className="text-blue-600 dark:text-blue-400 font-hindi ml-2">({option.textHindi})</span>
@@ -276,8 +275,8 @@ export function ComprehensionQuiz() {
           ))}
         </div>
 
-        <Button 
-          onClick={handleNext} 
+        <Button
+          onClick={handleNext}
           disabled={selectedAnswer === null}
           className="w-full"
         >

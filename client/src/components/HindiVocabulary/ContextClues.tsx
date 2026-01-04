@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, CheckCircle, XCircle, RotateCcw, HelpCircle, Trophy } from "lucide-react";
+import { Lightbulb, CheckCircle, XCircle, RotateCcw, HelpCircle, Award } from "lucide-react";
 
 interface ContextQuestion {
   id: number;
@@ -168,8 +168,8 @@ export function ContextClues() {
   const [streak, setStreak] = useState(0);
 
   const getRandomQuestion = () => {
-    const filtered = difficulty === "all" 
-      ? contextQuestions 
+    const filtered = difficulty === "all"
+      ? contextQuestions
       : contextQuestions.filter(q => q.difficulty === difficulty);
     if (filtered.length === 0) return;
     const randomIndex = Math.floor(Math.random() * filtered.length);
@@ -192,7 +192,7 @@ export function ContextClues() {
     if (!currentQuestion || !selectedAnswer) return;
     setShowResult(true);
     setTotalQuestions(totalQuestions + 1);
-    
+
     const isCorrect = currentQuestion.options.find(o => o.word === selectedAnswer)?.isCorrect;
     if (isCorrect) {
       setScore(score + (showHint ? 5 : 10));
@@ -221,7 +221,7 @@ export function ContextClues() {
             <Badge variant="outline">स्कोर: {score}</Badge>
             {streak >= 3 && (
               <Badge className="bg-orange-500">
-                <Trophy className="h-3 w-3 mr-1" /> {streak} स्ट्रीक!
+                <Award className="h-3 w-3 mr-1" /> {streak} स्ट्रीक!
               </Badge>
             )}
             <select
@@ -244,8 +244,8 @@ export function ContextClues() {
             <div className="flex justify-between items-start mb-2">
               <Badge>{currentQuestion.category}</Badge>
               <Badge variant="outline">
-                {currentQuestion.difficulty === "easy" ? "आसान" : 
-                 currentQuestion.difficulty === "medium" ? "मध्यम" : "कठिन"}
+                {currentQuestion.difficulty === "easy" ? "आसान" :
+                  currentQuestion.difficulty === "medium" ? "मध्यम" : "कठिन"}
               </Badge>
             </div>
             <p className="text-lg font-medium mb-2">{currentQuestion.sentence}</p>
@@ -256,9 +256,9 @@ export function ContextClues() {
 
           {/* Hint */}
           {!showResult && (
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setShowHint(!showHint)}
               className="w-full"
             >
@@ -285,21 +285,20 @@ export function ContextClues() {
             const isSelected = selectedAnswer === option.word;
             const showCorrect = showResult && option.isCorrect;
             const showIncorrect = showResult && isSelected && !option.isCorrect;
-            
+
             return (
               <button
                 key={option.word}
                 onClick={() => handleAnswerSelect(option.word)}
                 disabled={showResult}
-                className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  showCorrect 
-                    ? "bg-green-100 border-green-500 dark:bg-green-900/30" 
-                    : showIncorrect 
+                className={`p-4 rounded-xl border-2 text-left transition-all ${showCorrect
+                  ? "bg-green-100 border-green-500 dark:bg-green-900/30"
+                  : showIncorrect
                     ? "bg-red-100 border-red-500 dark:bg-red-900/30"
-                    : isSelected 
-                    ? "bg-amber-100 border-amber-500 dark:bg-amber-900/30"
-                    : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-amber-400"
-                }`}
+                    : isSelected
+                      ? "bg-amber-100 border-amber-500 dark:bg-amber-900/30"
+                      : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-amber-400"
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -320,11 +319,10 @@ export function ContextClues() {
 
         {/* Result */}
         {showResult && (
-          <div className={`p-4 rounded-xl border-2 ${
-            isCorrect 
-              ? "bg-green-50 dark:bg-green-900/20 border-green-300" 
-              : "bg-red-50 dark:bg-red-900/20 border-red-300"
-          }`}>
+          <div className={`p-4 rounded-xl border-2 ${isCorrect
+            ? "bg-green-50 dark:bg-green-900/20 border-green-300"
+            : "bg-red-50 dark:bg-red-900/20 border-red-300"
+            }`}>
             <div className="flex items-center gap-2 mb-2">
               {isCorrect ? (
                 <>

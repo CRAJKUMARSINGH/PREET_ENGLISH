@@ -3,12 +3,17 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { calculateSRS } from "./lib/SRS";
+import { User, insertActivityFeedSchema, insertContentRatingSchema } from "@shared/schema";
+
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(
   httpServer: Server | null,
   app: Express
 ): Promise<Server | null> {
-  
+  setupAuth(app);
+
   // Lessons
   app.get(api.lessons.list.path, async (req, res) => {
     const lessons = await storage.getLessons();
@@ -42,10 +47,64 @@ export async function registerRoutes(
     res.json(vocab);
   });
 
+  app.get("/api/vocabulary/category/:category", async (req, res) => {
+    const vocab = await storage.getVocabularyByCategory(req.params.category);
+    res.json(vocab);
+  });
+
+  app.get(api.vocabulary.due.path, async (req, res) => {
+    // Mock user ID 1
+    const userId = 1;
+    const date = new Date().toISOString();
+    const dueVocab = await storage.getVocabularyDueForReview(userId, date);
+
+    // Map to response format
+    const response = dueVocab.map(item => ({
+      ...item.vocabulary,
+      nextReviewDate: item.nextReviewDate,
+      interval: item.interval || 0
+    }));
+
+    res.json(response);
+  });
+
+  app.post(api.vocabulary.review.path, async (req, res) => {
+    try {
+      const { vocabularyId, quality } = api.vocabulary.review.input.parse(req.body);
+      const userId = 1; // Mock user ID
+
+      // Get existing progress or defaults
+      const existing = await storage.getVocabularyProgress(userId, vocabularyId);
+
+      // Calculate new SRS parameters
+      const srsResult = calculateSRS(quality, {
+        interval: existing?.interval || 0,
+        repetition: existing?.repetition || 0,
+        easeFactor: existing?.easeFactor || 250
+      });
+
+      // Update DB
+      const updated = await storage.updateVocabularyProgress(userId, vocabularyId, {
+        interval: srsResult.stats.interval,
+        repetition: srsResult.stats.repetition,
+        easeFactor: srsResult.stats.easeFactor,
+        nextReviewDate: srsResult.nextReviewDate.toISOString(),
+        lastReviewedAt: new Date().toISOString()
+      });
+
+      res.json(updated);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      throw err;
+    }
+  });
+
   // Progress
   app.get(api.progress.list.path, async (req, res) => {
     // Mock user ID 1 for now until auth is added
-    const userId = 1; 
+    const userId = 1;
     const prog = await storage.getUserProgress(userId);
     res.json(prog);
   });
@@ -54,7 +113,7 @@ export async function registerRoutes(
     const userId = 1; // Mock user
     const lessonId = Number(req.params.id);
     const { completed } = req.body;
-    
+
     const updated = await storage.updateProgress(userId, lessonId, completed);
     res.json(updated);
   });
@@ -62,7 +121,7 @@ export async function registerRoutes(
   // Search endpoint
   app.get('/api/search', async (req, res) => {
     const query = req.query.q as string;
-    
+
     if (!query || query.length < 3) {
       return res.json([]);
     }
@@ -117,8 +176,9 @@ export async function registerRoutes(
   });
 
   app.post(api.quizzes.attempts.submit.path, async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
     try {
-      const userId = 1; // Mock user for now
+      const userId = (req.user as User).id;
       const input = { ...api.quizzes.attempts.submit.input.parse(req.body), userId, quizId: Number(req.params.id) };
       const attempt = await storage.submitQuizAttempt(input);
       res.status(201).json(attempt);
@@ -131,18 +191,31 @@ export async function registerRoutes(
   });
 
   app.get(api.quizzes.attempts.list.path, async (req, res) => {
-    const attempts = await storage.getUserQuizAttempts(1, Number(req.params.id)); // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
+    const attempts = await storage.getUserQuizAttempts(userId, Number(req.params.id));
     res.json(attempts);
   });
 
   app.get(api.quizzes.attempts.userAttempts.path, async (req, res) => {
-    const attempts = await storage.getUserQuizAttempts(1); // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
+    const attempts = await storage.getUserQuizAttempts(userId);
     res.json(attempts);
   });
 
+  app.get("/api/lessons/:id/quiz", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const quiz = await storage.getQuizByLessonId(Number(req.params.id));
+    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+    res.json(quiz);
+  });
+
+
   // Gamification routes
   app.get(api.gamification.userStats.get.path, async (req, res) => {
-    const userId = 1; // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
     const stats = await storage.getUserStats(userId);
     if (!stats) {
       return res.status(404).json({ message: 'User stats not found' });
@@ -151,8 +224,9 @@ export async function registerRoutes(
   });
 
   app.put(api.gamification.userStats.update.path, async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
     try {
-      const userId = 1; // Mock user
+      const userId = (req.user as User).id;
       const input = api.gamification.userStats.update.input.parse(req.body);
       const stats = await storage.updateUserStats(userId, input);
       res.json(stats);
@@ -170,14 +244,16 @@ export async function registerRoutes(
   });
 
   app.get(api.gamification.achievements.userAchievements.path, async (req, res) => {
-    const userId = 1; // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
     const userAchievements = await storage.getUserAchievements(userId);
     res.json(userAchievements);
   });
 
   app.post(api.gamification.achievements.unlock.path, async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
     try {
-      const userId = 1; // Mock user
+      const userId = (req.user as User).id;
       const achievementId = Number(req.params.id);
       const userAchievement = await storage.unlockAchievement(userId, achievementId);
       res.status(201).json(userAchievement);
@@ -190,18 +266,21 @@ export async function registerRoutes(
   });
 
   app.get(api.gamification.dailyGoals.get.path, async (req, res) => {
-    const userId = 1; // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
     const date = req.params.date;
     const goal = await storage.getDailyGoal(userId, date);
     if (!goal) {
+      // Create default if missing or return 404
       return res.status(404).json({ message: 'Daily goal not found' });
     }
     res.json(goal);
   });
 
   app.put(api.gamification.dailyGoals.update.path, async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
     try {
-      const userId = 1; // Mock user
+      const userId = (req.user as User).id;
       const date = req.params.date;
       const input = api.gamification.dailyGoals.update.input.parse(req.body);
       const goal = await storage.updateDailyGoal(userId, date, input);
@@ -248,7 +327,8 @@ export async function registerRoutes(
   });
 
   app.get(api.scenarios.progress.get.path, async (req, res) => {
-    const userId = 1; // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
     const scenarioId = Number(req.params.id);
     const progress = await storage.getScenarioProgress(userId, scenarioId);
     if (!progress) {
@@ -258,8 +338,9 @@ export async function registerRoutes(
   });
 
   app.put(api.scenarios.progress.update.path, async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
     try {
-      const userId = 1; // Mock user
+      const userId = (req.user as User).id;
       const scenarioId = Number(req.params.id);
       const input = req.body; // Use partial update
       const progress = await storage.updateScenarioProgress(userId, scenarioId, input);
@@ -273,16 +354,18 @@ export async function registerRoutes(
   });
 
   app.get(api.scenarios.progress.userProgress.path, async (req, res) => {
-    const userId = 1; // Mock user
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
     const progress = await storage.getUserScenarioProgress(userId);
     res.json(progress);
   });
 
   // Certification routes
   app.get(api.certifications.userCertifications.path, async (req, res) => {
-    const userId = 1; // Mock user
-    const certifications = await storage.getUserCertifications(userId);
-    res.json(certifications);
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
+    const userCertifications = await storage.getUserCertifications(userId);
+    res.json(userCertifications);
   });
 
   app.post(api.certifications.create.path, async (req, res) => {
@@ -296,6 +379,111 @@ export async function registerRoutes(
       }
       throw err;
     }
+  });
+
+  // Seeding
+  // SRS & Stories (Phase 3)
+  app.get("/api/stories", async (req, res) => {
+    const stories = await storage.getStories();
+    res.json(stories);
+  });
+
+  app.get("/api/stories/:id", async (req, res) => {
+    const story = await storage.getStory(Number(req.params.id));
+    if (!story) return res.status(404).json({ message: "Story not found" });
+    res.json(story);
+  });
+
+  app.get("/api/vocabulary/review", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as User).id;
+    const today = new Date().toISOString();
+    const due = await storage.getVocabularyDueForReview(userId, today);
+    res.json(due);
+  });
+
+  // Listenings
+  app.get("/api/listenings", async (req, res) => {
+    const data = await storage.getListenings();
+    res.json(data);
+  });
+
+  app.get("/api/listenings/:id", async (req, res) => {
+    const data = await storage.getListening(Number(req.params.id));
+    if (!data) return res.status(404).json({ message: "Listening lesson not found" });
+    res.json(data);
+  });
+
+  // Speaking Topics
+  app.get("/api/speaking-topics", async (req, res) => {
+    const data = await storage.getSpeakingTopics();
+    res.json(data);
+  });
+
+  app.get("/api/speaking-topics/:id", async (req, res) => {
+    const data = await storage.getSpeakingTopic(Number(req.params.id));
+    if (!data) return res.status(404).json({ message: "Speaking topic not found" });
+    res.json(data);
+  });
+
+
+  // Activity Feed (Phase 4)
+  app.get('/api/activity-feed', async (req, res) => {
+    const feed = await storage.getActivityFeed();
+    res.json(feed);
+  });
+
+  app.post('/api/activity-feed', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    try {
+      const input = insertActivityFeedSchema.parse({
+        ...req.body,
+        userId: (req.user as User).id
+      });
+      const entry = await storage.createActivityEntry(input);
+      res.status(201).json(entry);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      throw err;
+    }
+  });
+
+  // Content Ratings (Phase 4)
+  app.get('/api/content-ratings/:type/:id', async (req, res) => {
+    const ratings = await storage.getContentRatings(req.params.type, Number(req.params.id));
+    res.json(ratings);
+  });
+
+  app.post('/api/content-ratings', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    try {
+      const input = insertContentRatingSchema.parse({
+        ...req.body,
+        userId: (req.user as User).id
+      });
+      const rating = await storage.createContentRating(input);
+
+      // Also create an activity feed entry for this rating
+      await storage.createActivityEntry({
+        userId: (req.user as User).id,
+        type: 'RATING',
+        referenceId: rating.contentId,
+        content: `Rated a ${input.contentType.toLowerCase()} ${input.rating} stars!`
+      });
+      res.status(201).json(rating);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      throw err;
+    }
+  });
+
+  app.get('/api/community/buddies', async (req, res) => {
+    const users = await storage.getPublicUsers();
+    res.json(users);
   });
 
   // Seeding
@@ -351,7 +539,7 @@ async function seedDatabase() {
       order: 2,
       imageUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80"
     });
-    
+
     await storage.createVocabulary({
       lessonId: l2.id,
       word: "Run",
@@ -436,10 +624,45 @@ async function seedDatabase() {
       level: 1,
       currentStreak: 0,
       longestStreak: 0,
-      lastActiveDate: new Date().toISOString().split('T')[0],
-      totalLessonsCompleted: 0,
-      totalQuizzesPassed: 0,
-      totalMinutesLearned: 0
+      lastActiveDate: new Date().toISOString().split('T')[0]
+    });
+
+    // Phase 3: Add sample stories
+    await storage.createStory({
+      title: "The Golden Bird",
+      titleHindi: "सुनहरी चिड़िया",
+      description: "A classic folk tale about kindness and greed.",
+      descriptionHindi: "दयालुता और लालच के बारे में एक लोक कथा।",
+      content: "Once upon a time, there lived a golden bird in a deep forest. She sang beautiful songs every morning. One day, a hunter came and tried to catch her.\n\nThe bird flew high into the sky and said, 'If you let me go, I will give you a golden feather.' The hunter agreed, and the bird kept her word.",
+      contentHindi: "एक समय की बात है, एक गहरे जंगल में एक सुनहरी चिड़िया रहती थी। वह हर सुबह सुंदर गीत गाती थी। एक दिन, एक शिकारी आया और उसने उसे पकड़ने की कोशिश की।\n\nचिड़िया आसमान में ऊँची उड़ी और बोली, 'अगर तुम मुझे जाने दोगे, तो मैं तुम्हें एक सुनहरा पंख दूँगी।' शिकारी मान गया, और चिड़िया ने अपनी बात रखी।",
+      imageUrl: "https://images.unsplash.com/photo-1552084117-56a987666449?auto=format&fit=crop&q=80&w=800",
+      difficulty: "Beginner",
+      category: "Folk Tale",
+      order: 1
+    });
+
+    await storage.createStory({
+      title: "The Busy Market",
+      titleHindi: "व्यस्त बाजार",
+      description: "Learn essential vocabulary for shopping in a crowded Indian market.",
+      descriptionHindi: "भारतीय बाजार में खरीदारी के लिए आवश्यक शब्दावली सीखें।",
+      content: "Walking through the market, Ravi saw many colorful stalls. He wanted to buy some fresh mangoes. 'How much for a kilo?' he asked the vendor.\n\nThe vendor replied, 'Eighty rupees, sir. They are very sweet today.' Ravi bought two kilos and went home happy.",
+      contentHindi: "बाजार में चलते हुए रवि ने कई रंगीन स्टाल देखे। वह कुछ ताजे आम खरीदना चाहता था। 'एक किलो कितने का है?' उसने विक्रेता से पूछा।\n\nविक्रेता ने उत्तर दिया, 'अस्सी रुपये, सर। वे आज बहुत मीठे हैं।' रवि ने दो किलो खरीदे और खुशी-खुशी घर चला गया।",
+      imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800",
+      difficulty: "Intermediate",
+      category: "Daily Life",
+      order: 2
+    });
+
+    // Add some sample vocabulary for SRS testing
+    // Link them to lesson 1
+    await storage.createVocabulary({
+      lessonId: 1,
+      word: "Flawless",
+      hindiTranslation: "बेदाग / त्रुटिहीन",
+      pronunciation: "flaw-less",
+      definition: "Without any blemishes or imperfections; perfect.",
+      example: "Her performance was flawless."
     });
 
     // Initialize today's daily goal

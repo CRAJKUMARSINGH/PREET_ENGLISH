@@ -1,112 +1,218 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Volume2, CheckCircle, XCircle, Lightbulb } from 'lucide-react';
 
 interface HindiExplanationProps {
   englishText: string;
   hindiExplanation: string;
-  pronunciation?: string;
-  commonMistake?: string;
   tip?: string;
-  className?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
 }
 
 export function HindiExplanation({ 
   englishText, 
   hindiExplanation, 
-  pronunciation,
-  commonMistake,
-  tip,
-  className 
+  tip, 
+  difficulty = 'medium' 
 }: HindiExplanationProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playAudio = () => {
+    if ('speechSynthesis' in window) {
+      setIsPlaying(true);
+      const utterance = new SpeechSynthesisUtterance(englishText);
+      utterance.lang = 'en-US';
+      utterance.onend = () => setIsPlaying(false);
+      speechSynthesis.speak(utterance);
+    }
+  };
+
+  const difficultyColors = {
+    easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+    hard: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+  };
+
   return (
-    <div className={cn('hindi-explanation bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800', className)}>
-      <div className="english-text font-semibold text-lg mb-2">
-        {englishText}
-      </div>
-      
-      <div className="hindi-explanation text-blue-700 dark:text-blue-300 mb-2">
-        <span className="font-medium">Hindi में:</span> {hindiExplanation}
-      </div>
-      
-      {pronunciation && (
-        <div className="pronunciation text-sm text-purple-600 dark:text-purple-400 mb-2">
-          <span className="font-medium">उच्चारण:</span> {pronunciation}
+    <Card className="hindi-explanation-card">
+      <CardContent className="pt-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-lg font-semibold text-primary">{englishText}</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={playAudio}
+                disabled={isPlaying}
+                className="h-8 w-8 p-0"
+              >
+                <Volume2 className={`h-4 w-4 ${isPlaying ? 'animate-pulse' : ''}`} />
+              </Button>
+            </div>
+            <p className="text-muted-foreground mb-2">{hindiExplanation}</p>
+            {tip && (
+              <div className="flex items-start gap-2 mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <Lightbulb className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-blue-700 dark:text-blue-300">{tip}</p>
+              </div>
+            )}
+          </div>
+          <Badge className={difficultyColors[difficulty]}>
+            {difficulty}
+          </Badge>
         </div>
-      )}
-      
-      {commonMistake && (
-        <div className="common-mistake text-sm text-red-600 dark:text-red-400 mb-2">
-          <span className="font-medium">आम गलती:</span> {commonMistake}
-        </div>
-      )}
-      
-      {tip && (
-        <div className="tip text-sm text-green-600 dark:text-green-400">
-          <span className="font-medium">💡 टिप:</span> {tip}
-        </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
-// Common English mistakes for Hindi speakers
-interface CommonMistakeProps {
+interface CommonMistakeCardProps {
   wrongSentence: string;
   correctSentence: string;
   hindiExplanation: string;
-  className?: string;
 }
 
 export function CommonMistakeCard({ 
   wrongSentence, 
   correctSentence, 
-  hindiExplanation,
-  className 
-}: CommonMistakeProps) {
+  hindiExplanation 
+}: CommonMistakeCardProps) {
   return (
-    <div className={cn('mistake-card bg-red-50 dark:bg-red-950/20 p-4 rounded-lg border border-red-200 dark:border-red-800', className)}>
-      <div className="wrong-sentence text-red-600 dark:text-red-400 mb-2">
-        <span className="font-medium">❌ गलत:</span> {wrongSentence}
-      </div>
-      
-      <div className="correct-sentence text-green-600 dark:text-green-400 mb-2">
-        <span className="font-medium">✅ सही:</span> {correctSentence}
-      </div>
-      
-      <div className="explanation text-sm text-muted-foreground">
-        <span className="font-medium">समझाइए:</span> {hindiExplanation}
-      </div>
-    </div>
+    <Card className="common-mistake-card">
+      <CardContent className="pt-4">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+            <XCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-red-700 dark:text-red-300">गलत:</p>
+              <p className="text-red-600 dark:text-red-400">{wrongSentence}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+            <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-green-700 dark:text-green-300">सही:</p>
+              <p className="text-green-600 dark:text-green-400">{correctSentence}</p>
+            </div>
+          </div>
+          
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
+              <strong>व्याख्या:</strong> {hindiExplanation}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
-// Pronunciation guide for Hindi speakers
 interface PronunciationGuideProps {
   englishWord: string;
   hindiComparison: string;
   soundTip: string;
-  className?: string;
 }
 
 export function PronunciationGuide({ 
   englishWord, 
   hindiComparison, 
-  soundTip,
-  className 
+  soundTip 
 }: PronunciationGuideProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playPronunciation = () => {
+    if ('speechSynthesis' in window) {
+      setIsPlaying(true);
+      const utterance = new SpeechSynthesisUtterance(englishWord);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.8;
+      utterance.onend = () => setIsPlaying(false);
+      speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
-    <div className={cn('pronunciation-guide bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800', className)}>
-      <div className="english-word font-semibold text-lg mb-2">
-        {englishWord}
-      </div>
-      
-      <div className="hindi-comparison text-purple-600 dark:text-purple-400 mb-2">
-        <span className="font-medium">Hindi में समान:</span> {hindiComparison}
-      </div>
-      
-      <div className="sound-tip text-sm text-muted-foreground">
-        <span className="font-medium">🎵 आवाज़ की टिप:</span> {soundTip}
-      </div>
-    </div>
+    <Card className="pronunciation-guide-card">
+      <CardContent className="pt-4">
+        <div className="text-center space-y-3">
+          <div className="flex items-center justify-center gap-2">
+            <h3 className="text-xl font-bold text-primary">{englishWord}</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={playPronunciation}
+              disabled={isPlaying}
+              className="h-8 w-8 p-0"
+            >
+              <Volume2 className={`h-4 w-4 ${isPlaying ? 'animate-pulse text-primary' : ''}`} />
+            </Button>
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              <strong>हिंदी तुलना:</strong> {hindiComparison}
+            </p>
+            <p className="text-sm text-blue-600 dark:text-blue-400">
+              <strong>टिप:</strong> {soundTip}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface QuickPronunciationTipsProps {
+  className?: string;
+}
+
+export function QuickPronunciationTips({ className }: QuickPronunciationTipsProps) {
+  const tips = [
+    {
+      sound: 'TH',
+      hindi: 'थ',
+      tip: 'जीभ को दांतों के बीच रखें, हवा निकालें'
+    },
+    {
+      sound: 'V',
+      hindi: 'व',
+      tip: 'ऊपरी दांत निचले होंठ को छूएं'
+    },
+    {
+      sound: 'W',
+      hindi: 'व',
+      tip: 'होंठों को गोल करें, दांत न छुएं'
+    },
+    {
+      sound: 'R',
+      hindi: 'र',
+      tip: 'जीभ को मोड़ें, तालू न छुएं'
+    }
+  ];
+
+  return (
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Volume2 className="h-5 w-5" />
+          Quick Pronunciation Tips
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {tips.map((tip, index) => (
+            <div key={index} className="text-center p-3 bg-secondary/50 rounded-lg">
+              <div className="text-lg font-bold text-primary mb-1">{tip.sound}</div>
+              <div className="text-sm text-muted-foreground mb-1">≠ {tip.hindi}</div>
+              <div className="text-xs text-blue-600 dark:text-blue-400">{tip.tip}</div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Gamepad2, Trophy, RotateCcw, Clock, Star } from "lucide-react";
+import { Gamepad2, Award, RotateCcw, Clock, Star } from "lucide-react";
 
 interface MatchPair {
   id: number;
@@ -62,8 +62,8 @@ export function GrammarMatchGame() {
   const categories = ["All", "Pronouns", "Verbs", "Adjectives", "Nouns"];
 
   const startGame = () => {
-    const filtered = category === "All" 
-      ? matchPairs 
+    const filtered = category === "All"
+      ? matchPairs
       : matchPairs.filter(p => p.category === category);
     const shuffled = [...filtered].sort(() => Math.random() - 0.5).slice(0, 8);
     setCurrentPairs(shuffled);
@@ -138,7 +138,7 @@ export function GrammarMatchGame() {
               60 सेकंड में जितने हो सके उतने शब्द मिलाएं!
             </p>
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium">श्रेणी चुनें (Select Category):</label>
             <div className="flex flex-wrap gap-2">
@@ -169,14 +169,14 @@ export function GrammarMatchGame() {
       <Card className="border-2 border-green-200 dark:border-green-800">
         <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
           <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
-            <Trophy className="h-6 w-6" />
+            <Award className="h-6 w-6" />
             खेल समाप्त! (Game Over!)
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 text-center space-y-6">
           <div className="text-6xl font-bold text-green-600">{score}</div>
           <div className="text-xl">अंक (Points)</div>
-          
+
           <div className="flex justify-center gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold">{matchedPairs.length}/{currentPairs.length}</div>
@@ -190,10 +190,10 @@ export function GrammarMatchGame() {
 
           {percentage === 100 && (
             <div className="flex justify-center gap-1">
-              {[1,2,3].map(i => <Star key={i} className="h-8 w-8 text-yellow-500 fill-yellow-500" />)}
+              {[1, 2, 3].map(i => <Star key={i} className="h-8 w-8 text-yellow-500 fill-yellow-500" />)}
             </div>
           )}
-          
+
           <Badge className={`text-lg py-2 px-4 ${percentage === 100 ? 'bg-green-500' : percentage >= 50 ? 'bg-yellow-500' : 'bg-orange-500'}`}>
             {percentage === 100 ? '🎉 परफेक्ट!' : percentage >= 50 ? '👍 अच्छा!' : '📚 और अभ्यास करें!'}
           </Badge>
@@ -231,19 +231,18 @@ export function GrammarMatchGame() {
                 key={`eng-${pair.id}`}
                 onClick={() => handleEnglishClick(pair.id)}
                 disabled={matchedPairs.includes(pair.id)}
-                className={`w-full p-3 rounded-lg border-2 transition-all ${
-                  matchedPairs.includes(pair.id)
+                className={`w-full p-3 rounded-lg border-2 transition-all ${matchedPairs.includes(pair.id)
                     ? 'bg-green-100 border-green-500 text-green-700'
                     : selectedEnglish === pair.id
-                    ? 'bg-blue-100 border-blue-500'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400'
-                }`}
+                      ? 'bg-blue-100 border-blue-500'
+                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400'
+                  }`}
               >
                 {pair.english}
               </button>
             ))}
           </div>
-          
+
           {/* Hindi Column */}
           <div className="space-y-2">
             <h3 className="font-bold text-center mb-3 text-orange-600">हिंदी</h3>
@@ -252,20 +251,19 @@ export function GrammarMatchGame() {
                 key={`hin-${pair.id}`}
                 onClick={() => handleHindiClick(pair.id)}
                 disabled={matchedPairs.includes(pair.id)}
-                className={`w-full p-3 rounded-lg border-2 transition-all font-hindi ${
-                  matchedPairs.includes(pair.id)
+                className={`w-full p-3 rounded-lg border-2 transition-all font-hindi ${matchedPairs.includes(pair.id)
                     ? 'bg-green-100 border-green-500 text-green-700'
                     : selectedHindi === pair.id
-                    ? 'bg-orange-100 border-orange-500'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-orange-400'
-                }`}
+                      ? 'bg-orange-100 border-orange-500'
+                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-orange-400'
+                  }`}
               >
                 {pair.hindi}
               </button>
             ))}
           </div>
         </div>
-        
+
         <div className="mt-4 text-center text-sm text-muted-foreground">
           {matchedPairs.length}/{currentPairs.length} मिलान पूर्ण
         </div>

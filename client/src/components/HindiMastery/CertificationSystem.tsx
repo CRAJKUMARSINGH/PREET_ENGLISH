@@ -3,10 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Award, 
-  Trophy, 
-  Star, 
+import {
+  Award,
+  Star,
   CheckCircle,
   Lock,
   Download,
@@ -208,15 +207,15 @@ export function CertificationSystem() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-500" />
+            <Award className="w-5 h-5 text-yellow-500" />
             Certificates
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
             {certificates.map((cert) => (
-              <Card 
-                key={cert.id} 
+              <Card
+                key={cert.id}
                 className={cn(
                   'cursor-pointer transition-all hover:shadow-md',
                   cert.isUnlocked ? 'border-yellow-500' : 'opacity-80'
@@ -240,9 +239,9 @@ export function CertificationSystem() {
                       {cert.level}
                     </Badge>
                   </div>
-                  
+
                   <p className="text-sm text-muted-foreground mb-3">{cert.description}</p>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
@@ -289,7 +288,7 @@ export function CertificationSystem() {
               <div className="text-blue-600 dark:text-blue-400 font-medium">
                 {selectedCertificate.titleHindi}
               </div>
-              
+
               <div>
                 <h4 className="font-medium mb-2">Requirements:</h4>
                 <ul className="space-y-2">
@@ -297,8 +296,8 @@ export function CertificationSystem() {
                     <li key={index} className="flex items-center gap-2 text-sm">
                       <CheckCircle className={cn(
                         'w-4 h-4',
-                        index < Math.floor(selectedCertificate.progress / 25) 
-                          ? 'text-green-500' 
+                        index < Math.floor(selectedCertificate.progress / 25)
+                          ? 'text-green-500'
                           : 'text-gray-300'
                       )} />
                       <span>{req}</span>
@@ -318,7 +317,7 @@ export function CertificationSystem() {
               {selectedCertificate.progress < 100 && (
                 <div className="bg-blue-50 dark:bg-blue-950/20 p-3 rounded-lg text-sm">
                   <strong className="text-blue-700 dark:text-blue-300">
-                    💡 Tip: 
+                    💡 Tip:
                   </strong>
                   <span className="text-blue-600 dark:text-blue-400 ml-1">
                     Continue practicing to unlock this certificate!
@@ -345,8 +344,8 @@ export function CertificationSystem() {
                 key={achievement.id}
                 className={cn(
                   'text-center p-4 rounded-lg border transition-all',
-                  achievement.isEarned 
-                    ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800' 
+                  achievement.isEarned
+                    ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800'
                     : 'bg-gray-50 dark:bg-gray-800 opacity-60'
                 )}
               >

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,143 +13,14 @@ interface VocabularyWord {
   pronunciation: string;
   partOfSpeech: string;
   difficulty: "beginner" | "intermediate" | "advanced";
-  synonyms: string[];
-  antonyms: string[];
-  examples: { english: string; hindi: string }[];
+  synonyms: readonly string[];
+  antonyms: readonly string[];
+  examples: readonly { english: string; hindi: string }[];
   category: string;
   frequency: "common" | "moderate" | "rare";
 }
 
-const vocabularyWords: VocabularyWord[] = [
-  {
-    id: 1,
-    english: "Beautiful",
-    hindi: "सुंदर",
-    pronunciation: "/ˈbjuːtɪfʊl/",
-    partOfSpeech: "Adjective",
-    difficulty: "beginner",
-    synonyms: ["Pretty", "Lovely", "Gorgeous", "Attractive"],
-    antonyms: ["Ugly", "Hideous", "Unattractive"],
-    examples: [
-      { english: "She has beautiful eyes.", hindi: "उसकी आँखें सुंदर हैं।" },
-      { english: "The sunset is beautiful.", hindi: "सूर्यास्त सुंदर है।" }
-    ],
-    category: "Appearance",
-    frequency: "common"
-  },
-  {
-    id: 2,
-    english: "Magnificent",
-    hindi: "शानदार",
-    pronunciation: "/mæɡˈnɪfɪsənt/",
-    partOfSpeech: "Adjective",
-    difficulty: "intermediate",
-    synonyms: ["Splendid", "Grand", "Majestic", "Superb"],
-    antonyms: ["Ordinary", "Plain", "Modest"],
-    examples: [
-      { english: "The palace is magnificent.", hindi: "महल शानदार है।" },
-      { english: "He gave a magnificent performance.", hindi: "उसने शानदार प्रदर्शन दिया।" }
-    ],
-    category: "Quality",
-    frequency: "moderate"
-  },
-  {
-    id: 3,
-    english: "Perseverance",
-    hindi: "दृढ़ता",
-    pronunciation: "/ˌpɜːrsɪˈvɪrəns/",
-    partOfSpeech: "Noun",
-    difficulty: "advanced",
-    synonyms: ["Persistence", "Determination", "Tenacity"],
-    antonyms: ["Giving up", "Surrender", "Abandonment"],
-    examples: [
-      { english: "Success requires perseverance.", hindi: "सफलता के लिए दृढ़ता चाहिए।" },
-      { english: "His perseverance paid off.", hindi: "उसकी दृढ़ता का फल मिला।" }
-    ],
-    category: "Character",
-    frequency: "rare"
-  },
-  {
-    id: 4,
-    english: "Generous",
-    hindi: "उदार",
-    pronunciation: "/ˈdʒenərəs/",
-    partOfSpeech: "Adjective",
-    difficulty: "beginner",
-    synonyms: ["Kind", "Giving", "Charitable", "Benevolent"],
-    antonyms: ["Selfish", "Stingy", "Greedy"],
-    examples: [
-      { english: "He is very generous with his time.", hindi: "वह अपने समय के साथ बहुत उदार है।" },
-      { english: "She made a generous donation.", hindi: "उसने उदार दान दिया।" }
-    ],
-    category: "Character",
-    frequency: "common"
-  },
-  {
-    id: 5,
-    english: "Eloquent",
-    hindi: "वाक्पटु",
-    pronunciation: "/ˈeləkwənt/",
-    partOfSpeech: "Adjective",
-    difficulty: "advanced",
-    synonyms: ["Articulate", "Fluent", "Expressive"],
-    antonyms: ["Inarticulate", "Tongue-tied", "Speechless"],
-    examples: [
-      { english: "The speaker was eloquent.", hindi: "वक्ता वाक्पटु था।" },
-      { english: "She gave an eloquent speech.", hindi: "उसने वाक्पटु भाषण दिया।" }
-    ],
-    category: "Communication",
-    frequency: "rare"
-  },
-  {
-    id: 6,
-    english: "Curious",
-    hindi: "जिज्ञासु",
-    pronunciation: "/ˈkjʊriəs/",
-    partOfSpeech: "Adjective",
-    difficulty: "beginner",
-    synonyms: ["Inquisitive", "Interested", "Eager"],
-    antonyms: ["Indifferent", "Uninterested", "Apathetic"],
-    examples: [
-      { english: "Children are naturally curious.", hindi: "बच्चे स्वाभाविक रूप से जिज्ञासु होते हैं।" },
-      { english: "I'm curious about your opinion.", hindi: "मैं आपकी राय के बारे में जिज्ञासु हूँ।" }
-    ],
-    category: "Emotion",
-    frequency: "common"
-  },
-  {
-    id: 7,
-    english: "Resilient",
-    hindi: "लचीला",
-    pronunciation: "/rɪˈzɪliənt/",
-    partOfSpeech: "Adjective",
-    difficulty: "intermediate",
-    synonyms: ["Strong", "Tough", "Adaptable", "Flexible"],
-    antonyms: ["Fragile", "Weak", "Brittle"],
-    examples: [
-      { english: "She is resilient in tough times.", hindi: "वह कठिन समय में मजबूत है।" },
-      { english: "The material is very resilient.", hindi: "यह सामग्री बहुत लचीली है।" }
-    ],
-    category: "Character",
-    frequency: "moderate"
-  },
-  {
-    id: 8,
-    english: "Innovative",
-    hindi: "नवाचारी",
-    pronunciation: "/ˈɪnəveɪtɪv/",
-    partOfSpeech: "Adjective",
-    difficulty: "intermediate",
-    synonyms: ["Creative", "Original", "Inventive", "Novel"],
-    antonyms: ["Traditional", "Conventional", "Old-fashioned"],
-    examples: [
-      { english: "The company has innovative ideas.", hindi: "कंपनी के पास नवाचारी विचार हैं।" },
-      { english: "He found an innovative solution.", hindi: "उसने नवाचारी समाधान खोजा।" }
-    ],
-    category: "Quality",
-    frequency: "moderate"
-  }
-];
+import { advancedVocabularyData as vocabularyWords } from "@/data/advancedVocabularyData";
 
 export function VocabularyBuilder() {
   const [currentWord, setCurrentWord] = useState<VocabularyWord | null>(null);
@@ -167,7 +39,7 @@ export function VocabularyBuilder() {
     const matchesDifficulty = difficulty === "all" || word.difficulty === difficulty;
     const matchesCategory = category === "all" || word.category === category;
     const matchesSearch = word.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         word.hindi.includes(searchTerm);
+      word.hindi.includes(searchTerm);
     return matchesDifficulty && matchesCategory && matchesSearch;
   });
 
@@ -223,12 +95,11 @@ export function VocabularyBuilder() {
         </CardTitle>
         <div className="flex flex-wrap gap-2 mt-2">
           <Badge variant="outline">{studiedWords.length} शब्द सीखे</Badge>
-          <Badge className={`${
-            currentWord.frequency === "common" ? "bg-green-500" :
+          <Badge className={`${currentWord.frequency === "common" ? "bg-green-500" :
             currentWord.frequency === "moderate" ? "bg-yellow-500" : "bg-red-500"
-          }`}>
-            {currentWord.frequency === "common" ? "आम" : 
-             currentWord.frequency === "moderate" ? "मध्यम" : "दुर्लभ"}
+            }`}>
+            {currentWord.frequency === "common" ? "आम" :
+              currentWord.frequency === "moderate" ? "मध्यम" : "दुर्लभ"}
           </Badge>
         </div>
       </CardHeader>
@@ -281,8 +152,8 @@ export function VocabularyBuilder() {
               <Button onClick={() => speakWord(currentWord.english)} size="sm">
                 <Volume2 className="h-4 w-4 mr-1" /> सुनें
               </Button>
-              <Button 
-                onClick={() => setQuizMode(!quizMode)} 
+              <Button
+                onClick={() => setQuizMode(!quizMode)}
                 variant={quizMode ? "default" : "outline"}
                 size="sm"
               >
@@ -313,13 +184,12 @@ export function VocabularyBuilder() {
                 disabled={showResult}
               />
             </div>
-            
+
             {showResult && (
-              <div className={`p-4 rounded-xl border-2 ${
-                isCorrect
-                  ? "bg-green-50 dark:bg-green-900/20 border-green-300"
-                  : "bg-red-50 dark:bg-red-900/20 border-red-300"
-              }`}>
+              <div className={`p-4 rounded-xl border-2 ${isCorrect
+                ? "bg-green-50 dark:bg-green-900/20 border-green-300"
+                : "bg-red-50 dark:bg-red-900/20 border-red-300"
+                }`}>
                 <div className="flex items-center gap-2 mb-2">
                   {isCorrect ? (
                     <>
@@ -389,9 +259,9 @@ export function VocabularyBuilder() {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <Button 
-            onClick={() => setShowDetails(!showDetails)} 
-            variant="outline" 
+          <Button
+            onClick={() => setShowDetails(!showDetails)}
+            variant="outline"
             className="flex-1"
             disabled={quizMode}
           >
@@ -408,3 +278,5 @@ export function VocabularyBuilder() {
     </Card>
   );
 }
+
+export default VocabularyBuilder;

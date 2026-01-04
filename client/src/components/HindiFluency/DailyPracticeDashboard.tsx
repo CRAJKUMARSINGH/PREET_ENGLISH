@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Target, 
-  Flame, 
-  Trophy, 
+import {
+  Calendar,
+  Target,
+  Flame,
+  Award,
   Clock,
   CheckCircle,
   Play,
@@ -115,7 +115,7 @@ export function DailyPracticeDashboard() {
     totalDays: 45,
     lastPracticeDate: new Date().toISOString().split('T')[0]
   });
-  
+
   const [goals, setGoals] = useState<DailyGoal[]>(dailyGoals);
   const [totalXP, setTotalXP] = useState(1250);
   const [level, setLevel] = useState(5);
@@ -177,15 +177,15 @@ export function DailyPracticeDashboard() {
             <div className="text-sm text-muted-foreground">Current Streak</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
-            <Trophy className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
+            <Award className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
             <div className="text-2xl font-bold">{streak.longestStreak}</div>
             <div className="text-sm text-muted-foreground">Best Streak</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <Star className="w-8 h-8 mx-auto mb-2 text-purple-500" />
@@ -193,7 +193,7 @@ export function DailyPracticeDashboard() {
             <div className="text-sm text-muted-foreground">Total XP</div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4 text-center">
             <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-500" />
@@ -223,12 +223,12 @@ export function DailyPracticeDashboard() {
         <CardContent>
           <div className="space-y-4">
             {goals.map((goal) => (
-              <div 
-                key={goal.id} 
+              <div
+                key={goal.id}
                 className={cn(
                   "flex items-center justify-between p-4 rounded-lg border",
-                  goal.completed >= goal.target 
-                    ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800" 
+                  goal.completed >= goal.target
+                    ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
                     : "bg-gray-50 dark:bg-gray-800"
                 )}
               >
@@ -239,18 +239,18 @@ export function DailyPracticeDashboard() {
                     <div className="text-sm text-blue-600 dark:text-blue-400">{goal.titleHindi}</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="text-right">
                     <div className="font-bold">{goal.completed}/{goal.target}</div>
                     <div className="text-xs text-muted-foreground">+{goal.xpReward} XP</div>
                   </div>
-                  
+
                   {goal.completed >= goal.target ? (
                     <CheckCircle className="w-6 h-6 text-green-500" />
                   ) : (
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       onClick={() => incrementGoal(goal.id)}
                     >
                       <Play className="w-4 h-4" />
@@ -313,10 +313,10 @@ export function DailyPracticeDashboard() {
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => {
               const isCompleted = index < 5; // Simulated: first 5 days completed
               const isToday = index === 4; // Friday is today
-              
+
               return (
-                <div 
-                  key={day} 
+                <div
+                  key={day}
                   className={cn(
                     "flex flex-col items-center p-2 rounded-lg",
                     isToday && "bg-blue-100 dark:bg-blue-900/20"
@@ -325,8 +325,8 @@ export function DailyPracticeDashboard() {
                   <span className="text-xs text-muted-foreground">{day}</span>
                   <div className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center mt-1",
-                    isCompleted 
-                      ? "bg-green-500 text-white" 
+                    isCompleted
+                      ? "bg-green-500 text-white"
                       : "bg-gray-200 dark:bg-gray-700"
                   )}>
                     {isCompleted ? (

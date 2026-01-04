@@ -1,4 +1,5 @@
 import { Layout } from "@/components/Layout";
+import { cn } from "@/lib/utils";
 import { LessonCard } from "@/components/LessonCard";
 import { StreakCard } from "@/components/StreakCard";
 import { DailyGoalCard } from "@/components/DailyGoalCard";
@@ -9,16 +10,22 @@ import { SaraswatiMascot } from "@/components/SaraswatiMascot";
 import { CertificationCard } from "@/components/CertificationCard";
 import { ResourcesSection } from "@/components/ResourcesSection";
 import { TodaysPractice } from "@/components/TodaysPractice";
-import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
-import { ComingSoon } from "@/components/ComingSoon";
-import { VocabularyBuilder } from "@/components/VocabularyBuilder";
-import { ConversationPractice } from "@/components/ConversationPractice";
 import { AITutor } from "@/components/AITutor";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
 import { useUserStats, useDailyGoal, useLeaderboard } from "@/hooks/use-gamification";
-import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare, Bot } from "lucide-react";
+import {
+  Sparkles,
+  BookOpen,
+  Mic,
+  CheckCircle,
+  Loader2,
+  Trophy,
+  Crown,
+  ArrowRight,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
+import React from "react";
 import { useState } from "react";
 import { Link } from "wouter";
 
@@ -38,39 +45,26 @@ export default function Home() {
   const totalLessons = lessons?.length || 0;
   const percentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
-  // Fallbacks while gamification data is loading or not yet initialized
-  // Coerce API values into non-null numbers for UI components
+  // Fallback data logic
   const effectiveUserStats = userStats
     ? {
-        currentStreak: Number(userStats.currentStreak ?? 0),
-        longestStreak: Number(userStats.longestStreak ?? 0),
-        xpPoints: Number(userStats.xpPoints ?? 0),
-        level: Number(userStats.level ?? 1),
-      }
-    : {
-        currentStreak: 0,
-        longestStreak: 0,
-        xpPoints: 0,
-        level: 1,
-      };
+      currentStreak: Number(userStats.currentStreak ?? 0),
+      longestStreak: Number(userStats.longestStreak ?? 0),
+      xpPoints: Number(userStats.xpPoints ?? 0),
+      level: Number(userStats.level ?? 1),
+    }
+    : { currentStreak: 0, longestStreak: 0, xpPoints: 0, level: 1 };
 
   const effectiveDailyGoal = dailyGoal
     ? {
-        lessonsTarget: Number(dailyGoal.lessonsTarget ?? 3),
-        lessonsCompleted: Number(dailyGoal.lessonsCompleted ?? Math.min(completedCount, 3)),
-        xpTarget: Number(dailyGoal.xpTarget ?? 50),
-        xpEarned: Number(dailyGoal.xpEarned ?? Math.min(completedCount * 5, 50)),
-        minutesTarget: Number(dailyGoal.minutesTarget ?? 15),
-        minutesSpent: Number(dailyGoal.minutesSpent ?? completedCount * 3),
-      }
-    : {
-        lessonsTarget: 3,
-        lessonsCompleted: Math.min(completedCount, 3),
-        xpTarget: 50,
-        xpEarned: Math.min(completedCount * 5, 50),
-        minutesTarget: 15,
-        minutesSpent: completedCount * 3,
-      };
+      lessonsTarget: Number(dailyGoal.lessonsTarget ?? 3),
+      lessonsCompleted: Number(dailyGoal.lessonsCompleted ?? Math.min(completedCount, 3)),
+      xpTarget: Number(dailyGoal.xpTarget ?? 50),
+      xpEarned: Number(dailyGoal.xpEarned ?? Math.min(completedCount * 5, 50)),
+      minutesTarget: Number(dailyGoal.minutesTarget ?? 15),
+      minutesSpent: Number(dailyGoal.minutesSpent ?? completedCount * 3),
+    }
+    : { lessonsTarget: 3, lessonsCompleted: Math.min(completedCount, 3), xpTarget: 50, xpEarned: Math.min(completedCount * 5, 50), minutesTarget: 15, minutesSpent: completedCount * 3 };
 
   const achievements = [
     { name: 'First Step', nameHindi: 'पहला कदम', description: 'Complete your first lesson', icon: '🎯', xpReward: 10, unlocked: completedCount >= 1 },
@@ -90,117 +84,103 @@ export default function Home() {
   const currentUserRank = leaderboardEntries.find((e) => e.isCurrentUser)?.rank;
 
   const scenarios = [
-    { id: 1, title: 'Job Interview - Introduction', titleHindi: 'नौकरी इंटरव्यू - परिचय', category: 'job_interview', difficulty: 'Beginner', xpReward: 40, completed: false },
-    { id: 2, title: 'Doctor Visit - Symptoms', titleHindi: 'डॉक्टर - लक्षण बताना', category: 'doctor_visit', difficulty: 'Beginner', xpReward: 35, completed: false },
-    { id: 3, title: 'Restaurant - Ordering', titleHindi: 'रेस्टोरेंट - ऑर्डर करना', category: 'restaurant', difficulty: 'Beginner', xpReward: 30, completed: true, score: 85 },
-    { id: 4, title: 'Bank - Opening Account', titleHindi: 'बैंक - खाता खोलना', category: 'bank', difficulty: 'Intermediate', xpReward: 40, completed: false },
+    { id: 1, title: 'Job Interview', titleHindi: 'नौकरी इंटरव्यू', category: 'job_interview', difficulty: 'Beginner', xpReward: 40, completed: false },
+    { id: 2, title: 'Medical Visit', titleHindi: 'डॉक्टर से बात', category: 'doctor_visit', difficulty: 'Beginner', xpReward: 35, completed: false },
+    { id: 3, title: 'Restaurant Order', titleHindi: 'ऑर्डर करना', category: 'restaurant', difficulty: 'Beginner', xpReward: 30, completed: true, score: 85 },
+    { id: 4, title: 'Bank Account', titleHindi: 'खाता खोलना', category: 'bank', difficulty: 'Intermediate', xpReward: 40, completed: false },
   ];
 
   return (
     <Layout>
-      {/* Credits Banner */}
-      <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border border-amber-200 rounded-2xl p-4 mb-8 text-center">
-        <div className="flex items-center justify-center gap-2 text-amber-800">
-          <Heart className="h-5 w-5 text-red-500 fill-red-500" />
-          <p className="text-sm md:text-base font-medium">
-            Prepared on Initiative of <span className="font-bold">Mrs. Premlata Jain</span>, AAO, PWD Udaipur
-          </p>
-          <Heart className="h-5 w-5 text-red-500 fill-red-500" />
-        </div>
-      </div>
+      {/* Premium Hero Section */}
+      <header className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-background to-secondary/30 p-8 md:p-12 border border-white/10 mb-12 group shadow-2xl shadow-primary/5">
 
-      <header className="mb-8">
-        <div className="flex flex-col md:flex-row items-center gap-6">
-          {/* Saraswati Mascot */}
-          <SaraswatiMascot 
-            size="lg" 
-            mood={completedCount > 0 ? 'encouraging' : 'happy'}
-            message={completedCount === 0 
-              ? "नमस्ते! आज से अंग्रेजी सीखना शुरू करें! 🙏" 
-              : completedCount >= 10 
-                ? "शाबाश! आप बहुत अच्छा कर रहे हैं! 🌟"
-                : "बहुत अच्छे! सीखते रहें! 📚"
-            }
-          />
-          
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
-              {t("welcome")}
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none opacity-60 animate-pulse-glow" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none opacity-40" />
+
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-12 relative z-10">
+
+          <div className="text-center lg:text-left flex-1 space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest shadow-sm backdrop-blur-sm animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <Sparkles className="h-3 w-3" />
+              <span>AI-Powered Learning</span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold font-display leading-[1.1] text-foreground tracking-tight">
+              {t("welcome")}<span className="text-primary text-6xl md:text-8xl">.</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              {t("subtitle")}
+
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl font-light leading-relaxed dark:text-gray-300">
+              {t("subtitle")} Experience the most <span className="text-foreground font-medium border-b-2 border-primary/50">immersive</span> English course specifically designed for Hindi speakers.
             </p>
-            <p className="text-sm text-amber-700 mt-2 font-medium">
-              🙏 माँ सरस्वती की कृपा से ज्ञान प्राप्त करें
-            </p>
+
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
+              <Link href="/lessons">
+                <button className="px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base shadow-[0_0_20px_rgba(28,231,131,0.3)] hover:shadow-[0_0_30px_rgba(28,231,131,0.5)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  Start Learning
+                </button>
+              </Link>
+              <Link href="/conversations">
+                <button className="px-8 py-4 rounded-xl bg-card border border-border hover:bg-secondary text-foreground font-bold text-base shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                  <Mic className="h-5 w-5 text-primary" />
+                  Practice Speaking
+                </button>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-6 justify-center lg:justify-start text-xs font-bold text-muted-foreground uppercase tracking-wider pt-2">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Free Forever</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Interactive AI</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-shrink-0 relative hidden md:block">
+            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+            <div className="relative z-10 animate-bounce-subtle">
+              <SaraswatiMascot size="lg" mood="happy" message={t("welcome_message") || "Start your journey!"} />
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Today's Practice Topic */}
-      <section className="mb-8">
-        <TodaysPractice />
-      </section>
-
-      {/* Quick Access - Speaking & Vocabulary */}
-      <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-          🚀 Quick Access - जल्दी शुरू करें
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link href="/speak">
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <Mic className="h-8 w-8" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">Speaking Practice</h3>
-                  <p className="text-purple-100">🗣️ बोलने का अभ्यास - 25 Topics</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-          
-          <Link href="/vocabulary">
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <BookOpen className="h-8 w-8" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">Vocabulary Builder</h3>
-                  <p className="text-blue-100">📚 शब्दावली - 72+ Words</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/conversations">
-            <div className="bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <MessagesSquare className="h-8 w-8" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">Conversations</h3>
-                  <p className="text-green-100">💬 बातचीत अभ्यास - 6 Dialogues</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* Gamification Section - Streak & Daily Goal */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <StreakCard 
+      {/* Stats Dashboard Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <StreakCard
           currentStreak={effectiveUserStats.currentStreak}
           longestStreak={effectiveUserStats.longestStreak}
           xpPoints={effectiveUserStats.xpPoints}
           level={effectiveUserStats.level}
         />
-        <DailyGoalCard 
+        <div className="lg:col-span-2 glass-card rounded-[2rem] p-6 relative overflow-hidden group border-border/50">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h3 className="text-lg font-bold text-foreground">Course Progress</h3>
+              <p className="text-sm text-muted-foreground">{completedCount} of {totalLessons} lessons</p>
+            </div>
+            <div className="text-4xl font-black text-primary/20">{percentage}%</div>
+          </div>
+          <div className="h-3 bg-secondary rounded-full overflow-hidden">
+            <div className="h-full bg-primary shadow-[0_0_10px_rgba(28,231,131,0.5)] transition-all duration-1000" style={{ width: `${percentage}%` }} />
+          </div>
+
+          <div className="mt-6 flex justify-between items-center">
+            <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Next: Lesson {completedCount + 1}</div>
+            <Link href={`/lesson/${completedCount + 1}`}>
+              <button className="text-xs font-bold text-primary flex items-center gap-1 hover:gap-2 transition-all">
+                Continue <ArrowRight className="h-3 w-3" />
+              </button>
+            </Link>
+          </div>
+        </div>
+        <DailyGoalCard
           lessonsTarget={effectiveDailyGoal.lessonsTarget}
           lessonsCompleted={effectiveDailyGoal.lessonsCompleted}
           xpTarget={effectiveDailyGoal.xpTarget}
@@ -210,237 +190,134 @@ export default function Home() {
         />
       </section>
 
-      {/* Progress Overview */}
-      <section className="mb-8 bg-white rounded-3xl p-6 md:p-8 border shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-        
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <div className="flex items-center gap-2 text-primary font-semibold mb-2">
-              <Sparkles className="h-5 w-5" />
-              <span>{t("your_progress")}</span>
-            </div>
-            <h2 className="text-2xl font-bold mb-2">{completedCount} of {totalLessons} {t("lessons_completed")}</h2>
-            <p className="text-muted-foreground">{t("keep_momentum")}</p>
-          </div>
-          
-          <div className="flex items-center gap-4 min-w-[200px]">
-            <div className="w-full bg-secondary h-4 rounded-full overflow-hidden">
-              <div 
-                className="bg-primary h-full rounded-full transition-all duration-1000 ease-out"
-                style={{ width: `${percentage}%` }}
-              />
-            </div>
-            <span className="font-bold text-xl text-primary">{percentage}%</span>
-          </div>
-        </div>
-      </section>
+      {/* Main Learning Content */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
 
-      {/* Achievements Section */}
-      <section className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="bg-yellow-100 p-2 rounded-xl">
-            <Award className="h-6 w-6 text-yellow-600" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">उपलब्धियां</h2>
-            <p className="text-sm text-muted-foreground">Achievements</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {achievements.map((achievement, index) => (
-            <AchievementBadge key={index} {...achievement} />
-          ))}
-        </div>
-      </section>
-
-      {/* Certification Levels Section */}
-      <section className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-xl">
-            <GraduationCap className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">प्रमाणपत्र स्तर</h2>
-            <p className="text-sm text-muted-foreground">Certification Levels</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <CertificationCard 
-            level="beginner"
-            lessonsCompleted={completedCount}
-            totalLessons={totalLessons}
-            quizzesPassed={Math.floor(completedCount / 10)}
-            totalQuizzes={10}
-          />
-          <CertificationCard 
-            level="intermediate"
-            lessonsCompleted={completedCount}
-            totalLessons={totalLessons}
-            quizzesPassed={Math.floor(completedCount / 10)}
-            totalQuizzes={20}
-          />
-          <CertificationCard 
-            level="advanced"
-            lessonsCompleted={completedCount}
-            totalLessons={totalLessons}
-            quizzesPassed={Math.floor(completedCount / 10)}
-            totalQuizzes={30}
-          />
-        </div>
-      </section>
-
-      {/* Tabs for Lessons and Scenarios */}
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => setActiveTab('lessons')}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-            activeTab === 'lessons' 
-              ? 'bg-primary text-white shadow-lg' 
-              : 'bg-white text-slate-600 border hover:bg-slate-50'
-          }`}
-        >
-          <Sparkles className="h-5 w-5" />
-          पाठ ({totalLessons})
-        </button>
-        <button
-          onClick={() => setActiveTab('scenarios')}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-            activeTab === 'scenarios' 
-              ? 'bg-primary text-white shadow-lg' 
-              : 'bg-white text-slate-600 border hover:bg-slate-50'
-          }`}
-        >
-          <MessageCircle className="h-5 w-5" />
-          रोलप्ले अभ्यास
-        </button>
-      </div>
-
-      {/* Content based on active tab */}
-      {activeTab === 'lessons' ? (
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Lessons Grid */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">{t("available_lessons")}</h2>
-            </div>
-
-            {isLoading ? (
-              <div className="flex justify-center py-20">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        {/* Left Column: Lessons (8 cols) */}
+        <div className="lg:col-span-8 space-y-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold font-display flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BookOpen className="h-5 w-5 text-primary" />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {lessons?.sort((a, b) => a.order - b.order).slice(0, 10).map((lesson) => (
-                  <LessonCard 
-                    key={lesson.id} 
-                    lesson={lesson} 
+              Your Learning Path
+            </h2>
+
+            <div className="flex bg-secondary/50 p-1 rounded-xl">
+              <button
+                onClick={() => setActiveTab('lessons')}
+                className={cn("px-4 py-1.5 rounded-lg text-xs font-bold transition-all", activeTab === 'lessons' ? "bg-white dark:bg-black text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
+              >
+                Lessons
+              </button>
+              <button
+                onClick={() => setActiveTab('scenarios')}
+                className={cn("px-4 py-1.5 rounded-lg text-xs font-bold transition-all", activeTab === 'scenarios' ? "bg-white dark:bg-black text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
+              >
+                Roleplay
+              </button>
+            </div>
+          </div>
+
+          <div className="min-h-[400px]">
+            {isLoading ? (
+              <div className="flex justify-center items-center h-60">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : activeTab === 'lessons' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {lessons?.sort((a, b) => a.order - b.order).slice(0, 6).map((lesson) => (
+                  <LessonCard
+                    key={lesson.id}
+                    lesson={lesson}
                     progress={progress?.find(p => p.lessonId === lesson.id)}
                   />
                 ))}
-                
-                {(!lessons || lessons.length === 0) && (
-                  <div className="col-span-full text-center py-12 text-muted-foreground bg-white rounded-2xl border border-dashed">
-                    {t("no_lessons")}
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {lessons && lessons.length > 10 && (
-              <div className="text-center mt-6">
                 <Link href="/lessons">
-                  <button className="px-6 py-3 bg-white border rounded-xl font-medium text-primary hover:bg-primary/5 transition-all">
-                    सभी {totalLessons} पाठ देखें →
-                  </button>
+                  <div className="h-full min-h-[220px] rounded-3xl border-2 border-dashed border-border hover:border-primary/30 flex flex-col items-center justify-center p-6 text-muted-foreground hover:text-primary hover:bg-secondary/20 transition-all cursor-pointer group">
+                    <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ArrowRight className="h-5 w-5" />
+                    </div>
+                    <span className="font-bold text-sm">View All Lessons</span>
+                  </div>
                 </Link>
               </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {scenarios.map((scenario) => (
+                  <ScenarioCard key={scenario.id} {...scenario} />
+                ))}
+              </div>
             )}
           </div>
+        </div>
 
-          {/* Leaderboard Sidebar */}
-          <div className="lg:col-span-1">
-            {leaderboardEntries.length > 0 && (
+        {/* Right Column: Sidebar Extras (4 cols) */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="glass-card p-6 rounded-3xl">
+            <TodaysPractice />
+          </div>
+
+          <div className="glass-card p-6 rounded-3xl">
+            <h3 className="font-bold mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+              <Trophy className="h-4 w-4 text-yellow-500" /> Leaderboard
+            </h3>
+            {leaderboardEntries.length > 0 ? (
               <LeaderboardCard entries={leaderboardEntries} currentUserRank={currentUserRank} />
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">Compete to be #1!</p>
             )}
           </div>
-        </section>
-      ) : (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-blue-100 p-2 rounded-xl">
-              <MessageCircle className="h-6 w-6 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold">रोलप्ले अभ्यास</h2>
-              <p className="text-sm text-muted-foreground">Real-life conversation practice</p>
+
+          <div className="glass-card p-6 rounded-3xl">
+            <h3 className="font-bold mb-4 text-sm uppercase tracking-wider">Achievements</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {achievements.slice(0, 4).map((achievement, index) => (
+                <AchievementBadge key={index} {...achievement} />
+              ))}
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {scenarios.map((scenario) => (
-              <ScenarioCard key={scenario.id} {...scenario} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Learning Resources Section */}
-      <ResourcesSection />
-
-      {/* Confidence Dashboard & Coming Soon */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <ConfidenceDashboard 
-          confidenceScore={Math.min(40 + completedCount * 2, 100)}
-          topicsCompleted={completedCount}
-          totalTopics={totalLessons}
-          interviewAnswers={Math.floor(completedCount / 5)}
-          speakingMinutes={completedCount * 3}
-          strengths={[
-            "Clear thinking",
-            "Good sentence structure",
-            "Improving vocabulary"
-          ]}
-          focusAreas={[
-            "Speak for longer duration",
-            "Add more examples"
-          ]}
-        />
-        <ComingSoon />
+        </div>
       </section>
 
       {/* AI Tutor Section */}
-      <section className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-xl">
-            <Bot className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">AI ट्यूटर से बात करें</h2>
-            <p className="text-sm text-muted-foreground">Practice English with Arya - आर्या से अंग्रेजी का अभ्यास करें</p>
+      <section className="mb-16 rounded-[2rem] bg-gradient-to-br from-indigo-900/10 to-purple-900/10 border border-indigo-500/10 overflow-hidden relative">
+        <div className="p-8 md:p-12 relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <h2 className="text-3xl font-bold font-display">Personal AI Tutor</h2>
+              <p className="text-muted-foreground">Practice real conversations, get instant grammar corrections, and improve your pronunciation with our advanced AI tutor.</p>
+              <Link href="/chat">
+                <button className="mt-4 px-6 py-3 bg-foreground text-background rounded-xl font-bold hover:bg-primary hover:text-primary-foreground transition-colors shadow-lg">
+                  Chat with Preet AI
+                </button>
+              </Link>
+            </div>
+            <div className="flex-1 w-full max-w-md bg-background/50 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-xl">
+              <AITutor />
+            </div>
           </div>
         </div>
-        <AITutor />
       </section>
 
-      {/* Footer Credits */}
-      <footer className="mt-16 pt-8 border-t">
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-slate-100 to-slate-50 rounded-2xl p-6 inline-block">
-            <p className="text-slate-600 mb-2">
-              <span className="font-bold text-slate-800">PREET ENGLISH</span> - हिंदी भाषियों के लिए अंग्रेजी सीखने का ऐप
-            </p>
-            <div className="flex items-center justify-center gap-2 text-amber-700">
-              <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-              <p className="text-sm font-medium">
-                Prepared on Initiative of <span className="font-bold">Mrs. Premlata Jain</span>, AAO, PWD Udaipur
-              </p>
-              <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-            </div>
-            <p className="text-xs text-slate-500 mt-2">© 2024 PREET ENGLISH. All rights reserved.</p>
+      {/* Resources & Certs */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <div>
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><BookOpen className="text-primary h-5 w-5" /> Study Resources</h2>
+          <ResourcesSection />
+        </div>
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold flex items-center gap-2"><Crown className="text-yellow-500 h-5 w-5" /> Certifications</h2>
+            <Link href="/hindi-mastery" className="text-primary text-xs font-bold hover:underline">View All</Link>
+          </div>
+          <div className="space-y-4">
+            <CertificationCard level="beginner" lessonsCompleted={completedCount} totalLessons={totalLessons} quizzesPassed={Math.floor(completedCount / 10)} totalQuizzes={10} />
           </div>
         </div>
-      </footer>
+      </section>
+
     </Layout>
   );
 }
+

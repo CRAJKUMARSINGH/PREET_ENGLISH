@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -403,3 +404,9 @@ export function SynonymAntonym() {
     </Card>
   );
 }
+
+
+{/* हिंदी सहायता / Hindi Support */}
+{/* यह घटक हिंदी भाषी उपयोगकर्ताओं के लिए डिज़ाइन किया गया है */}
+{/* This component is designed for Hindi-speaking users */}
+export default SynonymAntonym;

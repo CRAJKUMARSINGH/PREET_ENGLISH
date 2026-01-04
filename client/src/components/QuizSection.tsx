@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, XCircle, Trophy, Star, RefreshCw } from "lucide-react";
+import { CheckCircle, XCircle, Award, Star, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSound } from "@/hooks/use-sound";
 import { SupportCard, inferGrammarCategoryFromText, getGrammarEntryForKey, type GrammarCategoryKey } from "@/components/SupportCard";
@@ -32,7 +32,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
     prepositions: 0,
     present_continuous: 0,
   });
-  
+
   const { playSuccess, playError, playCelebration } = useSound();
 
   const question = questions[currentQuestion];
@@ -45,7 +45,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
 
   const handleSubmit = () => {
     if (selectedAnswer === null) return;
-    
+
     setShowResult(true);
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = selectedAnswer;
@@ -113,21 +113,21 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
             passed ? "bg-green-100 dark:bg-green-900/30" : "bg-orange-100 dark:bg-orange-900/30"
           )}>
             {passed ? (
-              <Trophy className="w-12 h-12 text-green-600 dark:text-green-400" />
+              <Award className="w-12 h-12 text-green-600 dark:text-green-400" />
             ) : (
               <RefreshCw className="w-12 h-12 text-orange-600 dark:text-orange-400" />
             )}
           </div>
-          
+
           <h3 className="text-2xl font-bold mb-2">
             {passed ? "बधाई हो! 🎉" : "फिर से कोशिश करें!"}
           </h3>
           <p className="text-muted-foreground mb-6">
-            {passed 
-              ? "आपने क्विज़ पास कर लिया!" 
+            {passed
+              ? "आपने क्विज़ पास कर लिया!"
               : "70% से अधिक अंक प्राप्त करें पास करने के लिए"}
           </p>
-          
+
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="text-center">
               <div className="text-4xl font-bold text-primary">{score}</div>
@@ -162,7 +162,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
                 आपकी आज की आम गलतियाँ (Your common mistakes today)
               </h4>
               <ul className="space-y-2 text-xs text-amber-900 dark:text-amber-50">
-                {(Object.entries(errorCounts) as [GrammarCategoryKey, number][]) 
+                {(Object.entries(errorCounts) as [GrammarCategoryKey, number][])
                   .filter(([, count]) => count > 0)
                   .map(([key, count]) => {
                     const entry = getGrammarEntryForKey(key);
@@ -216,7 +216,7 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
           <span>स्कोर: {score}</span>
         </div>
         <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-          <div 
+          <div
             className="h-full bg-primary transition-all duration-500"
             style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
           />
@@ -294,9 +294,9 @@ export function QuizSection({ lessonId, questions, onComplete }: QuizSectionProp
             : "bg-primary text-white hover:bg-primary/90"
         )}
       >
-        {showResult 
-          ? currentQuestion < questions.length - 1 
-            ? "अगला प्रश्न →" 
+        {showResult
+          ? currentQuestion < questions.length - 1
+            ? "अगला प्रश्न →"
             : "परिणाम देखें"
           : "उत्तर जमा करें"
         }

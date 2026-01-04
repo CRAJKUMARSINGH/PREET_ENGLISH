@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  MessageCircle, 
-  Theater, 
-  MessageSquare, 
+import {
+  MessageCircle,
+  Theater,
+  MessageSquare,
   Headphones,
   Users,
   Target,
-  Trophy,
+  Award,
   Sparkles
 } from "lucide-react";
 import { DialoguePractice } from "@/components/HindiConversation/DialoguePractice";
@@ -73,9 +73,9 @@ export default function HindiConversation() {
               </p>
             </div>
           </div>
-          
+
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            वास्तविक जीवन की परिस्थितियों में अंग्रेजी बोलने का अभ्यास करें। 
+            वास्तविक जीवन की परिस्थितियों में अंग्रेजी बोलने का अभ्यास करें।
             संवाद, भूमिका अभिनय, और सुनने के अभ्यास के माध्यम से अपनी बातचीत कौशल बढ़ाएं।
           </p>
         </div>

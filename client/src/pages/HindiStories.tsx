@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, HelpCircle, Pencil, Puzzle, Star, Trophy } from "lucide-react";
+import { BookOpen, HelpCircle, Pencil, Puzzle, Star, Award } from "lucide-react";
 import { StoryReader } from "@/components/HindiStories/StoryReader";
 import { ComprehensionQuiz } from "@/components/HindiStories/ComprehensionQuiz";
 import { DictationPractice } from "@/components/HindiStories/DictationPractice";
@@ -121,7 +121,7 @@ export default function HindiStories() {
         <Card className="border-2 border-yellow-200 dark:border-yellow-800">
           <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
             <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-300">
-              <Trophy className="h-6 w-6" />
+              <Award className="h-6 w-6" />
               उपलब्धियाँ (Achievements)
             </CardTitle>
           </CardHeader>

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Volume2, Play, Pause, RotateCcw } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Volume2, BookOpen, Lightbulb, Star } from 'lucide-react';
 
 interface HindiLearningCardProps {
   englishSentence: string;
@@ -11,10 +10,8 @@ interface HindiLearningCardProps {
   pronunciation: string;
   difficulty: 'easy' | 'medium' | 'hard';
   category: string;
-  commonMistakes?: string[];
   tips?: string[];
-  examples?: string[];
-  className?: string;
+  examples?: { english: string; hindi: string }[];
 }
 
 export function HindiLearningCard({
@@ -23,13 +20,22 @@ export function HindiLearningCard({
   pronunciation,
   difficulty,
   category,
-  commonMistakes = [],
   tips = [],
-  examples = [],
-  className
+  examples = []
 }: HindiLearningCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+
+  const playAudio = () => {
+    if ('speechSynthesis' in window) {
+      setIsPlaying(true);
+      const utterance = new SpeechSynthesisUtterance(englishSentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.onend = () => setIsPlaying(false);
+      speechSynthesis.speak(utterance);
+    }
+  };
 
   const difficultyColors = {
     easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
@@ -37,128 +43,85 @@ export function HindiLearningCard({
     hard: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
   };
 
-  const playAudio = () => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(englishSentence);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.8; // Slower for learning
-      
-      utterance.onstart = () => setIsPlaying(true);
-      utterance.onend = () => setIsPlaying(false);
-      
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  const stopAudio = () => {
-    speechSynthesis.cancel();
-    setIsPlaying(false);
-  };
-
   return (
-    <Card className={cn('hindi-learning-card', className)}>
+    <Card className="hindi-learning-card hover:shadow-lg transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg font-semibold mb-2">
-              {englishSentence}
-            </CardTitle>
-            <div className="text-blue-600 dark:text-blue-400 font-medium">
-              Hindi में: {hindiMeaning}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2 ml-4">
-            <Badge className={difficultyColors[difficulty]}>
-              {difficulty === 'easy' ? 'आसान' : difficulty === 'medium' ? 'मध्यम' : 'कठिन'}
-            </Badge>
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-primary" />
             <Badge variant="outline">{category}</Badge>
           </div>
+          <Badge className={difficultyColors[difficulty]}>
+            {difficulty}
+          </Badge>
         </div>
       </CardHeader>
-
-      <CardContent>
-        {/* Pronunciation Section */}
-        <div className="pronunciation-section mb-4 p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
-              उच्चारण: {pronunciation}
-            </span>
+      
+      <CardContent className="space-y-4">
+        {/* Main Content */}
+        <div className="space-y-3">
+          <div className="flex items-start gap-2">
+            <div className="flex-1">
+              <p className="text-lg font-semibold text-primary mb-1">
+                {englishSentence}
+              </p>
+              <p className="text-muted-foreground">
+                <strong>हिंदी:</strong> {hindiMeaning}
+              </p>
+              <p className="text-sm text-blue-600 dark:text-blue-400">
+                <strong>उच्चारण:</strong> {pronunciation}
+              </p>
+            </div>
             <Button
+              variant="ghost"
               size="sm"
-              variant="outline"
-              onClick={isPlaying ? stopAudio : playAudio}
-              className="flex items-center gap-1"
+              onClick={playAudio}
+              disabled={isPlaying}
+              className="h-8 w-8 p-0 flex-shrink-0"
             >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              {isPlaying ? 'रोकें' : 'सुनें'}
+              <Volume2 className={`h-4 w-4 ${isPlaying ? 'animate-pulse text-primary' : ''}`} />
             </Button>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowDetails(!showDetails)}
-          >
-            {showDetails ? 'कम दिखाएं' : 'और जानें'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              // Practice again functionality
-              playAudio();
-            }}
-          >
-            <RotateCcw className="w-4 h-4 mr-1" />
-            दोबारा अभ्यास
-          </Button>
-        </div>
+        {/* Tips Section */}
+        {tips.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold flex items-center gap-1">
+              <Lightbulb className="h-4 w-4 text-yellow-500" />
+              Tips:
+            </h4>
+            <ul className="space-y-1">
+              {tips.map((tip, index) => (
+                <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                  <Star className="h-3 w-3 text-yellow-500 mt-1 flex-shrink-0" />
+                  {tip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-        {/* Detailed Information */}
-        {showDetails && (
-          <div className="details-section space-y-3">
-            {/* Common Mistakes */}
-            {commonMistakes.length > 0 && (
-              <div className="mistakes-section">
-                <h4 className="font-medium text-red-600 dark:text-red-400 mb-2">
-                  ❌ आम गलतियां:
-                </h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-red-600 dark:text-red-400">
-                  {commonMistakes.map((mistake, index) => (
-                    <li key={index}>{mistake}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Tips */}
-            {tips.length > 0 && (
-              <div className="tips-section">
-                <h4 className="font-medium text-green-600 dark:text-green-400 mb-2">
-                  💡 सुझाव:
-                </h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-green-600 dark:text-green-400">
-                  {tips.map((tip, index) => (
-                    <li key={index}>{tip}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Examples */}
-            {examples.length > 0 && (
-              <div className="examples-section">
-                <h4 className="font-medium text-blue-600 dark:text-blue-400 mb-2">
-                  📝 और उदाहरण:
-                </h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-blue-600 dark:text-blue-400">
-                  {examples.map((example, index) => (
-                    <li key={index}>{example}</li>
-                  ))}
-                </ul>
+        {/* Examples Section */}
+        {examples.length > 0 && (
+          <div className="space-y-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDetails(!showDetails)}
+              className="text-sm p-0 h-auto"
+            >
+              {showDetails ? 'Hide' : 'Show'} Examples
+            </Button>
+            
+            {showDetails && (
+              <div className="space-y-2 p-3 bg-secondary/30 rounded-lg">
+                {examples.map((example, index) => (
+                  <div key={index} className="space-y-1">
+                    <p className="text-sm font-medium">{example.english}</p>
+                    <p className="text-sm text-muted-foreground">{example.hindi}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -168,13 +131,12 @@ export function HindiLearningCard({
   );
 }
 
-// Hindi Grammar Explanation Card
-interface GrammarExplanationProps {
+interface GrammarExplanationCardProps {
   rule: string;
   hindiExplanation: string;
   englishExamples: string[];
   hindiComparison: string;
-  className?: string;
+  commonMistakes?: string[];
 }
 
 export function GrammarExplanationCard({
@@ -182,36 +144,71 @@ export function GrammarExplanationCard({
   hindiExplanation,
   englishExamples,
   hindiComparison,
-  className
-}: GrammarExplanationProps) {
+  commonMistakes = []
+}: GrammarExplanationCardProps) {
+  const [showExamples, setShowExamples] = useState(false);
+
   return (
-    <Card className={cn('grammar-explanation-card', className)}>
+    <Card className="grammar-explanation-card">
       <CardHeader>
-        <CardTitle className="text-lg text-orange-600 dark:text-orange-400">
-          📚 Grammar Rule: {rule}
+        <CardTitle className="flex items-center gap-2">
+          <BookOpen className="h-5 w-5 text-primary" />
+          {rule}
         </CardTitle>
       </CardHeader>
+      
       <CardContent className="space-y-4">
-        <div className="hindi-explanation">
-          <h4 className="font-medium mb-2">Hindi में समझाइए:</h4>
-          <p className="text-muted-foreground">{hindiExplanation}</p>
+        {/* Hindi Explanation */}
+        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <p className="text-blue-700 dark:text-blue-300">
+            <strong>हिंदी में समझें:</strong> {hindiExplanation}
+          </p>
         </div>
 
-        <div className="examples">
-          <h4 className="font-medium mb-2">उदाहरण:</h4>
-          <ul className="list-disc list-inside space-y-1">
-            {englishExamples.map((example, index) => (
-              <li key={index} className="text-sm">{example}</li>
-            ))}
-          </ul>
+        {/* Hindi Comparison */}
+        <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+          <p className="text-purple-700 dark:text-purple-300">
+            <strong>हिंदी से तुलना:</strong> {hindiComparison}
+          </p>
         </div>
 
-        <div className="hindi-comparison bg-blue-50 dark:bg-blue-950/20 p-3 rounded-lg">
-          <h4 className="font-medium text-blue-600 dark:text-blue-400 mb-2">
-            Hindi से तुलना:
-          </h4>
-          <p className="text-sm text-blue-600 dark:text-blue-400">{hindiComparison}</p>
-        </div>
+        {/* Examples Toggle */}
+        <Button
+          variant="outline"
+          onClick={() => setShowExamples(!showExamples)}
+          className="w-full"
+        >
+          {showExamples ? 'Hide' : 'Show'} Examples
+        </Button>
+
+        {/* Examples */}
+        {showExamples && (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-green-600 dark:text-green-400">
+                सही उदाहरण:
+              </h4>
+              {englishExamples.map((example, index) => (
+                <div key={index} className="p-2 bg-green-50 dark:bg-green-900/20 rounded">
+                  <p className="text-green-700 dark:text-green-300">{example}</p>
+                </div>
+              ))}
+            </div>
+
+            {commonMistakes.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="font-semibold text-red-600 dark:text-red-400">
+                  आम गलतियां:
+                </h4>
+                {commonMistakes.map((mistake, index) => (
+                  <div key={index} className="p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                    <p className="text-red-700 dark:text-red-300">{mistake}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { 
-  insertUserSchema, insertLessonSchema, insertVocabularySchema, insertProgressSchema, 
+import {
+  insertUserSchema, insertLessonSchema, insertVocabularySchema, insertProgressSchema,
   insertQuizSchema, insertQuizQuestionSchema, insertQuizAttemptSchema,
   insertUserStatsSchema, insertAchievementSchema, insertUserAchievementSchema,
   insertDailyGoalSchema, insertLeaderboardSchema, insertScenarioSchema, insertCertificationSchema,
   lessons, vocabulary, progress, quizzes, quizQuestions, quizAttempts,
-  userStats, achievements, userAchievements, dailyGoals, leaderboard, users, scenarios, scenarioProgress, certifications
+  userStats, achievements, userAchievements, dailyGoals, leaderboard, users, scenarios, scenarioProgress, certifications, conversationLines, vocabularyProgress
 } from "./schema";
 
 export const errorSchemas = {
@@ -34,7 +34,7 @@ export const api = {
       method: 'GET' as const,
       path: '/api/lessons/:id',
       responses: {
-        200: z.custom<typeof lessons.$inferSelect & { vocabulary: typeof vocabulary.$inferSelect[] }>(),
+        200: z.custom<typeof lessons.$inferSelect & { vocabulary: typeof vocabulary.$inferSelect[]; conversationLines: typeof conversationLines.$inferSelect[] }>(),
         404: errorSchemas.notFound,
       },
     },
@@ -54,6 +54,25 @@ export const api = {
       path: '/api/lessons/:id/vocabulary',
       responses: {
         200: z.array(z.custom<typeof vocabulary.$inferSelect>()),
+      },
+    },
+    due: {
+      method: 'GET' as const,
+      path: '/api/vocabulary/due',
+      responses: {
+        200: z.array(z.custom<typeof vocabulary.$inferSelect & { nextReviewDate: string; interval: number }>()),
+      },
+    },
+    review: {
+      method: 'POST' as const,
+      path: '/api/vocabulary/review',
+      input: z.object({
+        vocabularyId: z.number(),
+        quality: z.number().min(0).max(5), // 0-5 rating
+      }),
+      responses: {
+        200: z.custom<typeof vocabularyProgress.$inferSelect>(),
+        400: errorSchemas.validation,
       },
     },
   },

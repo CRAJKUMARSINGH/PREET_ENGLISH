@@ -1,39 +1,34 @@
-/**
- * Enhanced Hindi Grammar Learning Module
- * Advanced English grammar with Hindi explanations and gamification
- * Enhanced version with superior features and better UX
- */
-
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  BookOpen, 
-  CheckCircle, 
-  AlertCircle, 
-  Lightbulb, 
-  Target, 
-  Brain,
-  Star,
-  Trophy,
-  Zap,
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Progress } from '../ui/progress';
+import { Badge } from '../ui/badge';
+import {
+  BookOpen,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
   Heart,
-  Play,
+  Star,
+  ArrowRight,
   RotateCcw,
-  ArrowRight
+  Award,
+  Zap,
+  Brain,
+  Target,
+  AlertCircle
 } from 'lucide-react';
-import { SaraswatiMascot } from '@/components/SaraswatiMascot';
-import { CelebrationModal } from '@/components/CelebrationModal';
+import { cn } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { SaraswatiMascot } from '../SaraswatiMascot';
+import { CelebrationModal } from '../CelebrationModal';
 
 interface GrammarRule {
   id: string;
   title: string;
   hindiTitle: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
   category: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   englishExplanation: string;
   hindiExplanation: string;
   hindiComparison: string;
@@ -59,6 +54,8 @@ interface GrammarRule {
   }[];
   xpReward: number;
 }
+
+
 
 const grammarRules: GrammarRule[] = [
   {
@@ -201,7 +198,7 @@ export const HindiGrammarModule: React.FC = () => {
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex);
     setShowResult(true);
-    
+
     if (answerIndex === selectedRule.practice[currentPractice].correctAnswer) {
       setScore(score + 1);
       setTotalXP(totalXP + selectedRule.xpReward);
@@ -238,7 +235,7 @@ export const HindiGrammarModule: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <SaraswatiMascot size="medium" />
+          <SaraswatiMascot size="md" />
           <div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
               Grammar Module
@@ -311,7 +308,7 @@ export const HindiGrammarModule: React.FC = () => {
             Practice
           </TabsTrigger>
           <TabsTrigger value="progress" className="flex items-center gap-2">
-            <Trophy className="h-4 w-4" />
+            <Award className="h-4 w-4" />
             Progress
           </TabsTrigger>
         </TabsList>
@@ -439,11 +436,10 @@ export const HindiGrammarModule: React.FC = () => {
                     </div>
 
                     {showResult && (
-                      <div className={`p-4 rounded-lg border ${
-                        selectedAnswer === selectedRule.practice[currentPractice].correctAnswer
-                          ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-                          : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
-                      }`}>
+                      <div className={`p-4 rounded-lg border ${selectedAnswer === selectedRule.practice[currentPractice].correctAnswer
+                        ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                        : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                        }`}>
                         <div className="flex items-center gap-2 mb-2">
                           {selectedAnswer === selectedRule.practice[currentPractice].correctAnswer ? (
                             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -468,7 +464,7 @@ export const HindiGrammarModule: React.FC = () => {
                           <ArrowRight className="h-4 w-4" />
                         </Button>
                       )}
-                      
+
                       <Button variant="outline" onClick={resetPractice} className="flex items-center gap-2">
                         <RotateCcw className="h-4 w-4" />
                         Reset Practice
@@ -485,7 +481,7 @@ export const HindiGrammarModule: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <Trophy className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
+                <Award className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
                 <p className="text-2xl font-bold">{totalXP}</p>
                 <p className="text-sm text-muted-foreground">Total XP Earned</p>
               </CardContent>
@@ -535,9 +531,8 @@ export const HindiGrammarModule: React.FC = () => {
       <CelebrationModal
         isOpen={showCelebration}
         onClose={() => setShowCelebration(false)}
-        title="Correct Answer! 🎉"
-        message={`You earned ${selectedRule.xpReward} XP points!`}
-        xpGained={selectedRule.xpReward}
+        lessonTitle={selectedRule.title}
+        hindiTitle={selectedRule.hindiTitle}
       />
 
       {/* Credits Footer */}

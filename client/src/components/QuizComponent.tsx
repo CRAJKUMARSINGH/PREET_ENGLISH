@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, XCircle, Trophy, RotateCcw, ArrowRight } from 'lucide-react';
+import { CheckCircle, XCircle, Award, RotateCcw, ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { cn } from '@/lib/utils';
@@ -111,7 +111,7 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
             <div className="mx-auto mb-4">
               {passed ? (
                 <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                  <Trophy className="w-12 h-12 text-green-600 dark:text-green-400" />
+                  <Award className="w-12 h-12 text-green-600 dark:text-green-400" />
                 </div>
               ) : (
                 <div className="w-24 h-24 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center text-4xl">
@@ -168,7 +168,7 @@ export function QuizComponent({ lessonId, lessonTitle, questions, onComplete }: 
                   आपकी आज की आम गलतियाँ (Your common mistakes today)
                 </h4>
                 <ul className="space-y-2 text-xs text-amber-900 dark:text-amber-50">
-                  {(Object.entries(errorCounts) as [GrammarCategoryKey, number][]) 
+                  {(Object.entries(errorCounts) as [GrammarCategoryKey, number][])
                     .filter(([, count]) => count > 0)
                     .map(([key, count]) => {
                       const entry = getGrammarEntryForKey(key);

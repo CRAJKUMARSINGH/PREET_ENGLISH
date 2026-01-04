@@ -10,28 +10,28 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Mic, 
-  Volume2, 
-  Play, 
-  Pause, 
-  Square, 
-  RotateCcw, 
-  Settings, 
-  CheckCircle, 
-  XCircle, 
-  AlertCircle, 
-  TrendingUp, 
-  Star, 
-  Award, 
-  Target, 
-  Activity, 
-  BarChart, 
-  Clock, 
-  Zap, 
+import {
+  Mic,
+  Volume2,
+  Play,
+  Pause,
+  Square,
+  RotateCcw,
+  Settings,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  TrendingUp,
+  Star,
+  Award,
+  Target,
+  Activity,
+  BarChart,
+  Clock,
+  Zap,
   Heart,
   Headphones,
-  Waveform,
+  AudioWaveform,
   Sparkles
 } from 'lucide-react';
 import { SaraswatiMascot } from '@/components/SaraswatiMascot';
@@ -161,7 +161,7 @@ export const HindiPronunciationTools: React.FC = () => {
   const [practiceCount, setPracticeCount] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [activeTab, setActiveTab] = useState<'practice' | 'learn' | 'progress'>('practice');
-  
+
   const recordingRef = useRef<number | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -184,15 +184,15 @@ export const HindiPronunciationTools: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
-      
+
       mediaRecorder.start();
       setIsRecording(true);
-      
+
       mediaRecorder.ondataavailable = (event) => {
         // Handle recorded audio data
         console.log('Audio recorded:', event.data);
       };
-      
+
       mediaRecorder.onstop = () => {
         stream.getTracks().forEach(track => track.stop());
         setIsRecording(false);
@@ -200,7 +200,7 @@ export const HindiPronunciationTools: React.FC = () => {
         const score = Math.floor(Math.random() * 30) + 70; // 70-100
         setPronunciationScore(score);
         setPracticeCount(practiceCount + 1);
-        
+
         if (score >= 80) {
           setTotalXP(totalXP + selectedWord.xpReward);
           setShowCelebration(true);
@@ -247,7 +247,7 @@ export const HindiPronunciationTools: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <SaraswatiMascot size="medium" />
+          <SaraswatiMascot size="md" />
           <div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
               Pronunciation Tools
@@ -368,7 +368,7 @@ export const HindiPronunciationTools: React.FC = () => {
                   >
                     {isPlaying ? (
                       <>
-                        <Waveform className="h-5 w-5 animate-pulse" />
+                        <AudioWaveform className="h-5 w-5 animate-pulse" />
                         Playing...
                       </>
                     ) : (
@@ -426,9 +426,9 @@ export const HindiPronunciationTools: React.FC = () => {
                       </p>
                       <p className="text-sm text-muted-foreground mt-2">
                         {pronunciationScore >= 90 ? 'Excellent! Perfect pronunciation!' :
-                         pronunciationScore >= 80 ? 'Great job! Very good pronunciation!' :
-                         pronunciationScore >= 70 ? 'Good effort! Keep practicing!' :
-                         'Keep trying! Practice makes perfect!'}
+                          pronunciationScore >= 80 ? 'Great job! Very good pronunciation!' :
+                            pronunciationScore >= 70 ? 'Good effort! Keep practicing!' :
+                              'Keep trying! Practice makes perfect!'}
                       </p>
                       {pronunciationScore >= 80 && (
                         <div className="flex items-center justify-center gap-1 mt-2 text-yellow-600">
@@ -555,8 +555,8 @@ export const HindiPronunciationTools: React.FC = () => {
                         {word.id === selectedWord.id && pronunciationScore ? `${pronunciationScore}%` : 'Not practiced'}
                       </span>
                     </div>
-                    <Progress 
-                      value={word.id === selectedWord.id && pronunciationScore ? pronunciationScore : 0} 
+                    <Progress
+                      value={word.id === selectedWord.id && pronunciationScore ? pronunciationScore : 0}
                     />
                   </div>
                 ))}
@@ -570,9 +570,8 @@ export const HindiPronunciationTools: React.FC = () => {
       <CelebrationModal
         isOpen={showCelebration}
         onClose={() => setShowCelebration(false)}
-        title="Great Pronunciation! 🎉"
-        message={`You earned ${selectedWord.xpReward} XP points!`}
-        xpGained={selectedWord.xpReward}
+        lessonTitle={selectedWord.word}
+        hindiTitle={selectedWord.hindiMeaning}
       />
 
       {/* Credits Footer */}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, MessageCircle, Brain, Flame, BookOpen, Target, Trophy } from "lucide-react";
+import { Calendar, MessageCircle, Brain, Flame, BookOpen, Target, Award } from "lucide-react";
 import { DailyWordCard } from "@/components/HindiDaily/DailyWordCard";
 import { PhrasesOfDay } from "@/components/HindiDaily/PhrasesOfDay";
 import { VocabularyQuiz } from "@/components/HindiDaily/VocabularyQuiz";
@@ -120,7 +120,7 @@ export default function HindiDaily() {
         {/* Motivation Quote */}
         <Card className="border-2 border-gradient-to-r from-indigo-200 to-purple-200 dark:from-indigo-800 dark:to-purple-800">
           <CardContent className="p-6 text-center">
-            <Trophy className="h-10 w-10 mx-auto text-yellow-500 mb-3" />
+            <Award className="h-10 w-10 mx-auto text-yellow-500 mb-3" />
             <blockquote className="text-lg italic text-indigo-700 dark:text-indigo-300">
               "एक भाषा आपको जीवन के लिए एक गलियारे में रखती है। दो भाषाएं हर दरवाजा खोल देती हैं।"
             </blockquote>

@@ -3,14 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  BookOpen, 
-  Network, 
-  ArrowUpDown, 
-  Lightbulb, 
+import {
+  BookOpen,
+  Network,
+  ArrowUpDown,
+  Lightbulb,
   GraduationCap,
   Target,
-  Trophy,
+  Award,
   Sparkles
 } from "lucide-react";
 import { VocabularyBuilder } from "@/components/HindiVocabulary/VocabularyBuilder";
@@ -74,9 +74,9 @@ export default function HindiVocabulary() {
               </p>
             </div>
           </div>
-          
+
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            अंग्रेजी शब्दावली को हिंदी के माध्यम से सीखें। समानार्थी, विपरीतार्थी, 
+            अंग्रेजी शब्दावली को हिंदी के माध्यम से सीखें। समानार्थी, विपरीतार्थी,
             शब्द संबंध और संदर्भ सुराग के साथ अपनी शब्दावली बढ़ाएं।
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function HindiVocabulary() {
           </Card>
           <Card className="border-amber-200 dark:border-amber-800">
             <CardContent className="p-4 text-center">
-              <Trophy className="h-8 w-8 mx-auto mb-2 text-amber-600" />
+              <Award className="h-8 w-8 mx-auto mb-2 text-amber-600" />
               <div className="text-2xl font-bold text-amber-700 dark:text-amber-300">3</div>
               <div className="text-sm text-muted-foreground">कठिनाई स्तर</div>
             </CardContent>

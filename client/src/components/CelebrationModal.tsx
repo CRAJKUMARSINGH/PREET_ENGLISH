@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trophy, Star, Sparkles, PartyPopper } from "lucide-react";
+import { Award, Star, Sparkles, PartyPopper } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { SaraswatiMascot } from "./SaraswatiMascot";
@@ -23,10 +23,10 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
     if (isOpen) {
       setShowBalloons(true);
       setShowXpPop(true);
-      
+
       // Play celebration sound
       playCelebration();
-      
+
       // Auto close after 5 seconds
       const timer = setTimeout(() => {
         onClose();
@@ -87,8 +87,8 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
       <div className="relative bg-white rounded-3xl p-8 md:p-12 max-w-md mx-4 text-center shadow-2xl animate-in zoom-in-95 duration-500">
         {/* Saraswati Mascot - Celebrating */}
         <div className="mb-4">
-          <SaraswatiMascot 
-            size="md" 
+          <SaraswatiMascot
+            size="md"
             mood="celebrating"
             message="बधाई हो! माँ सरस्वती आप पर प्रसन्न हैं! 🎉"
           />
@@ -98,7 +98,7 @@ export function CelebrationModal({ isOpen, onClose, lessonTitle, hindiTitle }: C
         <h2 className="text-3xl font-bold text-slate-900 mb-2 font-display">
           🎉 {t("congratulations")}! 🎉
         </h2>
-        
+
         <p className="text-lg text-slate-600 mb-4">
           {t("lesson_completed_message")}
         </p>

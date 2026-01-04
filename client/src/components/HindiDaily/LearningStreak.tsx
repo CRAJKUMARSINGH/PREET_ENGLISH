@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Calendar, Trophy, Target, Star, CheckCircle } from "lucide-react";
+import { Flame, Calendar, Award, Target, Star, CheckCircle } from "lucide-react";
 
 interface DayProgress {
   day: string;
@@ -55,7 +55,7 @@ export function LearningStreak() {
             <div className="text-sm text-muted-foreground">वर्तमान स्ट्रीक</div>
           </div>
           <div className="text-center p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl">
-            <Trophy className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
+            <Award className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
             <div className="text-3xl font-bold text-yellow-600">{longestStreak}</div>
             <div className="text-sm text-muted-foreground">सबसे लंबी</div>
           </div>
@@ -80,16 +80,15 @@ export function LearningStreak() {
             </h3>
             <Badge variant="outline">{completedDays}/7 दिन</Badge>
           </div>
-          
+
           <div className="grid grid-cols-7 gap-2">
             {weekProgress.map((day, index) => (
               <div
                 key={index}
-                className={`text-center p-3 rounded-xl transition-all ${
-                  day.completed
-                    ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300"
-                    : "bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700"
-                }`}
+                className={`text-center p-3 rounded-xl transition-all ${day.completed
+                  ? "bg-green-100 dark:bg-green-900/30 border-2 border-green-300"
+                  : "bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700"
+                  }`}
               >
                 <div className="text-xs font-medium">{day.day}</div>
                 <div className="text-xs text-muted-foreground font-hindi">{day.dayHindi}</div>
@@ -109,19 +108,18 @@ export function LearningStreak() {
         {/* Achievements */}
         <div className="space-y-3">
           <h3 className="font-bold flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
+            <Award className="h-5 w-5 text-yellow-500" />
             उपलब्धियाँ (Achievements)
           </h3>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {achievements.map((achievement) => (
               <div
                 key={achievement.id}
-                className={`p-3 rounded-xl text-center transition-all ${
-                  achievement.earned
-                    ? "bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300"
-                    : "bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 opacity-50"
-                }`}
+                className={`p-3 rounded-xl text-center transition-all ${achievement.earned
+                  ? "bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300"
+                  : "bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 opacity-50"
+                  }`}
               >
                 <div className="text-2xl mb-1">{achievement.icon}</div>
                 <div className="font-medium text-sm">{achievement.name}</div>

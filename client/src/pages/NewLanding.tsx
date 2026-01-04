@@ -109,9 +109,9 @@ export default function NewLanding() {
               <a href="#features" className="text-slate-600 hover:text-emerald-600 transition-colors">Features</a>
               <a href="#testimonials" className="text-slate-600 hover:text-emerald-600 transition-colors">Reviews</a>
               <a href="#pricing" className="text-slate-600 hover:text-emerald-600 transition-colors">Pricing</a>
-              <Link href="/dashboard">
+              <Link href="/auth">
                 <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white">
-                  Start Learning
+                  Create Account
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -148,9 +148,9 @@ export default function NewLanding() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link href="/dashboard">
+                <Link href="/auth">
                   <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-4 text-lg">
-                    Start Free Trial
+                    Create Account
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
@@ -351,9 +351,9 @@ export default function NewLanding() {
             <p className="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
               Join thousands of Hindi speakers who've already improved their English skills with Preet English
             </p>
-            <Link href="/dashboard">
+            <Link href="/auth">
               <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-4 text-lg font-bold">
-                Start Your Free Trial
+                Create Account
                 <Zap className="ml-2 h-5 w-5" />
               </Button>
             </Link>

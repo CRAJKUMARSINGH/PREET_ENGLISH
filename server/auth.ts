@@ -59,13 +59,14 @@ export function setupAuth(app: Express) {
         try {
             const existingUser = await storage.getUserByUsername(req.body.username);
             if (existingUser) {
-                return res.status(400).send("Username already exists");
+                return res.status(400).json({ message: "Username already exists" });
             }
 
             const hashedPassword = await hashPassword(req.body.password);
             const user = await storage.createUser({
-                ...req.body,
+                username: req.body.username,
                 password: hashedPassword,
+                isAdmin: false, // Default to false for new registrations
             });
 
             req.login(user, (err) => {

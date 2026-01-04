@@ -35,7 +35,7 @@ export default function AuthPage() {
 
     useEffect(() => {
         if (user) {
-            setLocation("/");
+            setLocation("/dashboard");
         }
     }, [user, setLocation]);
 
@@ -144,13 +144,18 @@ function AuthForm({
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        mutation.mutate(values);
+    function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        console.log('Form submitted, preventing default');
+        form.handleSubmit((values) => {
+            console.log('Form values:', values);
+            mutation.mutate(values);
+        })(e);
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={onSubmit} className="space-y-4">
                 <FormField
                     control={form.control}
                     name="username"
@@ -158,7 +163,11 @@ function AuthForm({
                         <FormItem>
                             <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <Input placeholder="student123" {...field} />
+                                <Input 
+                                    placeholder="student123" 
+                                    {...field}
+                                    autoComplete="username"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -171,16 +180,30 @@ function AuthForm({
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input type="password" placeholder="••••••••" {...field} />
+                                <Input 
+                                    type="password" 
+                                    placeholder="••••••••" 
+                                    {...field}
+                                    autoComplete={mode === "login" ? "current-password" : "new-password"}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+                {mutation.error && (
+                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                        {mutation.error.message}
+                    </div>
+                )}
                 <Button
                     type="submit"
                     className="w-full font-bold"
                     disabled={mutation.isPending}
+                    onClick={(e) => {
+                        console.log('Button clicked');
+                        e.preventDefault();
+                    }}
                 >
                     {mutation.isPending
                         ? "Please wait..."

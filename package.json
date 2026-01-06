@@ -25,6 +25,7 @@
     "test:signup-manual": "node Raj_Test/test-signup-manual-guide.cjs",
     "test:launch-strength": "node Raj_Test/ROBUST_STRENGTH_TEST.cjs",
     "fix:bottlenecks-enhanced": "node Raj_Test/bottleneck-resolver.cjs",
+    "test:signup-verify": "node Raj_Test/test-signup-verification.cjs",
     "db:push": "drizzle-kit push",
     "migrate": "tsx migrate-all-lessons.ts",
     "migrate:full": "tsx migrate-full-lessons.ts",

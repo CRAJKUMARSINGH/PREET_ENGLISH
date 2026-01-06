@@ -10,7 +10,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components for better performance
 const NewLanding = lazy(() => import("@/pages/NewLanding"));
-const AuthPage = lazy(() => import("@/pages/AuthPage"));
+const AuthPage = lazy(() => import("@/pages/AuthPageSimple"));
 const Home = lazy(() => import("@/pages/Home"));
 const AllLessons = lazy(() => import("@/pages/AllLessons"));
 const VocabularyPage = lazy(() => import("@/pages/VocabularyPage"));

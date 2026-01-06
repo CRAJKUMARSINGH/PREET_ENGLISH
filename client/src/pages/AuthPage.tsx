@@ -154,17 +154,41 @@ function AuthForm({
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log('🚀 Form submitted:', mode, values);
-        console.log('🔍 Mutation object:', mutation);
+        console.log('🚀 FORM SUBMISSION STARTED:', mode, values);
+        console.log('🔍 Mutation object exists:', !!mutation);
+        console.log('🔍 Mutation mutate function:', typeof mutation?.mutate);
         
-        // Add visual feedback
-        const submitButton = document.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.textContent = mode === 'login' ? 'Logging in...' : 'Creating account...';
+        // Prevent multiple submissions
+        if (mutation.isPending) {
+            console.log('⚠️ Already processing, ignoring duplicate submission');
+            return;
         }
         
-        mutation.mutate(values);
+        try {
+            console.log('📝 Calling mutation.mutate...');
+            mutation.mutate(values);
+            console.log('✅ Mutation.mutate called successfully');
+        } catch (error) {
+            console.error('❌ Error calling mutation:', error);
+        }
     }
+
+    // Add click handler for debugging
+    const handleButtonClick = (e: React.MouseEvent) => {
+        console.log('🖱️ Button clicked!', mode);
+        console.log('🔍 Form valid:', form.formState.isValid);
+        console.log('🔍 Form values:', form.getValues());
+        console.log('🔍 Form errors:', form.formState.errors);
+        
+        // Fallback: if form doesn't submit normally, try manual submission
+        setTimeout(() => {
+            const values = form.getValues();
+            if (values.username && values.password) {
+                console.log('🔄 Fallback: Manual form submission');
+                onSubmit(values);
+            }
+        }, 100);
+    };
 
     return (
         <Form {...form}>
@@ -213,6 +237,7 @@ function AuthForm({
                     type="submit"
                     className="w-full font-bold"
                     disabled={mutation.isPending}
+                    onClick={handleButtonClick}
                 >
                     {mutation.isPending
                         ? "Please wait..."

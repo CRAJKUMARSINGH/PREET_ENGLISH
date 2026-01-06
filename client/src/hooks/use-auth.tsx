@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             
             try {
                 // For frontend-only deployment, simulate login
-                if (window.location.hostname.includes('netlify.app') || window.location.hostname.includes('localhost')) {
+                if (window.location.hostname.includes('netlify.app')) {
                     console.log('🌐 Frontend-only mode: simulating login');
                     
                     // Show immediate feedback
@@ -147,31 +147,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log('🌐 Current hostname:', window.location.hostname);
             
             try {
-                // Always use mock authentication for now to ensure it works
-                console.log('🌐 Using mock authentication mode');
-                console.log('⏳ Simulating network delay...');
+                // For frontend-only deployment, simulate registration
+                if (window.location.hostname.includes('netlify.app')) {
+                    console.log('🌐 Frontend-only mode: simulating registration');
+                    
+                    // Show immediate feedback
+                    toast({
+                        title: "Creating your account...",
+                        description: "Please wait while we set up your profile.",
+                        variant: "default",
+                    });
+                    
+                    // Simulate network delay with timeout protection
+                    await Promise.race([
+                        new Promise(resolve => setTimeout(resolve, 1500)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Registration timeout')), 10000))
+                    ]);
+                    
+                    const mockUser = {
+                        id: Date.now(),
+                        username: credentials.username,
+                        isAdmin: false
+                    };
+                    
+                    console.log('✅ Mock registration successful:', mockUser);
+                    return mockUser;
+                }
                 
-                // Show immediate feedback
-                toast({
-                    title: "Creating your account...",
-                    description: "Please wait while we set up your profile.",
-                    variant: "default",
-                });
+                // Normal backend registration with timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
                 
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                const mockUser = {
-                    id: Date.now(),
-                    username: credentials.username,
-                    isAdmin: false
-                };
-                
-                console.log('✅ Mock user created:', mockUser);
-                return mockUser;
-                
+                try {
+                    const res = await apiRequest("POST", "/api/register", credentials, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    const userData = await res.json();
+                    return userData;
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
+                }
             } catch (error) {
                 console.error('❌ Registration failed:', error);
+                if (error instanceof Error && error.message === 'Registration timeout') {
+                    throw new Error('Registration is taking too long. Please try again.');
+                }
                 throw error;
             }
         },

@@ -14,6 +14,16 @@ export async function registerRoutes(
 ): Promise<Server | null> {
   setupAuth(app);
 
+  // Health check endpoint for Render
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      database: 'connected'
+    });
+  });
+
   // Lessons
   app.get(api.lessons.list.path, async (req, res) => {
     const lessons = await storage.getLessons();

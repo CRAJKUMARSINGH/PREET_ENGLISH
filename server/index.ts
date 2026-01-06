@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -11,6 +12,22 @@ declare module "http" {
     rawBody: unknown;
   }
 }
+
+// CORS configuration for Render deployment
+app.use(cors({
+  origin: [
+    'https://preetenglish.netlify.app',
+    'http://localhost:5000',
+    'http://localhost:5173', // Vite dev server
+    /\.netlify\.app$/ // Allow all Netlify preview deploys
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Enable pre-flight for all routes
+app.options('*', cors());
 
 app.use(
   express.json({
@@ -86,7 +103,18 @@ app.use((req, res, next) => {
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
   const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
-  httpServer.listen(port, host, () => {
-    log(`serving on ${host}:${port}`);
-  });
+  
+  // For Vercel serverless, export the app instead of listening
+  if (process.env.VERCEL) {
+    // Export for Vercel serverless
+    module.exports = app;
+  } else {
+    // Local development - start server
+    httpServer.listen(port, host, () => {
+      log(`serving on ${host}:${port}`);
+    });
+  }
 })();
+
+// Export for Vercel serverless functions
+export default app;

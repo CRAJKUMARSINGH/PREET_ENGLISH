@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Browser Signup</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 4px; width: 200px; }
+        .log { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; margin: 10px 0; border-radius: 4px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Browser Signup Test</h1>
+    
+    <div class="test-section info">
+        <h3>🔍 Environment Check</h3>
+        <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+        <p><strong>Hostname:</strong> <span id="hostname"></span></p>
+        <p><strong>Should use mock auth:</strong> <span id="mock-auth"></span></p>
+        <p><strong>Should use real API:</strong> <span id="real-api"></span></p>
+    </div>
+
+    <div class="test-section">
+        <h3>📝 Signup Test</h3>
+        <div>
+            <input type="text" id="username" placeholder="Username" value="browsertest123">
+            <input type="password" id="password" placeholder="Password" value="password123">
+            <button onclick="testSignup()" id="signup-btn">🚀 Test Signup</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>🔐 Login Test</h3>
+        <button onclick="testLogin()" id="login-btn">🔐 Test Login</button>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 Test Results</h3>
+        <div id="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📋 Console Log</h3>
+        <div id="console-log" class="log"></div>
+        <button onclick="clearLog()">🧹 Clear Log</button>
+    </div>
+
+    <script>
+        // Override console.log to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function logToPage(message, type = 'log') {
+            const logDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'warn' ? 'orange' : 'black';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logToPage(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logToPage(args.join(' '), 'error');
+        };
+
+        function clearLog() {
+            document.getElementById('console-log').innerHTML = '';
+        }
+
+        function updateResults(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            resultsDiv.innerHTML += `<div class="test-section ${className}">${message}</div>`;
+        }
+
+        // Initialize environment check
+        function initEnvironmentCheck() {
+            const currentUrl = window.location.href;
+            const hostname = window.location.hostname;
+            const shouldUseMock = hostname.includes('netlify.app');
+            
+            document.getElementById('current-url').textContent = currentUrl;
+            document.getElementById('hostname').textContent = hostname;
+            document.getElementById('mock-auth').textContent = shouldUseMock ? 'YES' : 'NO';
+            document.getElementById('real-api').textContent = shouldUseMock ? 'NO' : 'YES';
+            
+            console.log('🌐 Environment initialized');
+            console.log('📍 URL:', currentUrl);
+            console.log('🌐 Hostname:', hostname);
+            console.log('🔍 Mock auth:', shouldUseMock);
+        }
+
+        // Test signup functionality
+        async function testSignup() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const button = document.getElementById('signup-btn');
+            
+            console.log('🚀 Starting signup test...');
+            console.log('📝 Credentials:', { username, password: '***' });
+            
+            if (!username || username.length < 2) {
+                console.error('❌ Username validation failed');
+                updateResults('❌ Username must be at least 2 characters', 'error');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                console.error('❌ Password validation failed');
+                updateResults('❌ Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            button.disabled = true;
+            button.textContent = '⏳ Testing...';
+            
+            try {
+                // Simulate the React authentication logic
+                const hostname = window.location.hostname;
+                const shouldUseMock = hostname.includes('netlify.app');
+                
+                console.log('🔍 Hostname check:', hostname);
+                console.log('🔍 Should use mock:', shouldUseMock);
+                
+                if (shouldUseMock) {
+                    console.log('🌐 Using mock authentication');
+                    
+                    // Mock authentication
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    const mockUser = {
+                        id: Date.now(),
+                        username: username,
+                        isAdmin: false
+                    };
+                    
+                    console.log('✅ Mock signup successful:', mockUser);
+                    updateResults(`✅ Mock signup successful for ${username}`, 'success');
+                    
+                    // Test localStorage
+                    localStorage.setItem('preet-english-user', JSON.stringify(mockUser));
+                    console.log('💾 User stored in localStorage');
+                    
+                } else {
+                    console.log('🌐 Using real backend API');
+                    
+                    // Real API call
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+                    
+                    console.log('📡 API response status:', response.status);
+                    console.log('📡 API response headers:', Object.fromEntries(response.headers.entries()));
+                    
+                    if (response.ok) {
+                        const user = await response.json();
+                        console.log('✅ Real API signup successful:', user);
+                        updateResults(`✅ Real API signup successful for ${username}`, 'success');
+                        
+                        // Test localStorage
+                        localStorage.setItem('preet-english-user', JSON.stringify(user));
+                        console.log('💾 User stored in localStorage');
+                        
+                    } else {
+                        const errorText = await response.text();
+                        console.error('❌ API signup failed:', errorText);
+                        updateResults(`❌ API signup failed: ${errorText}`, 'error');
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('❌ Signup test failed:', error);
+                updateResults(`❌ Signup test failed: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = '🚀 Test Signup';
+            }
+        }
+
+        // Test login functionality
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const button = document.getElementById('login-btn');
+            
+            console.log('🔐 Starting login test...');
+            
+            if (!username || !password) {
+                console.error('❌ Missing credentials');
+                updateResults('❌ Please enter both username and password', 'error');
+                return;
+            }
+            
+            button.disabled = true;
+            button.textContent = '⏳ Testing...';
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                console.log('📡 Login response status:', response.status);
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    console.log('✅ Login successful:', user);
+                    updateResults(`✅ Login successful for ${username}`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Login failed:', errorText);
+                    updateResults(`❌ Login failed: ${errorText}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('❌ Login test failed:', error);
+                updateResults(`❌ Login test failed: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = '🔐 Test Login';
+            }
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initEnvironmentCheck();
+            console.log('🎯 Browser signup test page loaded');
+            
+            // Check localStorage
+            const storedUser = localStorage.getItem('preet-english-user');
+            if (storedUser) {
+                console.log('👤 Found stored user:', JSON.parse(storedUser));
+                updateResults('👤 Found stored user in localStorage', 'info');
+            } else {
+                console.log('ℹ️ No stored user found');
+            }
+        };
+    </script>
+</body>
+</html>

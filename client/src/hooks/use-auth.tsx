@@ -34,26 +34,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         queryKey: ["/api/user"],
         queryFn: async () => {
             try {
-                // First check localStorage for persisted user
-                const storedUser = localStorage.getItem('preet-english-user');
-                if (storedUser) {
-                    console.log('👤 Found stored user:', JSON.parse(storedUser));
-                    return JSON.parse(storedUser);
-                }
-                
                 const res = await fetch("/api/user");
                 if (res.status === 401) return undefined;
                 if (!res.ok) throw new Error("Failed to fetch user");
                 const userData = await res.json();
                 return userData;
             } catch (error) {
-                // Don't throw error, just return undefined for unauthenticated state
+                // Check localStorage only if API fails
+                const storedUser = localStorage.getItem('preet-english-user');
+                if (storedUser) {
+                    console.log('👤 Using stored user from localStorage');
+                    return JSON.parse(storedUser);
+                }
                 console.log('ℹ️ No user session found');
                 return undefined;
             }
         },
         retry: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
     });
 
     const loginMutation = useMutation({
@@ -124,10 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: "default",
             });
             
-            // Use React Router navigation instead of window.location
+            // Use setTimeout to prevent infinite loop
             setTimeout(() => {
                 console.log('🔄 Redirecting to dashboard...');
-                // Force a page refresh to ensure proper state update
                 window.location.replace('/dashboard');
             }, 1000);
         },
@@ -210,10 +210,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: "default",
             });
             
-            // Use React Router navigation instead of window.location
+            // Use setTimeout to prevent infinite loop
             setTimeout(() => {
                 console.log('🔄 Redirecting to dashboard...');
-                // Force a page refresh to ensure proper state update
                 window.location.replace('/dashboard');
             }, 1000);
         },

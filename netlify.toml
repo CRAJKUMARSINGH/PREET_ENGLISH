@@ -1,0 +1,58 @@
+[build]
+  publish = "dist/public"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 5000
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security Headers - Critical Protection
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(self), camera=(), payment=(), usb=()"
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https: blob:;
+      connect-src 'self' https://api.netlify.com;
+      frame-ancestors 'self';
+      base-uri 'self';
+      form-action 'self';
+      object-src 'none';
+    """
+    # Performance Headers
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

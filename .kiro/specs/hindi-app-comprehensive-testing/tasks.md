@@ -1,0 +1,244 @@
+# Implementation Plan
+
+- [ ] 1. Set up test infrastructure and utilities
+  - [ ] 1.1 Create test configuration file with data file schemas and component mappings
+    - Define required fields for each data file type
+    - Map data files to expected consuming components
+    - Map pages to expected child components
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 9.3-9.9, 10.5-10.7_
+  - [ ] 1.2 Create data validation utility functions
+    - Implement validateSchema function for checking required fields
+    - Implement validateDataFile function for iterating all records
+    - Implement generateValidationReport function
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
+  - [ ] 1.3 Create integration scanner utility
+    - Implement scanDataFileImports to find which components import each data file
+    - Implement findOrphanedDataFiles to detect unused data files
+    - Implement findOrphanedExports to detect unused exports within files
+    - _Requirements: 9.1, 9.2_
+  - [ ] 1.4 Create component reachability tracker utility
+    - Implement buildComponentTree to trace from App.tsx
+    - Implement findOrphanedComponents to detect unreachable components
+    - Implement generateIntegrationReport
+    - _Requirements: 10.1, 10.2, 10.3, 10.4_
+
+- [ ] 2. Implement data file validation tests
+  - [ ] 2.1 Create hindiCommonPhrasesData validation test
+    - Test all 125+ phrases have required fields (id, english, hindi, pronunciation, usage, category, difficulty)
+    - Test all difficulty values are valid enum values
+    - Test all category values are non-empty strings
+    - _Requirements: 1.1_
+  - [ ] 2.2 Write property test for data schema completeness (Property 1)
+    - **Property 1: Data Schema Completeness**
+    - **Validates: Requirements 1.1, 1.2, 1.3, 1.4, 1.5**
+  - [ ] 2.3 Create hindiListeningData validation test
+    - Test all 30+ listening lessons have required fields
+    - Test all lessons have at least one question
+    - Test duration format is valid
+    - _Requirements: 1.2_
+  - [ ] 2.4 Create hindiRolePlayData validation test
+    - Test all 40+ role play scenarios have required fields
+    - Test all scenarios have at least one dialogue
+    - Test category and difficulty values are valid
+    - _Requirements: 1.3_
+  - [ ] 2.5 Create hindiStoriesData validation test
+    - Test all stories have required fields
+    - Test vocabulary arrays are non-empty
+    - Test comprehension questions exist
+    - _Requirements: 1.4_
+  - [ ] 2.6 Create hindiLearningData validation test
+    - Test pronunciationChallenges structure
+    - Test commonGrammarMistakes structure
+    - Test culturalContextData structure
+    - Test businessEnglishForIndians structure
+    - Test dailyEnglishPhrases structure
+    - _Requirements: 1.5_
+  - [ ] 2.7 Create hindiDialoguesData validation test
+    - Test all dialogues have required fields
+    - Test dialogue turns are properly structured
+    - _Requirements: 9.7_
+  - [ ] 2.8 Create speakingTopics validation test
+    - Test all topics have required fields
+    - Test topic categories are valid
+    - _Requirements: 9.9_
+
+- [ ] 3. Checkpoint - Ensure all data validation tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 4. Implement component rendering tests
+  - [ ] 4.1 Create HindiConversation components test suite
+    - Test CommonPhrases mounts without errors
+    - Test ListeningPractice mounts without errors
+    - Test RolePlaySimulator mounts without errors
+    - Test DialoguePractice mounts without errors
+    - _Requirements: 2.1_
+  - [ ] 4.2 Write property test for component mount safety (Property 2)
+    - **Property 2: Component Mount Safety**
+    - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7**
+  - [ ] 4.3 Create HindiGames components test suite
+    - Test WordScramble mounts without errors
+    - Test SpellingBee mounts without errors
+    - Test FillBlanks mounts without errors
+    - Test GrammarMatchGame mounts without errors
+    - _Requirements: 2.2_
+  - [ ] 4.4 Create HindiStories components test suite
+    - Test StoryReader mounts without errors
+    - Test ComprehensionQuiz mounts without errors
+    - Test DictationPractice mounts without errors
+    - Test SentenceBuilder mounts without errors
+    - _Requirements: 2.3_
+  - [ ] 4.5 Create HindiFluency components test suite
+    - Test FlashcardSystem mounts without errors
+    - Test DailyPracticeDashboard mounts without errors
+    - Test SpeakingConfidenceTracker mounts without errors
+    - _Requirements: 2.4_
+  - [ ] 4.6 Create HindiVocabulary components test suite
+    - Test VocabularyBuilder mounts without errors
+    - Test WordAssociation mounts without errors
+    - Test SynonymAntonym mounts without errors
+    - Test ContextClues mounts without errors
+    - _Requirements: 2.5_
+  - [ ] 4.7 Create HindiDaily components test suite
+    - Test DailyWordCard mounts without errors
+    - Test PhrasesOfDay mounts without errors
+    - Test LearningStreak mounts without errors
+    - Test VocabularyQuiz mounts without errors
+    - _Requirements: 2.6_
+  - [ ] 4.8 Create HindiMastery components test suite
+    - Test CertificationSystem mounts without errors
+    - Test InterviewPrep mounts without errors
+    - Test ProfessionalWriting mounts without errors
+    - Test TranslationPractice mounts without errors
+    - _Requirements: 2.7_
+
+- [ ] 5. Checkpoint - Ensure all component tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 6. Implement page and route tests
+  - [ ] 6.1 Create route accessibility test suite
+    - Test all 11+ routes render correct page components
+    - Test undefined routes render NotFound component
+    - _Requirements: 3.1, 3.2_
+  - [ ] 6.2 Write property test for route accessibility (Property 3)
+    - **Property 3: Route Accessibility**
+    - **Validates: Requirements 3.1, 3.3**
+  - [ ] 6.3 Create page child component verification tests
+    - Test HindiConversation page renders all expected children
+    - Test HindiGames page renders all expected children
+    - Test HindiStories page renders all expected children
+    - Test HindiFluency page renders all expected children
+    - Test HindiVocabulary page renders all expected children
+    - Test HindiDaily page renders all expected children
+    - Test HindiMastery page renders all expected children
+    - _Requirements: 3.3, 10.5, 10.6, 10.7_
+  - [ ] 6.4 Write property test for navigation link validity (Property 4)
+    - **Property 4: Navigation Link Validity**
+    - **Validates: Requirements 3.4**
+
+- [ ] 7. Implement integration detection tests
+  - [ ] 7.1 Create data file integration test suite
+    - Scan all data files in client/src/data/
+    - Verify each data file is imported by at least one component
+    - Report orphaned data files with unused exports
+    - _Requirements: 9.1, 9.2_
+  - [ ] 7.2 Write property test for data file integration (Property 10)
+    - **Property 10: Data File Integration**
+    - **Validates: Requirements 9.1, 9.2**
+  - [ ] 7.3 Create component reachability test suite
+    - Build component tree from App.tsx
+    - Identify all components in Hindi learning directories
+    - Report orphaned components not reachable from any route
+    - _Requirements: 10.1, 10.2, 10.3, 10.4_
+  - [ ] 7.4 Write property test for component reachability (Property 11)
+    - **Property 11: Component Reachability**
+    - **Validates: Requirements 10.1, 10.2, 10.4**
+  - [ ] 7.5 Create content count consistency test
+    - Compare data file record counts with UI accessible counts
+    - Verify pagination/filtering doesn't hide content
+    - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
+  - [ ] 7.6 Write property test for content count consistency (Property 12)
+    - **Property 12: Content Count Consistency**
+    - **Validates: Requirements 11.1, 11.2, 11.3, 11.4, 11.5**
+  - [ ] 7.7 Create category filter completeness test
+    - Extract all categories from data files
+    - Verify all categories appear as filter options in UI
+    - _Requirements: 11.6_
+  - [ ] 7.8 Write property test for category filter completeness (Property 13)
+    - **Property 13: Category Filter Completeness**
+    - **Validates: Requirements 11.6**
+
+- [ ] 8. Checkpoint - Ensure all integration tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 9. Implement interactive feature tests
+  - [ ] 9.1 Create filter and search functionality tests
+    - Test category filtering returns only matching items
+    - Test difficulty filtering returns only matching items
+    - Test search returns items containing search term
+    - _Requirements: 4.4, 5.1, 5.2, 5.3_
+  - [ ] 9.2 Write property test for filter result correctness (Property 5)
+    - **Property 5: Filter Result Correctness**
+    - **Validates: Requirements 4.4, 5.1, 5.2**
+  - [ ] 9.3 Write property test for search result correctness (Property 6)
+    - **Property 6: Search Result Correctness**
+    - **Validates: Requirements 5.3**
+  - [ ] 9.4 Create favorites functionality tests
+    - Test adding item to favorites
+    - Test removing item from favorites
+    - Test favorites persistence
+    - _Requirements: 4.5_
+  - [ ] 9.5 Write property test for favorites round-trip (Property 7)
+    - **Property 7: Favorites Round-Trip**
+    - **Validates: Requirements 4.5**
+  - [ ] 9.6 Create quiz and scoring tests
+    - Test answer selection updates state
+    - Test score calculation accuracy
+    - Test feedback display
+    - _Requirements: 4.1, 7.2_
+  - [ ] 9.7 Write property test for score calculation accuracy (Property 8)
+    - **Property 8: Score Calculation Accuracy**
+    - **Validates: Requirements 7.2**
+  - [ ] 9.8 Create progress persistence tests
+    - Test saving progress to localStorage
+    - Test retrieving progress from localStorage
+    - Test progress state updates on lesson completion
+    - _Requirements: 7.1, 7.4_
+  - [ ] 9.9 Write property test for progress persistence round-trip (Property 9)
+    - **Property 9: Progress Persistence Round-Trip**
+    - **Validates: Requirements 7.4**
+
+- [ ] 10. Implement error handling tests
+  - [ ] 10.1 Create error boundary tests
+    - Test ErrorBoundary catches component errors
+    - Test fallback UI displays on error
+    - _Requirements: 8.1_
+  - [ ] 10.2 Create graceful degradation tests
+    - Test components handle missing optional props
+    - Test loading states display during data fetch
+    - Test error messages display on data load failure
+    - _Requirements: 8.2, 8.3_
+  - [ ] 10.3 Write property test for graceful missing props handling (Property 14)
+    - **Property 14: Graceful Missing Props Handling**
+    - **Validates: Requirements 8.3**
+
+- [ ] 11. Implement audio service tests
+  - [ ] 11.1 Create audio service initialization tests
+    - Test speechSynthesis API availability check
+    - Test graceful handling when API unavailable
+    - _Requirements: 6.1_
+  - [ ] 11.2 Create text-to-speech tests
+    - Test speaking Hindi text
+    - Test speaking English text
+    - Test error handling on playback failure
+    - _Requirements: 6.2, 6.3, 6.4_
+
+- [ ] 12. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 13. Generate comprehensive test report
+  - [ ] 13.1 Create test summary reporter
+    - Generate summary of all test results
+    - List any orphaned data files found
+    - List any orphaned components found
+    - Report content accessibility gaps
+    - _Requirements: 9.2, 10.2, 11.5_

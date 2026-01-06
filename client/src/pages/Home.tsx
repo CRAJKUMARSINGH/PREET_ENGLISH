@@ -26,10 +26,26 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import React from "react";
-import { useState } from "react";
-import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
+  
+  // Simple authentication check
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('preet-english-auth');
+    const user = localStorage.getItem('preet-english-user');
+    
+    if (!isAuthenticated || !user) {
+      console.log('🔒 Not authenticated, redirecting to auth page');
+      setLocation('/auth');
+      return;
+    }
+    
+    console.log('✅ User authenticated, showing dashboard');
+  }, [setLocation]);
+
   const { data: lessons, isLoading: lessonsLoading } = useLessons();
   const { data: progress, isLoading: progressLoading } = useProgress();
   const { data: userStats } = useUserStats();

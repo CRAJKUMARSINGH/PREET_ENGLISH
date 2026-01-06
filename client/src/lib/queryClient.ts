@@ -1,57 +1,74 @@
-import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 
-async function throwIfResNotOk(res: Response) {
-  if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
-  }
-}
-
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
-
-  await throwIfResNotOk(res);
-  return res;
-}
-
-type UnauthorizedBehavior = "returnNull" | "throw";
-export const getQueryFn: <T>(options: {
-  on401: UnauthorizedBehavior;
-}) => QueryFunction<T> =
-  ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
-      credentials: "include",
-    });
-
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
-    }
-
-    await throwIfResNotOk(res);
-    return await res.json();
-  };
-
+// Optimized query client with performance settings
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes - data stays fresh
+      gcTime: 10 * 60 * 1000, // 10 minutes - cache retention
+      retry: (failureCount, error: any) => {
+        // Don't retry on 4xx errors
+        if (error?.status >= 400 && error?.status < 500) {
+          return false;
+        }
+        return failureCount < 2;
+      },
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
+      refetchOnReconnect: true,
+      refetchOnMount: true,
     },
     mutations: {
-      retry: false,
+      retry: 1,
     },
   },
 });
+
+// API request helper with better error handling and caching
+export async function apiRequest(
+  method: string,
+  endpoint: string,
+  body?: any,
+  options: RequestInit = {}
+): Promise<Response> {
+  const url = endpoint.startsWith('http') ? endpoint : `${window.location.origin}${endpoint}`;
+  
+  const config: RequestInit = {
+    method,
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  if (body && method !== 'GET') {
+    config.body = JSON.stringify(body);
+  }
+
+  try {
+    const response = await fetch(url, config);
+    
+    // Handle different response types
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
+    }
+    
+    return response;
+  } catch (error) {
+    console.error(`API request failed: ${method} ${endpoint}`, error);
+    throw error;
+  }
+}
+
+// Prefetch helper for better performance
+export function prefetchQuery(queryKey: string[], queryFn: () => Promise<any>) {
+  queryClient.prefetchQuery({
+    queryKey,
+    queryFn,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export default queryClient;

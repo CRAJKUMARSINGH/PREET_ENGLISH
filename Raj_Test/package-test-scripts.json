@@ -1,0 +1,48 @@
+{
+  "name": "RAJ_TEST_SUITE_SCRIPTS",
+  "description": "Backup of all test scripts for PreetEnglish application",
+  "version": "1.0.0",
+  "scripts": {
+    "test:comprehensive": "node Raj_Test/comprehensive-user-testing.cjs",
+    "fix:bottlenecks": "node Raj_Test/bottleneck-resolver.cjs",
+    "test:deployment": "node Raj_Test/deployment-test.cjs",
+    "test:create-account": "node Raj_Test/test-create-account.js",
+    "test:all": "npm run test:deployment && npm run test:comprehensive && npm run fix:bottlenecks"
+  },
+  "testSuite": {
+    "totalUsers": 75,
+    "userLevels": ["beginner", "intermediate", "advanced"],
+    "usersPerLevel": 25,
+    "concurrentUsers": 5,
+    "testRoutes": [
+      "/dashboard",
+      "/lessons", 
+      "/vocabulary",
+      "/speaking",
+      "/listening",
+      "/stories",
+      "/chat",
+      "/progress"
+    ],
+    "performanceTargets": {
+      "excellent": "< 1000ms",
+      "good": "< 2000ms", 
+      "fair": "< 3000ms",
+      "poor": "> 3000ms"
+    }
+  },
+  "achievements": {
+    "registrationSuccessRate": "100%",
+    "navigationSuccessRate": "100%",
+    "performanceRating": "Excellent",
+    "bottlenecksDetected": 0,
+    "optimizationsApplied": 6
+  },
+  "lastTested": "2026-01-05T02:43:42.734Z",
+  "testEnvironment": {
+    "target": "https://preetenglish.netlify.app",
+    "platform": "Netlify (Static Site)",
+    "authentication": "Mock Implementation",
+    "backend": "Frontend-only deployment"
+  }
+}

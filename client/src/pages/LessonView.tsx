@@ -53,7 +53,7 @@ export default function LessonView() {
     queryKey: ['lesson-quiz', id],
     queryFn: async () => {
       if (!id) return null;
-      const res = await fetch(`/api/lessons/${id}/quiz`);
+      const res = await fetch(`/api/lessons/${id}/quiz`, { credentials: "include" });
       if (res.status === 404) return null;
       if (!res.ok) throw new Error("Failed to load quiz");
       return res.json();

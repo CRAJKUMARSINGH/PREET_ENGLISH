@@ -144,18 +144,14 @@ function AuthForm({
         },
     });
 
-    function onSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        console.log('Form submitted, preventing default');
-        form.handleSubmit((values) => {
-            console.log('Form values:', values);
-            mutation.mutate(values);
-        })(e);
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log('Form submitted:', mode, values);
+        mutation.mutate(values);
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                     control={form.control}
                     name="username"
@@ -200,10 +196,6 @@ function AuthForm({
                     type="submit"
                     className="w-full font-bold"
                     disabled={mutation.isPending}
-                    onClick={(e) => {
-                        console.log('Button clicked');
-                        e.preventDefault();
-                    }}
                 >
                     {mutation.isPending
                         ? "Please wait..."

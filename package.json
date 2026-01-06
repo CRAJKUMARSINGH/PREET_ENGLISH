@@ -21,6 +21,8 @@
     "test:all-raj": "npm run test:raj-suite && npm run fix:bottlenecks",
     "test:robust-strength": "node Raj_Test/ROBUST_STRENGTH_TEST.cjs",
     "test:launch-ready": "npm run test:robust-strength",
+    "test:random-signups": "node Raj_Test/test-random-signups.cjs",
+    "test:signup-manual": "node Raj_Test/test-signup-manual-guide.cjs",
     "test:launch-strength": "node Raj_Test/ROBUST_STRENGTH_TEST.cjs",
     "fix:bottlenecks-enhanced": "node Raj_Test/bottleneck-resolver.cjs",
     "db:push": "drizzle-kit push",

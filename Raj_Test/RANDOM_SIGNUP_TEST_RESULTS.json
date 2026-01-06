@@ -1,0 +1,819 @@
+{
+  "timestamp": "2026-01-06T05:54:24.272Z",
+  "summary": {
+    "totalSignups": 20,
+    "successfulSignups": 0,
+    "failedSignups": 20,
+    "signupDetails": [
+      {
+        "user": "chopra560",
+        "profile": "Rajesh Chopra from Indore",
+        "level": "advanced",
+        "startTime": 1767678850992,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 400,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 401
+      },
+      {
+        "user": "lucknow_user6",
+        "profile": "Bhagat Verma from Lucknow",
+        "level": "beginner",
+        "startTime": 1767678850994,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 419,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 419
+      },
+      {
+        "user": "singh413",
+        "profile": "Parvati Singh from Delhi",
+        "level": "advanced",
+        "startTime": 1767678850963,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 478,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 479
+      },
+      {
+        "user": "rahulghosh555",
+        "profile": "Rahul Ghosh from Lucknow",
+        "level": "beginner",
+        "startTime": 1767678853458,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 91,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 91
+      },
+      {
+        "user": "parvati_mukherjee",
+        "profile": "Parvati Mukherjee from Bangalore",
+        "level": "beginner",
+        "startTime": 1767678853457,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 105,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 106
+      },
+      {
+        "user": "arjun728",
+        "profile": "Arjun Malhotra from Visakhapatnam",
+        "level": "advanced",
+        "startTime": 1767678853456,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 116,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 117
+      },
+      {
+        "user": "nagpur_user396",
+        "profile": "Suresh Tiwari from Nagpur",
+        "level": "intermediate",
+        "startTime": 1767678855589,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 94,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 95
+      },
+      {
+        "user": "rajkot_user77",
+        "profile": "Deepika Sharma from Rajkot",
+        "level": "intermediate",
+        "startTime": 1767678855589,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 103,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 103
+      },
+      {
+        "user": "sita_banerjee",
+        "profile": "Sita Banerjee from Patna",
+        "level": "intermediate",
+        "startTime": 1767678855588,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 113,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 113
+      },
+      {
+        "user": "rani.ludhiana",
+        "profile": "Rani Reddy from Ludhiana",
+        "level": "beginner",
+        "startTime": 1767678857706,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 99,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 100
+      },
+      {
+        "user": "english_learner_595",
+        "profile": "Pooja Chatterjee from Pune",
+        "level": "intermediate",
+        "startTime": 1767678857706,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 115,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 115
+      },
+      {
+        "user": "english_learner_290",
+        "profile": "Shiva Roy from Vadodara",
+        "level": "beginner",
+        "startTime": 1767678857705,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 122,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 122
+      },
+      {
+        "user": "english_learner_810",
+        "profile": "Deepika Bhattacharya from Nagpur",
+        "level": "advanced",
+        "startTime": 1767678859840,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 106,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 108
+      },
+      {
+        "user": "indira.nagpur",
+        "profile": "Indira Sen from Nagpur",
+        "level": "advanced",
+        "startTime": 1767678859841,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 107,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 107
+      },
+      {
+        "user": "english_learner_825",
+        "profile": "Karan Tiwari from Bhopal",
+        "level": "intermediate",
+        "startTime": 1767678859839,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 116,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 116
+      },
+      {
+        "user": "ludhiana_user75",
+        "profile": "Indira Agarwal from Ludhiana",
+        "level": "intermediate",
+        "startTime": 1767678861971,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 134,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 135
+      },
+      {
+        "user": "english_learner_36",
+        "profile": "Ganesh Nair from Vadodara",
+        "level": "advanced",
+        "startTime": 1767678861972,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 134,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 134
+      },
+      {
+        "user": "arjun_chopra",
+        "profile": "Arjun Chopra from Rajkot",
+        "level": "intermediate",
+        "startTime": 1767678861970,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 135,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 136
+      },
+      {
+        "user": "english_learner_305",
+        "profile": "Krishna Kumar from Delhi",
+        "level": "intermediate",
+        "startTime": 1767678864120,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 146,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 146
+      },
+      {
+        "user": "sharma172",
+        "profile": "Sita Sharma from Delhi",
+        "level": "beginner",
+        "startTime": 1767678864120,
+        "steps": [
+          {
+            "step": "Auth Page Access",
+            "status": 200,
+            "duration": 147,
+            "success": true
+          },
+          {
+            "step": "Signup Form Detection",
+            "success": false,
+            "note": "Form elements missing"
+          },
+          {
+            "step": "Error",
+            "success": false,
+            "error": "Signup form elements not found in page"
+          }
+        ],
+        "success": false,
+        "totalTime": 147
+      }
+    ],
+    "errors": [
+      {
+        "user": "chopra560",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "lucknow_user6",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "singh413",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "rahulghosh555",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "parvati_mukherjee",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "arjun728",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "nagpur_user396",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "rajkot_user77",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "sita_banerjee",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "rani.ludhiana",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_595",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_290",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_810",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "indira.nagpur",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_825",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "ludhiana_user75",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_36",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "arjun_chopra",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "english_learner_305",
+        "error": "Signup form elements not found in page"
+      },
+      {
+        "user": "sharma172",
+        "error": "Signup form elements not found in page"
+      }
+    ]
+  },
+  "randomUsers": [
+    {
+      "id": 1,
+      "username": "singh413",
+      "password": "study413",
+      "profile": "Parvati Singh from Delhi",
+      "firstName": "Parvati",
+      "lastName": "Singh",
+      "city": "Delhi",
+      "level": "advanced"
+    },
+    {
+      "id": 2,
+      "username": "chopra560",
+      "password": "learn560",
+      "profile": "Rajesh Chopra from Indore",
+      "firstName": "Rajesh",
+      "lastName": "Chopra",
+      "city": "Indore",
+      "level": "advanced"
+    },
+    {
+      "id": 3,
+      "username": "lucknow_user6",
+      "password": "study6",
+      "profile": "Bhagat Verma from Lucknow",
+      "firstName": "Bhagat",
+      "lastName": "Verma",
+      "city": "Lucknow",
+      "level": "beginner"
+    },
+    {
+      "id": 4,
+      "username": "arjun728",
+      "password": "preet728",
+      "profile": "Arjun Malhotra from Visakhapatnam",
+      "firstName": "Arjun",
+      "lastName": "Malhotra",
+      "city": "Visakhapatnam",
+      "level": "advanced"
+    },
+    {
+      "id": 5,
+      "username": "parvati_mukherjee",
+      "password": "password408",
+      "profile": "Parvati Mukherjee from Bangalore",
+      "firstName": "Parvati",
+      "lastName": "Mukherjee",
+      "city": "Bangalore",
+      "level": "beginner"
+    },
+    {
+      "id": 6,
+      "username": "rahulghosh555",
+      "password": "Lucknow123",
+      "profile": "Rahul Ghosh from Lucknow",
+      "firstName": "Rahul",
+      "lastName": "Ghosh",
+      "city": "Lucknow",
+      "level": "beginner"
+    },
+    {
+      "id": 7,
+      "username": "sita_banerjee",
+      "password": "study39",
+      "profile": "Sita Banerjee from Patna",
+      "firstName": "Sita",
+      "lastName": "Banerjee",
+      "city": "Patna",
+      "level": "intermediate"
+    },
+    {
+      "id": 8,
+      "username": "rajkot_user77",
+      "password": "preet77",
+      "profile": "Deepika Sharma from Rajkot",
+      "firstName": "Deepika",
+      "lastName": "Sharma",
+      "city": "Rajkot",
+      "level": "intermediate"
+    },
+    {
+      "id": 9,
+      "username": "nagpur_user396",
+      "password": "preet396",
+      "profile": "Suresh Tiwari from Nagpur",
+      "firstName": "Suresh",
+      "lastName": "Tiwari",
+      "city": "Nagpur",
+      "level": "intermediate"
+    },
+    {
+      "id": 10,
+      "username": "english_learner_290",
+      "password": "Shiva123",
+      "profile": "Shiva Roy from Vadodara",
+      "firstName": "Shiva",
+      "lastName": "Roy",
+      "city": "Vadodara",
+      "level": "beginner"
+    },
+    {
+      "id": 11,
+      "username": "english_learner_595",
+      "password": "learn595",
+      "profile": "Pooja Chatterjee from Pune",
+      "firstName": "Pooja",
+      "lastName": "Chatterjee",
+      "city": "Pune",
+      "level": "intermediate"
+    },
+    {
+      "id": 12,
+      "username": "rani.ludhiana",
+      "password": "study928",
+      "profile": "Rani Reddy from Ludhiana",
+      "firstName": "Rani",
+      "lastName": "Reddy",
+      "city": "Ludhiana",
+      "level": "beginner"
+    },
+    {
+      "id": 13,
+      "username": "english_learner_825",
+      "password": "english825",
+      "profile": "Karan Tiwari from Bhopal",
+      "firstName": "Karan",
+      "lastName": "Tiwari",
+      "city": "Bhopal",
+      "level": "intermediate"
+    },
+    {
+      "id": 14,
+      "username": "english_learner_810",
+      "password": "preet810",
+      "profile": "Deepika Bhattacharya from Nagpur",
+      "firstName": "Deepika",
+      "lastName": "Bhattacharya",
+      "city": "Nagpur",
+      "level": "advanced"
+    },
+    {
+      "id": 15,
+      "username": "indira.nagpur",
+      "password": "learn825",
+      "profile": "Indira Sen from Nagpur",
+      "firstName": "Indira",
+      "lastName": "Sen",
+      "city": "Nagpur",
+      "level": "advanced"
+    },
+    {
+      "id": 16,
+      "username": "arjun_chopra",
+      "password": "hindi2english831",
+      "profile": "Arjun Chopra from Rajkot",
+      "firstName": "Arjun",
+      "lastName": "Chopra",
+      "city": "Rajkot",
+      "level": "intermediate"
+    },
+    {
+      "id": 17,
+      "username": "ludhiana_user75",
+      "password": "password75",
+      "profile": "Indira Agarwal from Ludhiana",
+      "firstName": "Indira",
+      "lastName": "Agarwal",
+      "city": "Ludhiana",
+      "level": "intermediate"
+    },
+    {
+      "id": 18,
+      "username": "english_learner_36",
+      "password": "Ganesh123",
+      "profile": "Ganesh Nair from Vadodara",
+      "firstName": "Ganesh",
+      "lastName": "Nair",
+      "city": "Vadodara",
+      "level": "advanced"
+    },
+    {
+      "id": 19,
+      "username": "sharma172",
+      "password": "SitaSharma",
+      "profile": "Sita Sharma from Delhi",
+      "firstName": "Sita",
+      "lastName": "Sharma",
+      "city": "Delhi",
+      "level": "beginner"
+    },
+    {
+      "id": 20,
+      "username": "english_learner_305",
+      "password": "learn305",
+      "profile": "Krishna Kumar from Delhi",
+      "firstName": "Krishna",
+      "lastName": "Kumar",
+      "city": "Delhi",
+      "level": "intermediate"
+    }
+  ],
+  "testConfiguration": {
+    "siteUrl": "https://preetenglish.netlify.app",
+    "totalUsers": 20,
+    "testTimeout": 15000
+  }
+}

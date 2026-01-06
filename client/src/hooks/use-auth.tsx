@@ -8,7 +8,6 @@ import {
 import { InsertUser, User } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { usePerformanceMonitor } from "@/hooks/use-performance";
 
 type AuthContextType = {
     user: User | null;
@@ -26,7 +25,6 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const { toast } = useToast();
     const queryClient = useQueryClient();
-    const { startTimer, endTimer } = usePerformanceMonitor('AuthProvider');
 
     const {
         data: user,
@@ -35,13 +33,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = useQuery<User | undefined, Error>({
         queryKey: ["/api/user"],
         queryFn: async () => {
-            const timer = startTimer();
             try {
                 // First check localStorage for persisted user
                 const storedUser = localStorage.getItem('preet-english-user');
                 if (storedUser) {
                     console.log('👤 Found stored user:', JSON.parse(storedUser));
-                    endTimer(timer, 'User fetch (localStorage)');
                     return JSON.parse(storedUser);
                 }
                 
@@ -49,10 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 if (res.status === 401) return undefined;
                 if (!res.ok) throw new Error("Failed to fetch user");
                 const userData = await res.json();
-                endTimer(timer, 'User fetch');
                 return userData;
             } catch (error) {
-                endTimer(timer, 'User fetch (failed)');
                 // Don't throw error, just return undefined for unauthenticated state
                 console.log('ℹ️ No user session found');
                 return undefined;
@@ -64,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const loginMutation = useMutation({
         mutationFn: async (credentials: LoginData) => {
-            const timer = startTimer();
             console.log('🔐 Login attempt:', credentials.username);
             
             try {
@@ -89,17 +82,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     };
                     
                     console.log('✅ Mock login successful:', mockUser);
-                    endTimer(timer, 'Mock login');
                     return mockUser;
                 }
                 
                 // Normal backend login
                 const res = await apiRequest("POST", "/api/login", credentials);
                 const userData = await res.json();
-                endTimer(timer, 'Backend login');
                 return userData;
             } catch (error) {
-                endTimer(timer, 'Login (failed)');
+                console.error('❌ Login failed:', error);
                 throw error;
             }
         },
@@ -134,7 +125,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const registerMutation = useMutation({
         mutationFn: async (credentials: InsertUser) => {
-            const timer = startTimer();
             console.log('📝 Registration attempt:', credentials.username);
             console.log('🌐 Current hostname:', window.location.hostname);
             
@@ -161,17 +151,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     };
                     
                     console.log('✅ Mock user created:', mockUser);
-                    endTimer(timer, 'Mock registration');
                     return mockUser;
                 }
                 
                 // Normal backend registration
                 const res = await apiRequest("POST", "/api/register", credentials);
                 const userData = await res.json();
-                endTimer(timer, 'Backend registration');
                 return userData;
             } catch (error) {
-                endTimer(timer, 'Registration (failed)');
                 console.error('❌ Registration failed:', error);
                 throw error;
             }
@@ -207,12 +194,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logoutMutation = useMutation({
         mutationFn: async () => {
-            const timer = startTimer();
             try {
                 await apiRequest("POST", "/api/logout");
-                endTimer(timer, 'Logout');
             } catch (error) {
-                endTimer(timer, 'Logout (failed)');
                 // Don't throw error for logout - always clear local state
                 console.warn('Logout API failed, clearing local state anyway');
             }

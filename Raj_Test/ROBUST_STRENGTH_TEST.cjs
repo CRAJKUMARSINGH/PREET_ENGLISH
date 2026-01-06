@@ -61,6 +61,12 @@ class RobustStrengthTester {
     }
 
     async preflightBackend() {
+        // Skip backend preflight for static deployments
+        if (SITE_URL.includes('netlify.app')) {
+            console.log('   ⚠️  Static deployment detected - skipping backend preflight');
+            return;
+        }
+        
         const lessonsRes = await this.makeRequest(`${SITE_URL}/api/lessons`, { method: 'GET' });
 
         if (lessonsRes.status !== 200) {

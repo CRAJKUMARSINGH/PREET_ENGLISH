@@ -13,7 +13,6 @@ const NewLanding = lazy(() => import("@/pages/NewLanding"));
 const AuthPage = lazy(() => import("@/pages/AuthPage"));
 const Home = lazy(() => import("@/pages/Home"));
 const AllLessons = lazy(() => import("@/pages/AllLessons"));
-const LessonView = lazy(() => import("@/pages/LessonView"));
 const VocabularyPage = lazy(() => import("@/pages/VocabularyPage"));
 const SpeakingPractice = lazy(() => import("@/pages/SpeakingPractice"));
 const HindiStories = lazy(() => import("@/pages/HindiStories"));
@@ -24,7 +23,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -38,7 +37,6 @@ const AppRoutes = React.memo(() => (
     <Route path="/auth" component={AuthPage} />
     <Route path="/dashboard" component={Home} />
     <Route path="/lessons" component={AllLessons} />
-    <Route path="/lesson/:id" component={LessonView} />
     <Route path="/vocabulary" component={VocabularyPage} />
     <Route path="/speaking" component={SpeakingPractice} />
     <Route path="/listening" component={HindiStories} />

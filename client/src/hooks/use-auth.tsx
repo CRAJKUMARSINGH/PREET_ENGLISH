@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         queryFn: async () => {
             const timer = startTimer();
             try {
-                const res = await fetch("/api/user", { credentials: "include" });
+                const res = await fetch("/api/user");
                 if (res.status === 401) return undefined;
                 if (!res.ok) throw new Error("Failed to fetch user");
                 const userData = await res.json();

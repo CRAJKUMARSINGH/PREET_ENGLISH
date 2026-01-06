@@ -35,9 +35,18 @@ export default function AuthPage() {
 
     useEffect(() => {
         if (user) {
+            console.log('✅ User authenticated, redirecting to dashboard:', user);
             setLocation("/dashboard");
         }
     }, [user, setLocation]);
+
+    // Debug logging
+    useEffect(() => {
+        console.log('🔍 AuthPage mounted');
+        console.log('🔍 Current user:', user);
+        console.log('🔍 Login mutation state:', loginMutation.isPending);
+        console.log('🔍 Register mutation state:', registerMutation.isPending);
+    }, [user, loginMutation.isPending, registerMutation.isPending]);
 
     return (
         <div className="min-h-screen grid lg:grid-cols-2">
@@ -145,7 +154,15 @@ function AuthForm({
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log('Form submitted:', mode, values);
+        console.log('🚀 Form submitted:', mode, values);
+        console.log('🔍 Mutation object:', mutation);
+        
+        // Add visual feedback
+        const submitButton = document.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.textContent = mode === 'login' ? 'Logging in...' : 'Creating account...';
+        }
+        
         mutation.mutate(values);
     }
 

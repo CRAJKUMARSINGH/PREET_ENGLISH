@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-06T05:39:31.647Z",
+  "timestamp": "2026-01-06T05:45:20.645Z",
   "summary": {
     "totalUsers": 75,
     "successfulLogins": 75,
@@ -13,36 +13,36 @@
         "test": "Landing Page Load",
         "url": "https://preetenglish.netlify.app",
         "samples": 5,
-        "avgTime": 206,
-        "maxTime": 564,
-        "minTime": 101,
+        "avgTime": 156,
+        "maxTime": 415,
+        "minTime": 89,
         "rating": "Excellent"
       },
       {
         "test": "Auth Page Load",
         "url": "https://preetenglish.netlify.app/auth",
         "samples": 5,
-        "avgTime": 148,
-        "maxTime": 320,
-        "minTime": 103,
+        "avgTime": 121,
+        "maxTime": 227,
+        "minTime": 92,
         "rating": "Excellent"
       },
       {
         "test": "Dashboard Load",
         "url": "https://preetenglish.netlify.app/dashboard",
         "samples": 5,
-        "avgTime": 151,
-        "maxTime": 338,
-        "minTime": 102,
+        "avgTime": 92,
+        "maxTime": 96,
+        "minTime": 90,
         "rating": "Excellent"
       },
       {
         "test": "Lessons Load",
         "url": "https://preetenglish.netlify.app/lessons",
         "samples": 5,
-        "avgTime": 159,
-        "maxTime": 320,
-        "minTime": 103,
+        "avgTime": 95,
+        "maxTime": 97,
+        "minTime": 91,
         "rating": "Excellent"
       }
     ],
@@ -54,53 +54,25 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 121,
+            "duration": 95,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 104,
+            "duration": 90,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 350,
+            "duration": 91,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 575,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_02",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 510,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 406,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 304,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1221,
+        "totalTime": 276,
         "bottlenecks": []
       },
       {
@@ -110,231 +82,7 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 510,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 406,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 304,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1220,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_05",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 617,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 361,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 326,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1304,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_04",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 633,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 406,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 385,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1424,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_09",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 159,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 509,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 95,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 763,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_06",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 160,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 506,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 97,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 764,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_08",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 160,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 507,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 98,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 765,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_07",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 165,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 502,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 100,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 769,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_10",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 751,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 87,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 87,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 926,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_11",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 95,
+            "duration": 271,
             "success": true
           },
           {
@@ -346,23 +94,23 @@
           {
             "step": "Registration",
             "status": 404,
-            "duration": 92,
+            "duration": 90,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 276,
+        "totalTime": 450,
         "bottlenecks": []
       },
       {
-        "user": "beginner_user_14",
+        "user": "beginner_user_05",
         "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 104,
+            "duration": 306,
             "success": true
           },
           {
@@ -374,13 +122,209 @@
           {
             "step": "Registration",
             "status": 404,
-            "duration": 94,
+            "duration": 106,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 300,
+        "totalTime": 514,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_02",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 315,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 104,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 104,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 523,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_04",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 332,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 110,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 113,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 555,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_08",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 110,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 139,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 147,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 397,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_07",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 113,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 136,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 148,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 398,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_06",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 117,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 134,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 149,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 400,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_10",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 394,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 93,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 157,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 644,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_09",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 396,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 137,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 113,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 646,
         "bottlenecks": []
       },
       {
@@ -390,25 +334,25 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 105,
+            "duration": 94,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 101,
+            "duration": 90,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 100,
+            "duration": 99,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 306,
+        "totalTime": 283,
         "bottlenecks": []
       },
       {
@@ -418,25 +362,53 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 109,
+            "duration": 103,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 102,
+            "duration": 103,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 101,
+            "duration": 97,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 312,
+        "totalTime": 303,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_11",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 114,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 111,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 112,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 337,
         "bottlenecks": []
       },
       {
@@ -446,81 +418,53 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 661,
+            "duration": 301,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 327,
+            "duration": 121,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 387,
+            "duration": 98,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 1376,
+        "totalTime": 521,
         "bottlenecks": []
       },
       {
-        "user": "beginner_user_17",
+        "user": "beginner_user_14",
         "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 93,
+            "duration": 318,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 94,
+            "duration": 113,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 87,
+            "duration": 106,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 275,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_20",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 99,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 97,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 94,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 291,
+        "totalTime": 537,
         "bottlenecks": []
       },
       {
@@ -536,47 +480,47 @@
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 98,
+            "duration": 100,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 99,
+            "duration": 104,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 297,
+        "totalTime": 304,
         "bottlenecks": []
       },
       {
-        "user": "beginner_user_19",
+        "user": "beginner_user_17",
         "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 104,
+            "duration": 109,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 104,
+            "duration": 111,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 101,
+            "duration": 109,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 311,
+        "totalTime": 329,
         "bottlenecks": []
       },
       {
@@ -586,53 +530,81 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 120,
+            "duration": 115,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 126,
+            "duration": 116,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 118,
+            "duration": 110,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 364,
+        "totalTime": 342,
         "bottlenecks": []
       },
       {
-        "user": "beginner_user_21",
+        "user": "beginner_user_19",
         "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 105,
+            "duration": 288,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 94,
+            "duration": 91,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 185,
+            "duration": 90,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 385,
+        "totalTime": 469,
+        "bottlenecks": []
+      },
+      {
+        "user": "beginner_user_20",
+        "level": "beginner",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 303,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 101,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 98,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 502,
         "bottlenecks": []
       },
       {
@@ -642,433 +614,13 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 111,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 123,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 150,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 385,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_22",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 128,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 117,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 140,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 385,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_25",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 490,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 364,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 298,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1152,
-        "bottlenecks": []
-      },
-      {
-        "user": "beginner_user_24",
-        "level": "beginner",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 557,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 323,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 323,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1203,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_03",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 92,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 90,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 87,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 270,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_04",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 100,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 94,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 93,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 287,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_01",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 117,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 119,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 116,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 353,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_02",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 120,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 117,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 118,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 355,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_05",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 772,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 328,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 388,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1488,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_08",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 95,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 89,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 93,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 277,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_07",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 104,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
             "duration": 98,
             "success": true
           },
           {
-            "step": "Registration",
-            "status": 404,
-            "duration": 100,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 302,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_09",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 120,
-            "success": true
-          },
-          {
             "step": "Auth Page",
             "status": 200,
-            "duration": 116,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 116,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 353,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_06",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 123,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 116,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 117,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 356,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_10",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 289,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 94,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
             "duration": 92,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 476,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_12",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 102,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 118,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 92,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 314,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_11",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 110,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 114,
             "success": true
           },
           {
@@ -1080,376 +632,12 @@
           }
         ],
         "success": true,
-        "totalTime": 320,
+        "totalTime": 288,
         "bottlenecks": []
       },
       {
-        "user": "intermediate_user_13",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 121,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 118,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 119,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 358,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_15",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 307,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 98,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 92,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 497,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_14",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 520,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 354,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 305,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1180,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_16",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 94,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 93,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 93,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 280,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_18",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 95,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 95,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 94,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 285,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_19",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 100,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 98,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 98,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 297,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_17",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 118,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 120,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 126,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 365,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_20",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 285,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 92,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 93,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 470,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_22",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 98,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 108,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 95,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 301,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_23",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 109,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 102,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 102,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 313,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_21",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 121,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 117,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 116,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 355,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_24",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 1185,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 99,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 98,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 1382,
-        "bottlenecks": []
-      },
-      {
-        "user": "intermediate_user_25",
-        "level": "intermediate",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 1438,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 410,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 348,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 2196,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_04",
-        "level": "advanced",
+        "user": "beginner_user_24",
+        "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
@@ -1460,91 +648,35 @@
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 94,
+            "duration": 95,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 111,
+            "duration": 103,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 306,
+        "totalTime": 300,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_02",
-        "level": "advanced",
+        "user": "beginner_user_21",
+        "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 101,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 94,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
             "duration": 112,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 307,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_01",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 101,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 98,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 108,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 309,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_03",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 104,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 99,
+            "duration": 103,
             "success": true
           },
           {
@@ -1556,17 +688,17 @@
           }
         ],
         "success": true,
-        "totalTime": 309,
+        "totalTime": 321,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_05",
-        "level": "advanced",
+        "user": "beginner_user_22",
+        "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 358,
+            "duration": 117,
             "success": true
           },
           {
@@ -1578,60 +710,144 @@
           {
             "step": "Registration",
             "status": 404,
-            "duration": 223,
+            "duration": 110,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 693,
+        "totalTime": 339,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_07",
-        "level": "advanced",
+        "user": "beginner_user_25",
+        "level": "beginner",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 105,
+            "duration": 317,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 102,
+            "duration": 106,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 103,
+            "duration": 105,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 310,
+        "totalTime": 528,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_08",
-        "level": "advanced",
+        "user": "intermediate_user_05",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 105,
+            "duration": 97,
             "success": true
           },
           {
             "step": "Auth Page",
+            "status": 200,
+            "duration": 97,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 105,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 299,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_03",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
             "status": 200,
             "duration": 101,
             "success": true
           },
           {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 96,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 102,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 299,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_01",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 113,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 105,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 104,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 323,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_02",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 114,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 108,
+            "success": true
+          },
+          {
             "step": "Registration",
             "status": 404,
             "duration": 105,
@@ -1640,79 +856,23 @@
           }
         ],
         "success": true,
-        "totalTime": 311,
+        "totalTime": 327,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_06",
-        "level": "advanced",
+        "user": "intermediate_user_04",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
-            "status": 200,
-            "duration": 119,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 115,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 112,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 346,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_10",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 271,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 90,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 95,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 457,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_09",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 358,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
             "status": 200,
             "duration": 120,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 113,
             "success": true
           },
           {
@@ -1724,12 +884,432 @@
           }
         ],
         "success": true,
-        "totalTime": 597,
+        "totalTime": 351,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_13",
-        "level": "advanced",
+        "user": "intermediate_user_10",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 204,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 173,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 102,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 479,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_09",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 205,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 173,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 102,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 480,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_07",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 206,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 173,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 112,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 491,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_06",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 216,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 164,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 112,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 492,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_08",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 216,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 163,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 113,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 493,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_13",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 106,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 161,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 105,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 373,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_12",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 106,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 162,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 106,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 374,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_15",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 118,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 154,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 267,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 540,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_14",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 118,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 151,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 320,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 589,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_11",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 119,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 151,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 321,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 591,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_16",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 109,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 96,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 98,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 303,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_20",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 108,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 109,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 108,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 325,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_19",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 119,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 127,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 132,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 378,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_18",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 119,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 126,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 133,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 379,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_17",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 128,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 121,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 131,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 380,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_25",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
@@ -1740,35 +1320,35 @@
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 89,
+            "duration": 125,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 94,
+            "duration": 93,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 279,
+        "totalTime": 314,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_12",
-        "level": "advanced",
+        "user": "intermediate_user_24",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 115,
+            "duration": 97,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 114,
+            "duration": 124,
             "success": true
           },
           {
@@ -1780,23 +1360,51 @@
           }
         ],
         "success": true,
-        "totalTime": 329,
+        "totalTime": 321,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_11",
-        "level": "advanced",
+        "user": "intermediate_user_23",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 122,
+            "duration": 127,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 144,
+            "duration": 128,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 122,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 377,
+        "bottlenecks": []
+      },
+      {
+        "user": "intermediate_user_22",
+        "level": "intermediate",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 126,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 130,
             "success": true
           },
           {
@@ -1808,67 +1416,39 @@
           }
         ],
         "success": true,
-        "totalTime": 389,
+        "totalTime": 379,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_14",
-        "level": "advanced",
+        "user": "intermediate_user_21",
+        "level": "intermediate",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 273,
+            "duration": 126,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 95,
+            "duration": 130,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 100,
+            "duration": 124,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 468,
+        "totalTime": 380,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_15",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 310,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 101,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 103,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 514,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_18",
+        "user": "advanced_user_03",
         "level": "advanced",
         "steps": [
           {
@@ -1880,63 +1460,259 @@
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 103,
+            "duration": 112,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 103,
+            "duration": 102,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 320,
+        "totalTime": 327,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_16",
+        "user": "advanced_user_04",
         "level": "advanced",
         "steps": [
           {
             "step": "Landing Page",
-            "status": 200,
-            "duration": 119,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
             "status": 200,
             "duration": 114,
             "success": true
           },
           {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 124,
+            "success": true
+          },
+          {
             "step": "Registration",
             "status": 404,
-            "duration": 163,
+            "duration": 127,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 397,
+        "totalTime": 366,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_19",
+        "user": "advanced_user_02",
         "level": "advanced",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 316,
+            "duration": 125,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 113,
+            "duration": 115,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 152,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 392,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_01",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 115,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 325,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 112,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 552,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_05",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 434,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 102,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 230,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 767,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_08",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 97,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 350,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 164,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 611,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_06",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 112,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 338,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 172,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 622,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_07",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 121,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 328,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 175,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 624,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_09",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 610,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 162,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 112,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 885,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_10",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 621,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 151,
             "success": true
           },
           {
@@ -1948,35 +1724,147 @@
           }
         ],
         "success": true,
-        "totalTime": 559,
+        "totalTime": 902,
         "bottlenecks": []
       },
       {
-        "user": "advanced_user_20",
+        "user": "advanced_user_15",
         "level": "advanced",
         "steps": [
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 325,
+            "duration": 116,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 105,
+            "duration": 126,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 128,
+            "duration": 98,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 558,
+        "totalTime": 340,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_14",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 116,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 126,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 99,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 341,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_11",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 135,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 124,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 138,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 398,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_12",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 136,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 124,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 140,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 400,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_13",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 135,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 129,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 135,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 399,
         "bottlenecks": []
       },
       {
@@ -1986,25 +1874,137 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 113,
+            "duration": 92,
             "success": true
           },
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 754,
+            "duration": 87,
             "success": true
           },
           {
             "step": "Registration",
             "status": 404,
-            "duration": 477,
+            "duration": 86,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 1345,
+        "totalTime": 265,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_16",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 93,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 90,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 94,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 277,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_19",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 108,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 107,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 110,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 325,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_20",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 108,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 107,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 110,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 325,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_18",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 112,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 112,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 111,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 335,
         "bottlenecks": []
       },
       {
@@ -2020,91 +2020,7 @@
           {
             "step": "Auth Page",
             "status": 200,
-            "duration": 91,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 87,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 270,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_22",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 104,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 101,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 105,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 310,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_23",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 117,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 113,
-            "success": true
-          },
-          {
-            "step": "Registration",
-            "status": 404,
-            "duration": 113,
-            "success": true,
-            "note": "Static site - mock auth"
-          }
-        ],
-        "success": true,
-        "totalTime": 343,
-        "bottlenecks": []
-      },
-      {
-        "user": "advanced_user_25",
-        "level": "advanced",
-        "steps": [
-          {
-            "step": "Landing Page",
-            "status": 200,
-            "duration": 271,
-            "success": true
-          },
-          {
-            "step": "Auth Page",
-            "status": 200,
-            "duration": 91,
+            "duration": 92,
             "success": true
           },
           {
@@ -2116,7 +2032,35 @@
           }
         ],
         "success": true,
-        "totalTime": 450,
+        "totalTime": 272,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_25",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 99,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 91,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 93,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 283,
         "bottlenecks": []
       },
       {
@@ -2126,7 +2070,35 @@
           {
             "step": "Landing Page",
             "status": 200,
-            "duration": 335,
+            "duration": 113,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 107,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 115,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 335,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_23",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 113,
             "success": true
           },
           {
@@ -2138,13 +2110,41 @@
           {
             "step": "Registration",
             "status": 404,
-            "duration": 110,
+            "duration": 114,
             "success": true,
             "note": "Static site - mock auth"
           }
         ],
         "success": true,
-        "totalTime": 553,
+        "totalTime": 335,
+        "bottlenecks": []
+      },
+      {
+        "user": "advanced_user_22",
+        "level": "advanced",
+        "steps": [
+          {
+            "step": "Landing Page",
+            "status": 200,
+            "duration": 113,
+            "success": true
+          },
+          {
+            "step": "Auth Page",
+            "status": 200,
+            "duration": 115,
+            "success": true
+          },
+          {
+            "step": "Registration",
+            "status": 404,
+            "duration": 113,
+            "success": true,
+            "note": "Static site - mock auth"
+          }
+        ],
+        "success": true,
+        "totalTime": 342,
         "bottlenecks": []
       }
     ],

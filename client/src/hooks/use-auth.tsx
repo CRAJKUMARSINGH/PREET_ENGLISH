@@ -37,6 +37,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         queryFn: async () => {
             const timer = startTimer();
             try {
+                // First check localStorage for persisted user
+                const storedUser = localStorage.getItem('preet-english-user');
+                if (storedUser) {
+                    console.log('👤 Found stored user:', JSON.parse(storedUser));
+                    endTimer(timer, 'User fetch (localStorage)');
+                    return JSON.parse(storedUser);
+                }
+                
                 const res = await fetch("/api/user");
                 if (res.status === 401) return undefined;
                 if (!res.ok) throw new Error("Failed to fetch user");
@@ -45,7 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 return userData;
             } catch (error) {
                 endTimer(timer, 'User fetch (failed)');
-                throw error;
+                // Don't throw error, just return undefined for unauthenticated state
+                console.log('ℹ️ No user session found');
+                return undefined;
             }
         },
         retry: false,
@@ -59,10 +69,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             
             try {
                 // For frontend-only deployment, simulate login
-                if (window.location.hostname.includes('netlify.app')) {
+                if (window.location.hostname.includes('netlify.app') || window.location.hostname.includes('localhost')) {
                     console.log('🌐 Frontend-only mode: simulating login');
+                    
+                    // Show immediate feedback
+                    toast({
+                        title: "Signing you in...",
+                        description: "Please wait while we verify your credentials.",
+                        variant: "default",
+                    });
+                    
                     // Simulate network delay
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                     
                     const mockUser = {
                         id: Date.now(),
@@ -70,6 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         isAdmin: false
                     };
                     
+                    console.log('✅ Mock login successful:', mockUser);
                     endTimer(timer, 'Mock login');
                     return mockUser;
                 }
@@ -85,12 +104,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         },
         onSuccess: (user: User) => {
+            console.log('🎉 Login successful!', user);
             queryClient.setQueryData(["/api/user"], user);
+            
+            // Store user in localStorage for persistence
+            localStorage.setItem('preet-english-user', JSON.stringify(user));
+            
             toast({
-                title: "Login successful! 🎉",
-                description: `Welcome back, ${user.username}!`,
+                title: "Welcome back! 🎉",
+                description: `Successfully signed in as ${user.username}!`,
                 variant: "default",
             });
+            
+            // Force redirect after a short delay
+            setTimeout(() => {
+                console.log('🔄 Forcing redirect to dashboard...');
+                window.location.href = '/dashboard';
+            }, 1000);
         },
         onError: (error: Error) => {
             console.error('❌ Login error:', error);
@@ -106,13 +136,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         mutationFn: async (credentials: InsertUser) => {
             const timer = startTimer();
             console.log('📝 Registration attempt:', credentials.username);
+            console.log('🌐 Current hostname:', window.location.hostname);
             
             try {
                 // For frontend-only deployment, simulate registration
-                if (window.location.hostname.includes('netlify.app')) {
+                if (window.location.hostname.includes('netlify.app') || window.location.hostname.includes('localhost')) {
                     console.log('🌐 Frontend-only mode: simulating registration');
+                    console.log('⏳ Simulating network delay...');
+                    
+                    // Show immediate feedback
+                    toast({
+                        title: "Creating your account...",
+                        description: "Please wait while we set up your profile.",
+                        variant: "default",
+                    });
+                    
                     // Simulate network delay
-                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                     
                     const mockUser = {
                         id: Date.now(),
@@ -120,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         isAdmin: false
                     };
                     
+                    console.log('✅ Mock user created:', mockUser);
                     endTimer(timer, 'Mock registration');
                     return mockUser;
                 }
@@ -131,16 +172,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 return userData;
             } catch (error) {
                 endTimer(timer, 'Registration (failed)');
+                console.error('❌ Registration failed:', error);
                 throw error;
             }
         },
         onSuccess: (user: User) => {
+            console.log('🎉 Registration successful!', user);
             queryClient.setQueryData(["/api/user"], user);
+            
+            // Store user in localStorage for persistence
+            localStorage.setItem('preet-english-user', JSON.stringify(user));
+            
             toast({
-                title: "Account created successfully! 🎉",
-                description: `Welcome to PreetEnglish, ${user.username}! Let's start learning.`,
+                title: "🎉 Welcome to PreetEnglish!",
+                description: `Account created successfully! Welcome, ${user.username}! Let's start learning English together.`,
                 variant: "default",
             });
+            
+            // Force redirect after a short delay
+            setTimeout(() => {
+                console.log('🔄 Forcing redirect to dashboard...');
+                window.location.href = '/dashboard';
+            }, 1000);
         },
         onError: (error: Error) => {
             console.error('❌ Registration error:', error);
@@ -167,6 +220,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         onSuccess: () => {
             queryClient.setQueryData(["/api/user"], null);
             queryClient.clear(); // Clear all cached data on logout
+            
+            // Clear localStorage
+            localStorage.removeItem('preet-english-user');
+            
             toast({
                 title: "Logged out successfully",
                 description: "See you next time!",
@@ -177,6 +234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.error('❌ Logout error:', error);
             // Still clear local state even if API fails
             queryClient.setQueryData(["/api/user"], null);
+            localStorage.removeItem('preet-english-user');
             toast({
                 title: "Logged out",
                 description: "Session ended (with some issues)",

@@ -1,6 +1,6 @@
 # 🇮🇳 Preet English - Professional English Learning Platform
 
-**🌟 LIVE NOW**: [https://preetenglish.netlify.app/](https://preetenglish.netlify.app/)
+**🌟 LIVE NOW**: [https://preet-english.vercel.app/](https://preet-english.vercel.app/)
 
 A comprehensive full-stack English learning application designed specifically for Hindi speakers, featuring interactive lessons, progress tracking, gamification, and advanced speaking practice.
 
@@ -22,7 +22,7 @@ A comprehensive full-stack English learning application designed specifically fo
 - **Frontend**: React 18, TypeScript, Tailwind CSS
 - **Backend**: Express.js, SQLite with Drizzle ORM
 - **Testing**: Jest with 100% success rate
-- **Deployment**: Netlify with automatic CI/CD
+- **Deployment**: Vercel with serverless functions
 
 ---
 

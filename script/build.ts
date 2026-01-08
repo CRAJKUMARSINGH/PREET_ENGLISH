@@ -24,6 +24,7 @@ const allowlist = [
   "passport",
   "passport-local",
   "pg",
+  "postgres",
   "stripe",
   "uuid",
   "ws",
@@ -46,12 +47,29 @@ async function buildAll() {
   ];
   const externals = allDeps.filter((dep) => !allowlist.includes(dep));
 
+  // Build main server
   await esbuild({
     entryPoints: ["server/index.ts"],
     platform: "node",
     bundle: true,
     format: "cjs",
     outfile: "dist/index.cjs",
+    define: {
+      "process.env.NODE_ENV": '"production"',
+    },
+    minify: true,
+    external: externals,
+    logLevel: "info",
+  });
+
+  console.log("building server API for Vercel...");
+  // Build server API bundle for Vercel
+  await esbuild({
+    entryPoints: ["server/routes.ts"],
+    platform: "node",
+    bundle: true,
+    format: "cjs",
+    outfile: "dist/server-api.cjs",
     define: {
       "process.env.NODE_ENV": '"production"',
     },

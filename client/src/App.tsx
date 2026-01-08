@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/hooks/use-auth";
+import { SupabaseAuthProvider } from "@/hooks/use-supabase-auth";
 import { Route, Switch } from "wouter";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
@@ -10,7 +11,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components for better performance
 const NewLanding = lazy(() => import("@/pages/NewLanding"));
-const AuthPage = lazy(() => import("@/pages/AuthPage"));
+const AuthPage = lazy(() => import("@/pages/AuthPageSupabase"));
 const Home = lazy(() => import("@/pages/Home"));
 const AllLessons = lazy(() => import("@/pages/AllLessons"));
 const VocabularyPage = lazy(() => import("@/pages/VocabularyPage"));
@@ -18,12 +19,13 @@ const SpeakingPractice = lazy(() => import("@/pages/SpeakingPractice"));
 const HindiStories = lazy(() => import("@/pages/HindiStories"));
 const Chat = lazy(() => import("@/pages/Chat"));
 const Profile = lazy(() => import("@/pages/Profile"));
+const Admin = lazy(() => import("@/pages/Admin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -43,6 +45,7 @@ const AppRoutes = React.memo(() => (
     <Route path="/stories" component={HindiStories} />
     <Route path="/chat" component={Chat} />
     <Route path="/progress" component={Profile} />
+    <Route path="/admin" component={Admin} />
     <Route>
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -61,16 +64,18 @@ function App() {
     <HelmetProvider>
       <ThemeProvider attribute="class" defaultTheme="light">
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <ErrorBoundary>
-              <div className="min-h-screen bg-background">
-                <Suspense fallback={<LoadingSpinner />}>
-                  <AppRoutes />
-                </Suspense>
-                <Toaster />
-              </div>
-            </ErrorBoundary>
-          </AuthProvider>
+          <SupabaseAuthProvider>
+            <AuthProvider>
+              <ErrorBoundary>
+                <div className="min-h-screen bg-background">
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <AppRoutes />
+                  </Suspense>
+                  <Toaster />
+                </div>
+              </ErrorBoundary>
+            </AuthProvider>
+          </SupabaseAuthProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </HelmetProvider>

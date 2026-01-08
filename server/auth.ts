@@ -16,10 +16,33 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
-    const [hashed, salt] = stored.split(".");
-    const hashedBuf = Buffer.from(hashed, "hex");
-    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-    return timingSafeEqual(hashedBuf, suppliedBuf);
+    // Handle legacy passwords that might not have salt
+    if (!stored.includes('.')) {
+        // Legacy password without salt - just compare directly (not secure, but for existing data)
+        return supplied === stored;
+    }
+    
+    const parts = stored.split('.');
+    if (parts.length !== 2) {
+        // Invalid format, try direct comparison as fallback
+        return supplied === stored;
+    }
+    
+    const [hashed, salt] = parts;
+    if (!hashed || !salt) {
+        // Missing parts, try direct comparison as fallback
+        return supplied === stored;
+    }
+    
+    try {
+        const hashedBuf = Buffer.from(hashed, "hex");
+        const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+        return timingSafeEqual(hashedBuf, suppliedBuf);
+    } catch (error) {
+        console.error('Password comparison error:', error);
+        // Fallback to direct comparison for legacy passwords
+        return supplied === stored;
+    }
 }
 
 export function setupAuth(app: Express) {

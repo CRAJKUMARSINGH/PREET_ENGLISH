@@ -141,3 +141,5 @@ ANALYSIS_*.md
 # Kiro IDE specific (keep the main config)
 .kiro/cache/
 .kiro/temp/
+.vercel
+.env*.local

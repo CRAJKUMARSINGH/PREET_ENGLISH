@@ -40,11 +40,15 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUserAdminStatus(userId: number, isAdmin: boolean): Promise<User>;
+  getPublicUsers(): Promise<User[]>;
 
   // Lessons
   getLessons(): Promise<Lesson[]>;
   getLesson(id: number): Promise<(Lesson & { vocabulary: Vocabulary[] }) | undefined>;
   createLesson(lesson: InsertLesson): Promise<Lesson>;
+  updateLesson(id: number, lesson: Partial<InsertLesson>): Promise<Lesson>;
+  deleteLesson(id: number): Promise<void>;
 
   // Vocabulary
   getVocabularyForLesson(lessonId: number): Promise<Vocabulary[]>;
@@ -114,7 +118,6 @@ export interface IStorage {
   createActivityEntry(entry: InsertActivityFeed): Promise<ActivityFeed>;
   getContentRatings(contentType: string, contentId: number): Promise<(ContentRating & { user: User })[]>;
   createContentRating(rating: InsertContentRating): Promise<ContentRating>;
-  getPublicUsers(): Promise<User[]>;
 
   sessionStore: session.Store;
 }
@@ -135,6 +138,22 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async updateUserAdminStatus(userId: number, isAdmin: boolean): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ isAdmin })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  async getPublicUsers(): Promise<User[]> {
+    return await db.select({
+      id: users.id,
+      username: users.username,
+      isAdmin: users.isAdmin,
+    }).from(users);
+  }
+
   async getLessons(): Promise<Lesson[]> {
     return await db.select().from(lessons).orderBy(lessons.order);
   }
@@ -152,6 +171,23 @@ export class DatabaseStorage implements IStorage {
   async createLesson(insertLesson: InsertLesson): Promise<Lesson> {
     const [lesson] = await db.insert(lessons).values(insertLesson).returning();
     return lesson;
+  }
+
+  async updateLesson(id: number, updateData: Partial<InsertLesson>): Promise<Lesson> {
+    const [lesson] = await db.update(lessons)
+      .set(updateData)
+      .where(eq(lessons.id, id))
+      .returning();
+    return lesson;
+  }
+
+  async deleteLesson(id: number): Promise<void> {
+    // Delete related vocabulary first
+    await db.delete(vocabulary).where(eq(vocabulary.lessonId, id));
+    // Delete related conversation lines
+    await db.delete(conversationLines).where(eq(conversationLines.lessonId, id));
+    // Delete the lesson
+    await db.delete(lessons).where(eq(lessons.id, id));
   }
 
   async getVocabularyForLesson(lessonId: number): Promise<Vocabulary[]> {
@@ -192,7 +228,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(lessons, eq(progress.lessonId, lessons.id))
       .where(eq(progress.userId, userId));
 
-    return results.map(r => ({ ...r.progress, lesson: r.lesson }));
+    return results.map((r: any) => ({ ...r.progress, lesson: r.lesson }));
   }
 
   async updateProgress(userId: number, lessonId: number, completed: boolean): Promise<Progress> {
@@ -223,7 +259,7 @@ export class DatabaseStorage implements IStorage {
 
     // Search lessons
     const allLessons = await db.select().from(lessons);
-    const matchingLessons = allLessons.filter(lesson =>
+    const matchingLessons = allLessons.filter((lesson: any) =>
       lesson.title.toLowerCase().includes(lowerQuery) ||
       lesson.description.toLowerCase().includes(lowerQuery) ||
       (lesson.hindiTitle && lesson.hindiTitle.includes(query)) ||
@@ -231,7 +267,7 @@ export class DatabaseStorage implements IStorage {
       lesson.category.toLowerCase().includes(lowerQuery)
     );
 
-    results.push(...matchingLessons.map(lesson => ({
+    results.push(...matchingLessons.map((lesson: any) => ({
       id: lesson.id,
       type: 'lesson',
       title: lesson.title,
@@ -243,13 +279,13 @@ export class DatabaseStorage implements IStorage {
 
     // Search vocabulary
     const allVocab = await db.select().from(vocabulary);
-    const matchingVocab = allVocab.filter(vocab =>
+    const matchingVocab = allVocab.filter((vocab: any) =>
       vocab.word.toLowerCase().includes(lowerQuery) ||
       vocab.definition.toLowerCase().includes(lowerQuery) ||
       (vocab.hindiTranslation && vocab.hindiTranslation.includes(query))
     );
 
-    results.push(...matchingVocab.slice(0, 10).map(vocab => ({
+    results.push(...matchingVocab.slice(0, 10).map((vocab: any) => ({
       id: vocab.id,
       type: 'vocabulary',
       title: vocab.word,
@@ -368,7 +404,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(achievements, eq(userAchievements.achievementId, achievements.id))
       .where(eq(userAchievements.userId, userId));
 
-    return results.map(r => ({ ...r.userAchievement, achievement: r.achievement }));
+    return results.map((r: any) => ({ ...r.userAchievement, achievement: r.achievement }));
   }
 
   async unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement> {
@@ -422,7 +458,7 @@ export class DatabaseStorage implements IStorage {
       ? await baseQuery.where(eq(leaderboard.weekStart, weekStart)).orderBy(leaderboard.xpEarned)
       : await baseQuery.orderBy(leaderboard.xpEarned);
 
-    return results.map(r => ({ ...r.leaderboard, user: r.user }));
+    return results.map((r: any) => ({ ...r.leaderboard, user: r.user }));
   }
 
   // Scenario methods
@@ -485,7 +521,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(scenarios, eq(scenarioProgress.scenarioId, scenarios.id))
       .where(eq(scenarioProgress.userId, userId));
 
-    return results.map(r => ({ ...r.progress, scenario: r.scenario }));
+    return results.map((r: any) => ({ ...r.progress, scenario: r.scenario }));
   }
 
   // Certification methods
@@ -549,8 +585,8 @@ export class DatabaseStorage implements IStorage {
       .where(eq(vocabularyProgress.userId, userId));
 
     return results
-      .filter(r => r.progress.nextReviewDate <= date)
-      .map(r => ({ ...r.progress, vocabulary: r.vocabulary }));
+      .filter((r: any) => r.progress.nextReviewDate <= date)
+      .map((r: any) => ({ ...r.progress, vocabulary: r.vocabulary }));
   }
 
   async getStories(): Promise<Story[]> {
@@ -649,10 +685,6 @@ export class DatabaseStorage implements IStorage {
   async createContentRating(rating: InsertContentRating): Promise<ContentRating> {
     const [newRating] = await db.insert(contentRatings).values(rating).returning();
     return newRating;
-  }
-
-  async getPublicUsers(): Promise<User[]> {
-    return await db.select().from(users).limit(5);
   }
 
   sessionStore: session.Store;

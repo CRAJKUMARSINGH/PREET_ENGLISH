@@ -1,61 +1,60 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
-import cors from 'cors';
-import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { registerRoutes } from '../server/routes';
-import { serveStatic } from '../server/static';
+import { createServer } from 'http';
 
-// Create a simplified Express app for Vercel
 const app = express();
 
-// CORS configuration for Vercel deployment
-app.use(cors({
-  origin: [
-    'https://preetenglish.netlify.app',
-    'https://preet-english.vercel.app',
-    'http://localhost:5000',
-    'http://localhost:5173', // Vite dev server
-    /\.vercel\.app$/, // Allow all Vercel preview deploys
-    /\.netlify\.app$/ // Allow all Netlify preview deploys
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+// Initialize the app with routes
+let initialized = false;
 
-// Enable pre-flight for all routes
-app.options('*', cors());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Register all routes
-(async () => {
-  try {
-    const httpServer = createServer(app);
-    await registerRoutes(httpServer, app);
-    
-    // Serve static assets in production
-    if (process.env.NODE_ENV === 'production') {
-      serveStatic(app);
+async function initializeApp() {
+  if (!initialized) {
+    try {
+      const httpServer = createServer(app);
+      await registerRoutes(httpServer, app);
+      initialized = true;
+      console.log('✅ Server routes initialized for Vercel');
+    } catch (error) {
+      console.error('❌ Failed to initialize server routes:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error registering routes:', error);
   }
-})();
+}
 
-// Vercel serverless function handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Convert Vercel request/response to Express
-  await new Promise((resolve, reject) => {
-    const server = app;
-    server(req, res, (err: any) => {
-      if (err) {
-        console.error('Express error:', err);
-        reject(err);
-      } else {
-        resolve(undefined);
-      }
+  try {
+    await initializeApp();
+    
+    // Set CORS headers for all requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+    
+    // Convert Vercel request to Express request format
+    const expressReq = req as any;
+    const expressRes = res as any;
+    
+    // Add Express-like properties
+    expressReq.url = req.url;
+    expressReq.method = req.method;
+    expressReq.headers = req.headers;
+    expressReq.body = req.body;
+    
+    // Handle the request with Express app
+    app(expressReq, expressRes);
+    
+  } catch (error) {
+    console.error('❌ Vercel handler error:', error);
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
-  });
+  }
 }

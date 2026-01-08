@@ -34,27 +34,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         queryKey: ["/api/user"],
         queryFn: async () => {
             try {
-                const res = await fetch("/api/user");
+                // First check localStorage for persisted user
+                const storedUser = localStorage.getItem('preet-english-user');
+                if (storedUser) {
+                    console.log('👤 Found stored user:', JSON.parse(storedUser));
+                    return JSON.parse(storedUser);
+                }
+                
+                // Try to fetch from API
+                const res = await fetch("/api/user", {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
                 if (res.status === 401) return undefined;
-                if (!res.ok) throw new Error("Failed to fetch user");
+                if (!res.ok) {
+                    console.warn(`API user fetch failed: ${res.status} ${res.statusText}`);
+                    return undefined;
+                }
+                
                 const userData = await res.json();
                 return userData;
             } catch (error) {
-                // Check localStorage only if API fails
-                const storedUser = localStorage.getItem('preet-english-user');
-                if (storedUser) {
-                    console.log('👤 Using stored user from localStorage');
-                    return JSON.parse(storedUser);
-                }
-                console.log('ℹ️ No user session found');
+                // Don't throw error, just return undefined for unauthenticated state
+                console.log('ℹ️ No user session found or network error:', error);
                 return undefined;
             }
         },
         retry: false,
         staleTime: 5 * 60 * 1000, // 5 minutes
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
     });
 
     const loginMutation = useMutation({
@@ -62,53 +72,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log('🔐 Login attempt:', credentials.username);
             
             try {
-                // For frontend-only deployment, simulate login
-                if (window.location.hostname.includes('netlify.app')) {
-                    console.log('🌐 Frontend-only mode: simulating login');
+                // For production deployment, try API first
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(credentials),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `Login failed: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                console.log('✅ Login successful:', userData);
+                return userData;
+                
+            } catch (error) {
+                console.error('❌ Login API failed:', error);
+                
+                // Fallback to mock authentication for frontend-only deployment
+                if (error instanceof TypeError && error.message.includes('fetch')) {
+                    console.log('🌐 Network error, using mock authentication');
                     
-                    // Show immediate feedback
                     toast({
-                        title: "Signing you in...",
-                        description: "Please wait while we verify your credentials.",
+                        title: "Demo Mode",
+                        description: "Using demo authentication (API unavailable)",
                         variant: "default",
                     });
                     
-                    // Simulate network delay with timeout protection
-                    await Promise.race([
-                        new Promise(resolve => setTimeout(resolve, 1500)),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Login timeout')), 10000))
-                    ]);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     
                     const mockUser = {
                         id: Date.now(),
                         username: credentials.username,
-                        isAdmin: false
+                        isAdmin: credentials.username === 'admin'
                     };
                     
-                    console.log('✅ Mock login successful:', mockUser);
                     return mockUser;
                 }
                 
-                // Normal backend login with timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
-                try {
-                    const res = await apiRequest("POST", "/api/login", credentials, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
-                    const userData = await res.json();
-                    return userData;
-                } catch (error) {
-                    clearTimeout(timeoutId);
-                    throw error;
-                }
-            } catch (error) {
-                console.error('❌ Login failed:', error);
-                if (error instanceof Error && error.message === 'Login timeout') {
-                    throw new Error('Login is taking too long. Please try again.');
-                }
                 throw error;
             }
         },
@@ -125,10 +131,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: "default",
             });
             
-            // Use setTimeout to prevent infinite loop
+            // Force redirect after a short delay
             setTimeout(() => {
-                console.log('🔄 Redirecting to dashboard...');
-                window.location.replace('/dashboard');
+                console.log('🔄 Forcing redirect to dashboard...');
+                window.location.href = '/dashboard';
             }, 1000);
         },
         onError: (error: Error) => {
@@ -144,25 +150,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const registerMutation = useMutation({
         mutationFn: async (credentials: InsertUser) => {
             console.log('📝 Registration attempt:', credentials.username);
-            console.log('🌐 Current hostname:', window.location.hostname);
             
             try {
-                // For frontend-only deployment, simulate registration
-                if (window.location.hostname.includes('netlify.app')) {
-                    console.log('🌐 Frontend-only mode: simulating registration');
+                // Try API registration first
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(credentials),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `Registration failed: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                console.log('✅ Registration successful:', userData);
+                return userData;
+                
+            } catch (error) {
+                console.error('❌ Registration API failed:', error);
+                
+                // Fallback to mock authentication for frontend-only deployment
+                if (error instanceof TypeError && error.message.includes('fetch')) {
+                    console.log('🌐 Network error, using mock registration');
                     
-                    // Show immediate feedback
                     toast({
-                        title: "Creating your account...",
-                        description: "Please wait while we set up your profile.",
+                        title: "Demo Mode",
+                        description: "Using demo registration (API unavailable)",
                         variant: "default",
                     });
                     
-                    // Simulate network delay with timeout protection
-                    await Promise.race([
-                        new Promise(resolve => setTimeout(resolve, 1500)),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Registration timeout')), 10000))
-                    ]);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     
                     const mockUser = {
                         id: Date.now(),
@@ -170,30 +192,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         isAdmin: false
                     };
                     
-                    console.log('✅ Mock registration successful:', mockUser);
                     return mockUser;
                 }
                 
-                // Normal backend registration with timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
-                try {
-                    const res = await apiRequest("POST", "/api/register", credentials, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
-                    const userData = await res.json();
-                    return userData;
-                } catch (error) {
-                    clearTimeout(timeoutId);
-                    throw error;
-                }
-            } catch (error) {
-                console.error('❌ Registration failed:', error);
-                if (error instanceof Error && error.message === 'Registration timeout') {
-                    throw new Error('Registration is taking too long. Please try again.');
-                }
                 throw error;
             }
         },
@@ -210,10 +211,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 variant: "default",
             });
             
-            // Use setTimeout to prevent infinite loop
+            // Force redirect after a short delay
             setTimeout(() => {
-                console.log('🔄 Redirecting to dashboard...');
-                window.location.replace('/dashboard');
+                console.log('🔄 Forcing redirect to dashboard...');
+                window.location.href = '/dashboard';
             }, 1000);
         },
         onError: (error: Error) => {

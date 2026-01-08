@@ -157,7 +157,6 @@ function AuthForm({
         console.log('🚀 FORM SUBMISSION STARTED:', mode, values);
         console.log('🔍 Mutation object exists:', !!mutation);
         console.log('🔍 Mutation mutate function:', typeof mutation?.mutate);
-        console.log('🔍 Mutation isPending:', mutation?.isPending);
         
         // Prevent multiple submissions
         if (mutation.isPending) {
@@ -165,24 +164,8 @@ function AuthForm({
             return;
         }
         
-        // Validate form data
-        if (!values.username || !values.password) {
-            console.error('❌ Missing username or password');
-            return;
-        }
-        
-        if (values.username.length < 2) {
-            console.error('❌ Username too short');
-            return;
-        }
-        
-        if (values.password.length < 6) {
-            console.error('❌ Password too short');
-            return;
-        }
-        
         try {
-            console.log('📝 Calling mutation.mutate with values:', values);
+            console.log('📝 Calling mutation.mutate...');
             mutation.mutate(values);
             console.log('✅ Mutation.mutate called successfully');
         } catch (error) {
@@ -257,24 +240,11 @@ function AuthForm({
                     onClick={handleButtonClick}
                 >
                     {mutation.isPending
-                        ? (
-                            <div className="flex items-center gap-2">
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                Please wait...
-                            </div>
-                        )
+                        ? "Please wait..."
                         : mode === "login"
                             ? "Login"
                             : "Create Account"}
                 </Button>
-                
-                {/* Debug info in development */}
-                {process.env.NODE_ENV === 'development' && (
-                    <div className="text-xs text-gray-500 mt-2">
-                        <p>Debug: isPending = {mutation.isPending.toString()}</p>
-                        <p>Debug: error = {mutation.error?.message || 'none'}</p>
-                    </div>
-                )}
             </form>
         </Form>
     );

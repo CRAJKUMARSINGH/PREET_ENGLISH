@@ -7,6 +7,27 @@ import { calculateSRS } from "./lib/SRS";
 import { User, insertActivityFeedSchema, insertContentRatingSchema } from "@shared/schema";
 
 import { setupAuth } from "./auth";
+import { AIService } from "./lib/ai";
+import { 
+  getCachedLessons, 
+  getCachedLesson, 
+  getCachedUserStats, 
+  getCachedVocabulary,
+  getCachedLeaderboard,
+  getCachedQuizzes,
+  getCachedQuiz,
+  getCachedStories,
+  getCachedStory,
+  getCachedScenarios,
+  getCachedAchievements,
+  getCachedSearchResults
+} from "./lib/cache";
+import { 
+  performDatabaseOperation, 
+  callExternalAPI, 
+  checkRateLimit 
+} from "./lib/concurrency";
+import { registerAdminRoutes } from "./admin/routes";
 
 export async function registerRoutes(
   httpServer: Server | null,
@@ -14,52 +35,181 @@ export async function registerRoutes(
 ): Promise<Server | null> {
   setupAuth(app);
 
-  // Health check endpoint for Render
-  app.get('/api/health', (req, res) => {
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: 'connected'
-    });
+  // Register admin routes
+  registerAdminRoutes(app);
+
+  // AI-powered routes
+  app.post('/api/ai/evaluate-conversation', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const userId = (req.user as User).id.toString();
+    if (!checkRateLimit(userId, 50, 60000)) { // 50 requests per minute
+      return res.status(429).json({ message: 'Rate limit exceeded' });
+    }
+
+    try {
+      const { message, context, targetLevel } = req.body;
+      
+      if (!message || !context) {
+        return res.status(400).json({ message: 'Message and context are required' });
+      }
+
+      const evaluation = await callExternalAPI(
+        () => AIService.evaluateConversation(message, context, targetLevel),
+        'OpenAI Conversation Evaluation'
+      );
+      
+      res.json(evaluation);
+    } catch (err) {
+      console.error('AI evaluation error:', err);
+      res.status(500).json({ message: 'AI evaluation failed' });
+    }
   });
 
-  // Lessons
+  app.post('/api/ai/generate-lesson', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const userId = (req.user as User).id.toString();
+    if (!checkRateLimit(userId, 10, 60000)) { // 10 lesson generations per minute
+      return res.status(429).json({ message: 'Rate limit exceeded' });
+    }
+
+    try {
+      const { userLevel, topic, learningStyle } = req.body;
+      
+      if (!userLevel || !topic) {
+        return res.status(400).json({ message: 'User level and topic are required' });
+      }
+
+      const lesson = await callExternalAPI(
+        () => AIService.generatePersonalizedLesson(userLevel, topic, learningStyle),
+        'OpenAI Lesson Generation'
+      );
+      
+      res.json(lesson);
+    } catch (err) {
+      console.error('AI lesson generation error:', err);
+      res.status(500).json({ message: 'AI lesson generation failed' });
+    }
+  });
+
+  app.post('/api/ai/conversation', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const userId = (req.user as User).id.toString();
+    if (!checkRateLimit(userId, 100, 60000)) { // 100 conversation messages per minute
+      return res.status(429).json({ message: 'Rate limit exceeded' });
+    }
+
+    try {
+      const { message, history, scenario } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ message: 'Message is required' });
+      }
+
+      const response = await callExternalAPI(
+        () => AIService.generateConversationResponse(message, history || [], scenario),
+        'OpenAI Conversation'
+      );
+      
+      res.json({ response });
+    } catch (err) {
+      console.error('AI conversation error:', err);
+      res.status(500).json({ message: 'AI conversation failed' });
+    }
+  });
+
+  app.post('/api/ai/pronunciation-feedback', async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const userId = (req.user as User).id.toString();
+    if (!checkRateLimit(userId, 30, 60000)) { // 30 pronunciation checks per minute
+      return res.status(429).json({ message: 'Rate limit exceeded' });
+    }
+
+    try {
+      const { targetPhrase, userAttempt } = req.body;
+      
+      if (!targetPhrase || !userAttempt) {
+        return res.status(400).json({ message: 'Target phrase and user attempt are required' });
+      }
+
+      const feedback = await callExternalAPI(
+        () => AIService.generatePronunciationFeedback(targetPhrase, userAttempt),
+        'OpenAI Pronunciation Feedback'
+      );
+      
+      res.json(feedback);
+    } catch (err) {
+      console.error('AI pronunciation feedback error:', err);
+      res.status(500).json({ message: 'AI pronunciation feedback failed' });
+    }
+  });
+
+  // Enhanced lessons with caching
   app.get(api.lessons.list.path, async (req, res) => {
-    const lessons = await storage.getLessons();
-    res.json(lessons);
+    try {
+      const lessons = await getCachedLessons();
+      res.json(lessons);
+    } catch (err) {
+      console.error('Get lessons error:', err);
+      res.status(500).json({ message: 'Error fetching lessons' });
+    }
   });
 
   app.get(api.lessons.get.path, async (req, res) => {
-    const lesson = await storage.getLesson(Number(req.params.id));
-    if (!lesson) {
-      return res.status(404).json({ message: 'Lesson not found' });
+    try {
+      const lesson = await getCachedLesson(Number(req.params.id));
+      if (!lesson) {
+        return res.status(404).json({ message: 'Lesson not found' });
+      }
+      res.json(lesson);
+    } catch (err) {
+      console.error('Get lesson error:', err);
+      res.status(500).json({ message: 'Error fetching lesson' });
     }
-    res.json(lesson);
   });
 
   app.post(api.lessons.create.path, async (req, res) => {
     try {
       const input = api.lessons.create.input.parse(req.body);
-      const lesson = await storage.createLesson(input);
+      const lesson = await performDatabaseOperation(
+        () => storage.createLesson(input),
+        'Create Lesson'
+      );
       res.status(201).json(lesson);
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({ message: err.errors[0].message });
       }
-      throw err;
+      console.error('Create lesson error:', err);
+      res.status(500).json({ message: 'Error creating lesson' });
     }
   });
 
-  // Vocabulary
+  // Enhanced vocabulary with caching
   app.get(api.vocabulary.list.path, async (req, res) => {
-    const vocab = await storage.getVocabularyForLesson(Number(req.params.id));
-    res.json(vocab);
+    try {
+      const vocab = await getCachedVocabulary(Number(req.params.id));
+      res.json(vocab);
+    } catch (err) {
+      console.error('Get vocabulary error:', err);
+      res.status(500).json({ message: 'Error fetching vocabulary' });
+    }
   });
 
   app.get("/api/vocabulary/category/:category", async (req, res) => {
-    const vocab = await storage.getVocabularyByCategory(req.params.category);
-    res.json(vocab);
+    try {
+      const vocab = await performDatabaseOperation(
+        () => storage.getVocabularyByCategory(req.params.category),
+        'Get Vocabulary by Category'
+      );
+      res.json(vocab);
+    } catch (err) {
+      console.error('Get vocabulary by category error:', err);
+      res.status(500).json({ message: 'Error fetching vocabulary' });
+    }
   });
 
   app.get(api.vocabulary.due.path, async (req, res) => {
@@ -128,30 +278,45 @@ export async function registerRoutes(
     res.json(updated);
   });
 
-  // Search endpoint
+  // Enhanced search with caching
   app.get('/api/search', async (req, res) => {
-    const query = req.query.q as string;
+    try {
+      const query = req.query.q as string;
 
-    if (!query || query.length < 3) {
-      return res.json([]);
+      if (!query || query.length < 3) {
+        return res.json([]);
+      }
+
+      const results = await getCachedSearchResults(query);
+      res.json(results);
+    } catch (err) {
+      console.error('Search error:', err);
+      res.status(500).json({ message: 'Search failed' });
     }
-
-    const results = await storage.search(query);
-    res.json(results);
   });
 
-  // Quizzes
+  // Enhanced quizzes with caching
   app.get(api.quizzes.list.path, async (req, res) => {
-    const quizzes = await storage.getQuizzes();
-    res.json(quizzes);
+    try {
+      const quizzes = await getCachedQuizzes();
+      res.json(quizzes);
+    } catch (err) {
+      console.error('Get quizzes error:', err);
+      res.status(500).json({ message: 'Error fetching quizzes' });
+    }
   });
 
   app.get(api.quizzes.get.path, async (req, res) => {
-    const quiz = await storage.getQuiz(Number(req.params.id));
-    if (!quiz) {
-      return res.status(404).json({ message: 'Quiz not found' });
+    try {
+      const quiz = await getCachedQuiz(Number(req.params.id));
+      if (!quiz) {
+        return res.status(404).json({ message: 'Quiz not found' });
+      }
+      res.json(quiz);
+    } catch (err) {
+      console.error('Get quiz error:', err);
+      res.status(500).json({ message: 'Error fetching quiz' });
     }
-    res.json(quiz);
   });
 
   app.post(api.quizzes.create.path, async (req, res) => {
@@ -222,15 +387,20 @@ export async function registerRoutes(
   });
 
 
-  // Gamification routes
+  // Enhanced gamification with caching
   app.get(api.gamification.userStats.get.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const userId = (req.user as User).id;
-    const stats = await storage.getUserStats(userId);
-    if (!stats) {
-      return res.status(404).json({ message: 'User stats not found' });
+    try {
+      const userId = (req.user as User).id;
+      const stats = await getCachedUserStats(userId);
+      if (!stats) {
+        return res.status(404).json({ message: 'User stats not found' });
+      }
+      res.json(stats);
+    } catch (err) {
+      console.error('Get user stats error:', err);
+      res.status(500).json({ message: 'Error fetching user stats' });
     }
-    res.json(stats);
   });
 
   app.put(api.gamification.userStats.update.path, async (req, res) => {
@@ -249,8 +419,13 @@ export async function registerRoutes(
   });
 
   app.get(api.gamification.achievements.list.path, async (req, res) => {
-    const achievements = await storage.getAchievements();
-    res.json(achievements);
+    try {
+      const achievements = await getCachedAchievements();
+      res.json(achievements);
+    } catch (err) {
+      console.error('Get achievements error:', err);
+      res.status(500).json({ message: 'Error fetching achievements' });
+    }
   });
 
   app.get(api.gamification.achievements.userAchievements.path, async (req, res) => {
@@ -304,15 +479,25 @@ export async function registerRoutes(
   });
 
   app.get(api.gamification.leaderboard.get.path, async (req, res) => {
-    const weekStart = req.query.weekStart as string;
-    const leaderboard = await storage.getLeaderboard(weekStart);
-    res.json(leaderboard);
+    try {
+      const weekStart = req.query.weekStart as string;
+      const leaderboard = await getCachedLeaderboard(weekStart);
+      res.json(leaderboard);
+    } catch (err) {
+      console.error('Get leaderboard error:', err);
+      res.status(500).json({ message: 'Error fetching leaderboard' });
+    }
   });
 
-  // Scenario routes
+  // Enhanced scenario routes with caching
   app.get(api.scenarios.list.path, async (req, res) => {
-    const scenarios = await storage.getScenarios();
-    res.json(scenarios);
+    try {
+      const scenarios = await getCachedScenarios();
+      res.json(scenarios);
+    } catch (err) {
+      console.error('Get scenarios error:', err);
+      res.status(500).json({ message: 'Error fetching scenarios' });
+    }
   });
 
   app.get(api.scenarios.get.path, async (req, res) => {
@@ -391,17 +576,26 @@ export async function registerRoutes(
     }
   });
 
-  // Seeding
-  // SRS & Stories (Phase 3)
+  // Enhanced stories with caching
   app.get("/api/stories", async (req, res) => {
-    const stories = await storage.getStories();
-    res.json(stories);
+    try {
+      const stories = await getCachedStories();
+      res.json(stories);
+    } catch (err) {
+      console.error('Get stories error:', err);
+      res.status(500).json({ message: 'Error fetching stories' });
+    }
   });
 
   app.get("/api/stories/:id", async (req, res) => {
-    const story = await storage.getStory(Number(req.params.id));
-    if (!story) return res.status(404).json({ message: "Story not found" });
-    res.json(story);
+    try {
+      const story = await getCachedStory(Number(req.params.id));
+      if (!story) return res.status(404).json({ message: "Story not found" });
+      res.json(story);
+    } catch (err) {
+      console.error('Get story error:', err);
+      res.status(500).json({ message: 'Error fetching story' });
+    }
   });
 
   app.get("/api/vocabulary/review", async (req, res) => {

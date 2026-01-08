@@ -14,6 +14,7 @@ import { AITutor } from "@/components/AITutor";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
 import { useUserStats, useDailyGoal, useLeaderboard } from "@/hooks/use-gamification";
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth";
 import {
   Sparkles,
   BookOpen,
@@ -31,20 +32,37 @@ import { Link, useLocation } from "wouter";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { user, loading } = useSupabaseAuth();
   
-  // Simple authentication check
+  // Redirect to auth if not authenticated
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('preet-english-auth');
-    const user = localStorage.getItem('preet-english-user');
-    
-    if (!isAuthenticated || !user) {
+    if (!loading && !user) {
       console.log('🔒 Not authenticated, redirecting to auth page');
       setLocation('/auth');
       return;
     }
     
-    console.log('✅ User authenticated, showing dashboard');
-  }, [setLocation]);
+    if (user) {
+      console.log('✅ User authenticated:', user.email);
+    }
+  }, [user, loading, setLocation]);
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
 
   const { data: lessons, isLoading: lessonsLoading } = useLessons();
   const { data: progress, isLoading: progressLoading } = useProgress();

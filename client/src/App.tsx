@@ -13,6 +13,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 const NewLanding = lazy(() => import("@/pages/NewLanding"));
 const AuthPage = lazy(() => import("@/pages/AuthPageSupabase"));
 const Home = lazy(() => import("@/pages/Home"));
+const EnhancedDashboard = lazy(() => import("@/pages/EnhancedDashboard"));
 const AllLessons = lazy(() => import("@/pages/AllLessons"));
 const VocabularyPage = lazy(() => import("@/pages/VocabularyPage"));
 const SpeakingPractice = lazy(() => import("@/pages/SpeakingPractice"));
@@ -37,7 +38,8 @@ const AppRoutes = React.memo(() => (
   <Switch>
     <Route path="/" component={NewLanding} />
     <Route path="/auth" component={AuthPage} />
-    <Route path="/dashboard" component={Home} />
+    <Route path="/dashboard" component={EnhancedDashboard} />
+    <Route path="/home" component={Home} />
     <Route path="/lessons" component={AllLessons} />
     <Route path="/vocabulary" component={VocabularyPage} />
     <Route path="/speaking" component={SpeakingPractice} />

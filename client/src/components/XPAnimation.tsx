@@ -4,24 +4,18 @@ import { useEffect, useState } from 'react';
 import { Zap } from 'lucide-react';
 
 interface XPAnimationProps {
-    amount: number;
-    trigger: boolean;
-    onComplete?: () => void;
+    xpGained: number;
 }
 
-export function XPAnimation({ amount, trigger, onComplete }: XPAnimationProps) {
-    const [isVisible, setIsVisible] = useState(false);
+export function XPAnimation({ xpGained }: XPAnimationProps) {
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        if (trigger) {
-            setIsVisible(true);
-            const timer = setTimeout(() => {
-                setIsVisible(false);
-                onComplete?.();
-            }, 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [trigger, onComplete]);
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <AnimatePresence>
@@ -34,7 +28,7 @@ export function XPAnimation({ amount, trigger, onComplete }: XPAnimationProps) {
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                     <Zap className="h-6 w-6 fill-yellow-700" />
-                    <span className="text-xl font-bold">+{amount} XP</span>
+                    <span className="text-xl font-bold">+{xpGained} XP</span>
                 </motion.div>
             )}
         </AnimatePresence>

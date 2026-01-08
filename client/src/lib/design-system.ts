@@ -334,10 +334,12 @@ export const designUtils = {
   focusRing: (color: string = 'primary-500') => 
     `focus:outline-none focus:ring-2 focus:ring-${color} focus:ring-offset-2`,
 
-  // Generate cultural color combinations
+  // Generate cultural color combinations (returns inline style object)
   culturalGradient: (primary: keyof typeof colors.cultural, secondary?: keyof typeof colors.cultural) => {
     const secondaryColor = secondary || 'saffron';
-    return `bg-gradient-to-r from-[${colors.cultural[primary]}] to-[${colors.cultural[secondaryColor]}]`;
+    return {
+      background: `linear-gradient(to right, ${colors.cultural[primary]}, ${colors.cultural[secondaryColor]})`,
+    };
   },
 } as const;
 

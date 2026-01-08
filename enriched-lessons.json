@@ -1,0 +1,900 @@
+[
+  {
+    "id": 1,
+    "title": "Basic Greetings",
+    "description": "Learn basic English greetings",
+    "level": "beginner",
+    "content": "## Learning Content\n\nHello, Hi, Good morning, Goodbye\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n",
+    "order": 1,
+    "titleHindi": "बेसिक ग्रीटिंग्स",
+    "descriptionHindi": "बेसिक अंग्रेजी ग्रीटिंग्स सीखें",
+    "contentHindi": "## लर्निंग कंटेंट\n\n## Learning Content\n\nHello, Hi, Good morning, Goodbye\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n\n\n### उदाहरण\n\nयहां कुछ व्यावहारिक उदाहरण दिए गए हैं:\n\n1. **उदाहरण 1**: [संदर्भ-विशिष्ट उदाहरण]\n2. **उदाहरण 2**: [एक और प्रासंगिक उदाहरण]\n3. **उदाहरण 3**: [वास्तविक दुनिया अनुप्रयोग]\n\n### सीखने के टिप्स\n\n- **टिप 1**: रोजाना उच्चारण का अभ्यास करें\n- **टिप 2**: शब्दावली के लिए फ्लैशकार्ड का उपयोग करें\n- **टिप 3**: बातचीत में संलग्न हों\n\n### अभ्यास व्यायाम\n\nअपने सीखने को मजबूत करने के लिए नीचे दिए गए व्यायाम पूरा करें:\n\n- व्यायाम 1: मिलान गतिविधि\n- व्यायाम 2: रिक्त स्थान भरें\n- व्यायाम 3: बातचीत अभ्यास\n\n",
+    "vocabulary": [
+      {
+        "english": "hello",
+        "hindi": "नमस्ते",
+        "example": "Hello, how are you?",
+        "exampleHindi": "नमस्ते, आप कैसे हैं?"
+      },
+      {
+        "english": "goodbye",
+        "hindi": "अलविदा",
+        "example": "Goodbye, see you tomorrow",
+        "exampleHindi": "अलविदा, कल मिलते हैं"
+      },
+      {
+        "english": "thank you",
+        "hindi": "धन्यवाद",
+        "example": "Thank you for your help",
+        "exampleHindi": "आपकी मदद के लिए धन्यवाद"
+      },
+      {
+        "english": "please",
+        "hindi": "कृपया",
+        "example": "Please help me",
+        "exampleHindi": "कृपया मेरी मदद करें"
+      },
+      {
+        "english": "sorry",
+        "hindi": "माफ़ कीजिए",
+        "example": "Sorry, I am late",
+        "exampleHindi": "माफ़ कीजिए, मैं देर से हूं"
+      },
+      {
+        "english": "yes",
+        "hindi": "हां",
+        "example": "Yes, I agree",
+        "exampleHindi": "हां, मैं सहमत हूं"
+      },
+      {
+        "english": "no",
+        "hindi": "नहीं",
+        "example": "No, I don't understand",
+        "exampleHindi": "नहीं, मुझे नहीं समझ आया"
+      },
+      {
+        "english": "water",
+        "hindi": "पानी",
+        "example": "I need water",
+        "exampleHindi": "मुझे पानी चाहिए"
+      }
+    ],
+    "objectives": [
+      "Learn basic vocabulary for daily conversations",
+      "Understand simple sentence structures",
+      "Practice pronunciation with audio guides",
+      "दैनिक वार्तालाप के लिए बेसिक शब्दावली सीखें",
+      "सरल वाक्य संरचनाओं को समझें",
+      "ऑडियो गाइड के साथ उच्चारण का अभ्यास करें"
+    ],
+    "exercises": [
+      {
+        "type": "matching",
+        "instructions": "Match English words with Hindi translations",
+        "instructionsHindi": "अंग्रेजी शब्दों को हिंदी अनुवाद के साथ मिलाएं",
+        "items": [
+          {
+            "english": "hello",
+            "hindi": "नमस्ते"
+          },
+          {
+            "english": "goodbye",
+            "hindi": "अलविदा"
+          },
+          {
+            "english": "thank you",
+            "hindi": "धन्यवाद"
+          },
+          {
+            "english": "please",
+            "hindi": "कृपया"
+          },
+          {
+            "english": "sorry",
+            "hindi": "माफ़ कीजिए"
+          },
+          {
+            "english": "yes",
+            "hindi": "हां"
+          },
+          {
+            "english": "no",
+            "hindi": "नहीं"
+          },
+          {
+            "english": "water",
+            "hindi": "पानी"
+          }
+        ]
+      },
+      {
+        "type": "fill-in-blanks",
+        "instructions": "Complete the sentences with correct words",
+        "instructionsHindi": "सही शब्दों के साथ वाक्यों को पूरा करें",
+        "items": [
+          {
+            "sentence": "I need to learn the word \"hello\".",
+            "sentenceHindi": "मुझे \"नमस्ते\" शब्द सीखना है।",
+            "answer": "hello",
+            "answerHindi": "नमस्ते"
+          },
+          {
+            "sentence": "I need to learn the word \"goodbye\".",
+            "sentenceHindi": "मुझे \"अलविदा\" शब्द सीखना है।",
+            "answer": "goodbye",
+            "answerHindi": "अलविदा"
+          },
+          {
+            "sentence": "I need to learn the word \"thank you\".",
+            "sentenceHindi": "मुझे \"धन्यवाद\" शब्द सीखना है।",
+            "answer": "thank you",
+            "answerHindi": "धन्यवाद"
+          },
+          {
+            "sentence": "I need to learn the word \"please\".",
+            "sentenceHindi": "मुझे \"कृपया\" शब्द सीखना है।",
+            "answer": "please",
+            "answerHindi": "कृपया"
+          },
+          {
+            "sentence": "I need to learn the word \"sorry\".",
+            "sentenceHindi": "मुझे \"माफ़ कीजिए\" शब्द सीखना है।",
+            "answer": "sorry",
+            "answerHindi": "माफ़ कीजिए"
+          }
+        ]
+      },
+      {
+        "type": "pronunciation",
+        "instructions": "Listen and repeat the words",
+        "instructionsHindi": "शब्दों को सुनें और दोहराएं",
+        "items": [
+          {
+            "word": "hello",
+            "wordHindi": "नमस्ते",
+            "phonetic": "[hello]",
+            "audioReference": "audio/hello.mp3"
+          },
+          {
+            "word": "goodbye",
+            "wordHindi": "अलविदा",
+            "phonetic": "[goodbye]",
+            "audioReference": "audio/goodbye.mp3"
+          },
+          {
+            "word": "thank you",
+            "wordHindi": "धन्यवाद",
+            "phonetic": "[thank you]",
+            "audioReference": "audio/thank you.mp3"
+          },
+          {
+            "word": "please",
+            "wordHindi": "कृपया",
+            "phonetic": "[please]",
+            "audioReference": "audio/please.mp3"
+          },
+          {
+            "word": "sorry",
+            "wordHindi": "माफ़ कीजिए",
+            "phonetic": "[sorry]",
+            "audioReference": "audio/sorry.mp3"
+          },
+          {
+            "word": "yes",
+            "wordHindi": "हां",
+            "phonetic": "[yes]",
+            "audioReference": "audio/yes.mp3"
+          },
+          {
+            "word": "no",
+            "wordHindi": "नहीं",
+            "phonetic": "[no]",
+            "audioReference": "audio/no.mp3"
+          },
+          {
+            "word": "water",
+            "wordHindi": "पानी",
+            "phonetic": "[water]",
+            "audioReference": "audio/water.mp3"
+          }
+        ]
+      }
+    ],
+    "culturalNotes": {
+      "title": "Cultural Context",
+      "description": "Family plays central role in Indian society",
+      "examples": [
+        "Joint families are common",
+        "Respect for elders is important",
+        "Family decisions are collective"
+      ],
+      "relevance": "Understanding cultural context helps in better language acquisition"
+    },
+    "culturalNotesHindi": {
+      "title": "सांस्कृतिक संदर्भ",
+      "examples": [
+        "औपचारिक अभिवादन के लिए नमस्ते",
+        "अनौपचारिक स्थितियों के लिए हाय/हैलो",
+        "बड़ों के लिए प्रणाम"
+      ],
+      "relevance": "सांस्कृतिक संदर्भ को समझना बेहतर भाषा अधिग्रहण में मदद करता है"
+    },
+    "audioReferences": [
+      {
+        "word": "hello",
+        "wordHindi": "नमस्ते",
+        "audioFile": "audio/hello.mp3",
+        "phoneticGuide": "[h-e-l-l-o]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "goodbye",
+        "wordHindi": "अलविदा",
+        "audioFile": "audio/goodbye.mp3",
+        "phoneticGuide": "[g-o-o-d-b-y-e]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "thank you",
+        "wordHindi": "धन्यवाद",
+        "audioFile": "audio/thank you.mp3",
+        "phoneticGuide": "[t-h-a-n-k- -y-o-u]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "please",
+        "wordHindi": "कृपया",
+        "audioFile": "audio/please.mp3",
+        "phoneticGuide": "[p-l-e-a-s-e]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "sorry",
+        "wordHindi": "माफ़ कीजिए",
+        "audioFile": "audio/sorry.mp3",
+        "phoneticGuide": "[s-o-r-r-y]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "yes",
+        "wordHindi": "हां",
+        "audioFile": "audio/yes.mp3",
+        "phoneticGuide": "[y-e-s]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "no",
+        "wordHindi": "नहीं",
+        "audioFile": "audio/no.mp3",
+        "phoneticGuide": "[n-o]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "water",
+        "wordHindi": "पानी",
+        "audioFile": "audio/water.mp3",
+        "phoneticGuide": "[w-a-t-e-r]",
+        "duration": "2-3 seconds"
+      }
+    ],
+    "practiceActivities": [
+      {
+        "name": "Flashcard Practice",
+        "nameHindi": "फ्लैशकार्ड अभ्यास",
+        "description": "Use digital or physical flashcards",
+        "descriptionHindi": "डिजिटल या भौतिक फ्लैशकार्ड का उपयोग करें",
+        "duration": "10-15 minutes"
+      },
+      {
+        "name": "Role Play",
+        "nameHindi": "रोल प्ले",
+        "description": "Practice simple conversations",
+        "descriptionHindi": "सरल बातचीत का अभ्यास करें",
+        "duration": "15-20 minutes"
+      }
+    ],
+    "assessmentCriteria": {
+      "level": "beginner",
+      "criteria": [
+        {
+          "aspect": "Vocabulary Usage",
+          "aspectHindi": "शब्दावली उपयोग",
+          "weight": "25%",
+          "description": "Correct use of lesson vocabulary",
+          "descriptionHindi": "पाठ शब्दावली का सही उपयोग"
+        },
+        {
+          "aspect": "Grammar Accuracy",
+          "aspectHindi": "व्याकरण सटीकता",
+          "weight": "30%",
+          "description": "Grammatical correctness",
+          "descriptionHindi": "व्याकरणिक सटीकता"
+        },
+        {
+          "aspect": "Pronunciation",
+          "aspectHindi": "उच्चारण",
+          "weight": "20%",
+          "description": "Clear and accurate pronunciation",
+          "descriptionHindi": "स्पष्ट और सटीक उच्चारण"
+        },
+        {
+          "aspect": "Cultural Understanding",
+          "aspectHindi": "सांस्कृतिक समझ",
+          "weight": "15%",
+          "description": "Understanding cultural context",
+          "descriptionHindi": "सांस्कृतिक संदर्भ की समझ"
+        },
+        {
+          "aspect": "Communication Fluency",
+          "aspectHindi": "संचार प्रवाह",
+          "weight": "10%",
+          "description": "Overall communication effectiveness",
+          "descriptionHindi": "समग्र संचार प्रभावशीलता"
+        }
+      ],
+      "passingScore": "70%",
+      "excellenceScore": "85%"
+    }
+  },
+  {
+    "id": 2,
+    "title": "Family Members",
+    "description": "Learn about family relationships",
+    "level": "beginner",
+    "content": "## Learning Content\n\nFather, Mother, Brother, Sister\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n",
+    "order": 2,
+    "titleHindi": "परिवार के सदस्य",
+    "descriptionHindi": "Learn about family relationships (हिंदी अनुवाद)",
+    "contentHindi": "## लर्निंग कंटेंट\n\n## Learning Content\n\nFather, Mother, Brother, Sister\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n\n\n### उदाहरण\n\nयहां कुछ व्यावहारिक उदाहरण दिए गए हैं:\n\n1. **उदाहरण 1**: [संदर्भ-विशिष्ट उदाहरण]\n2. **उदाहरण 2**: [एक और प्रासंगिक उदाहरण]\n3. **उदाहरण 3**: [वास्तविक दुनिया अनुप्रयोग]\n\n### सीखने के टिप्स\n\n- **टिप 1**: रोजाना उच्चारण का अभ्यास करें\n- **टिप 2**: शब्दावली के लिए फ्लैशकार्ड का उपयोग करें\n- **टिप 3**: बातचीत में संलग्न हों\n\n### अभ्यास व्यायाम\n\nअपने सीखने को मजबूत करने के लिए नीचे दिए गए व्यायाम पूरा करें:\n\n- व्यायाम 1: मिलान गतिविधि\n- व्यायाम 2: रिक्त स्थान भरें\n- व्यायाम 3: बातचीत अभ्यास\n\n",
+    "vocabulary": [
+      {
+        "english": "hello",
+        "hindi": "नमस्ते",
+        "example": "Hello, how are you?",
+        "exampleHindi": "नमस्ते, आप कैसे हैं?"
+      },
+      {
+        "english": "goodbye",
+        "hindi": "अलविदा",
+        "example": "Goodbye, see you tomorrow",
+        "exampleHindi": "अलविदा, कल मिलते हैं"
+      },
+      {
+        "english": "thank you",
+        "hindi": "धन्यवाद",
+        "example": "Thank you for your help",
+        "exampleHindi": "आपकी मदद के लिए धन्यवाद"
+      },
+      {
+        "english": "please",
+        "hindi": "कृपया",
+        "example": "Please help me",
+        "exampleHindi": "कृपया मेरी मदद करें"
+      },
+      {
+        "english": "sorry",
+        "hindi": "माफ़ कीजिए",
+        "example": "Sorry, I am late",
+        "exampleHindi": "माफ़ कीजिए, मैं देर से हूं"
+      },
+      {
+        "english": "yes",
+        "hindi": "हां",
+        "example": "Yes, I agree",
+        "exampleHindi": "हां, मैं सहमत हूं"
+      },
+      {
+        "english": "no",
+        "hindi": "नहीं",
+        "example": "No, I don't understand",
+        "exampleHindi": "नहीं, मुझे नहीं समझ आया"
+      },
+      {
+        "english": "water",
+        "hindi": "पानी",
+        "example": "I need water",
+        "exampleHindi": "मुझे पानी चाहिए"
+      }
+    ],
+    "objectives": [
+      "Learn basic vocabulary for daily conversations",
+      "Understand simple sentence structures",
+      "Practice pronunciation with audio guides",
+      "दैनिक वार्तालाप के लिए बेसिक शब्दावली सीखें",
+      "सरल वाक्य संरचनाओं को समझें",
+      "ऑडियो गाइड के साथ उच्चारण का अभ्यास करें"
+    ],
+    "exercises": [
+      {
+        "type": "matching",
+        "instructions": "Match English words with Hindi translations",
+        "instructionsHindi": "अंग्रेजी शब्दों को हिंदी अनुवाद के साथ मिलाएं",
+        "items": [
+          {
+            "english": "hello",
+            "hindi": "नमस्ते"
+          },
+          {
+            "english": "goodbye",
+            "hindi": "अलविदा"
+          },
+          {
+            "english": "thank you",
+            "hindi": "धन्यवाद"
+          },
+          {
+            "english": "please",
+            "hindi": "कृपया"
+          },
+          {
+            "english": "sorry",
+            "hindi": "माफ़ कीजिए"
+          },
+          {
+            "english": "yes",
+            "hindi": "हां"
+          },
+          {
+            "english": "no",
+            "hindi": "नहीं"
+          },
+          {
+            "english": "water",
+            "hindi": "पानी"
+          }
+        ]
+      },
+      {
+        "type": "fill-in-blanks",
+        "instructions": "Complete the sentences with correct words",
+        "instructionsHindi": "सही शब्दों के साथ वाक्यों को पूरा करें",
+        "items": [
+          {
+            "sentence": "I need to learn the word \"hello\".",
+            "sentenceHindi": "मुझे \"नमस्ते\" शब्द सीखना है।",
+            "answer": "hello",
+            "answerHindi": "नमस्ते"
+          },
+          {
+            "sentence": "I need to learn the word \"goodbye\".",
+            "sentenceHindi": "मुझे \"अलविदा\" शब्द सीखना है।",
+            "answer": "goodbye",
+            "answerHindi": "अलविदा"
+          },
+          {
+            "sentence": "I need to learn the word \"thank you\".",
+            "sentenceHindi": "मुझे \"धन्यवाद\" शब्द सीखना है।",
+            "answer": "thank you",
+            "answerHindi": "धन्यवाद"
+          },
+          {
+            "sentence": "I need to learn the word \"please\".",
+            "sentenceHindi": "मुझे \"कृपया\" शब्द सीखना है।",
+            "answer": "please",
+            "answerHindi": "कृपया"
+          },
+          {
+            "sentence": "I need to learn the word \"sorry\".",
+            "sentenceHindi": "मुझे \"माफ़ कीजिए\" शब्द सीखना है।",
+            "answer": "sorry",
+            "answerHindi": "माफ़ कीजिए"
+          }
+        ]
+      },
+      {
+        "type": "pronunciation",
+        "instructions": "Listen and repeat the words",
+        "instructionsHindi": "शब्दों को सुनें और दोहराएं",
+        "items": [
+          {
+            "word": "hello",
+            "wordHindi": "नमस्ते",
+            "phonetic": "[hello]",
+            "audioReference": "audio/hello.mp3"
+          },
+          {
+            "word": "goodbye",
+            "wordHindi": "अलविदा",
+            "phonetic": "[goodbye]",
+            "audioReference": "audio/goodbye.mp3"
+          },
+          {
+            "word": "thank you",
+            "wordHindi": "धन्यवाद",
+            "phonetic": "[thank you]",
+            "audioReference": "audio/thank you.mp3"
+          },
+          {
+            "word": "please",
+            "wordHindi": "कृपया",
+            "phonetic": "[please]",
+            "audioReference": "audio/please.mp3"
+          },
+          {
+            "word": "sorry",
+            "wordHindi": "माफ़ कीजिए",
+            "phonetic": "[sorry]",
+            "audioReference": "audio/sorry.mp3"
+          },
+          {
+            "word": "yes",
+            "wordHindi": "हां",
+            "phonetic": "[yes]",
+            "audioReference": "audio/yes.mp3"
+          },
+          {
+            "word": "no",
+            "wordHindi": "नहीं",
+            "phonetic": "[no]",
+            "audioReference": "audio/no.mp3"
+          },
+          {
+            "word": "water",
+            "wordHindi": "पानी",
+            "phonetic": "[water]",
+            "audioReference": "audio/water.mp3"
+          }
+        ]
+      }
+    ],
+    "culturalNotes": {
+      "title": "Cultural Context",
+      "description": "Family plays central role in Indian society",
+      "examples": [
+        "Joint families are common",
+        "Respect for elders is important",
+        "Family decisions are collective"
+      ],
+      "relevance": "Understanding cultural context helps in better language acquisition"
+    },
+    "culturalNotesHindi": {
+      "title": "सांस्कृतिक संदर्भ",
+      "examples": [
+        "औपचारिक अभिवादन के लिए नमस्ते",
+        "अनौपचारिक स्थितियों के लिए हाय/हैलो",
+        "बड़ों के लिए प्रणाम"
+      ],
+      "relevance": "सांस्कृतिक संदर्भ को समझना बेहतर भाषा अधिग्रहण में मदद करता है"
+    },
+    "audioReferences": [
+      {
+        "word": "hello",
+        "wordHindi": "नमस्ते",
+        "audioFile": "audio/hello.mp3",
+        "phoneticGuide": "[h-e-l-l-o]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "goodbye",
+        "wordHindi": "अलविदा",
+        "audioFile": "audio/goodbye.mp3",
+        "phoneticGuide": "[g-o-o-d-b-y-e]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "thank you",
+        "wordHindi": "धन्यवाद",
+        "audioFile": "audio/thank you.mp3",
+        "phoneticGuide": "[t-h-a-n-k- -y-o-u]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "please",
+        "wordHindi": "कृपया",
+        "audioFile": "audio/please.mp3",
+        "phoneticGuide": "[p-l-e-a-s-e]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "sorry",
+        "wordHindi": "माफ़ कीजिए",
+        "audioFile": "audio/sorry.mp3",
+        "phoneticGuide": "[s-o-r-r-y]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "yes",
+        "wordHindi": "हां",
+        "audioFile": "audio/yes.mp3",
+        "phoneticGuide": "[y-e-s]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "no",
+        "wordHindi": "नहीं",
+        "audioFile": "audio/no.mp3",
+        "phoneticGuide": "[n-o]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "water",
+        "wordHindi": "पानी",
+        "audioFile": "audio/water.mp3",
+        "phoneticGuide": "[w-a-t-e-r]",
+        "duration": "2-3 seconds"
+      }
+    ],
+    "practiceActivities": [
+      {
+        "name": "Flashcard Practice",
+        "nameHindi": "फ्लैशकार्ड अभ्यास",
+        "description": "Use digital or physical flashcards",
+        "descriptionHindi": "डिजिटल या भौतिक फ्लैशकार्ड का उपयोग करें",
+        "duration": "10-15 minutes"
+      },
+      {
+        "name": "Role Play",
+        "nameHindi": "रोल प्ले",
+        "description": "Practice simple conversations",
+        "descriptionHindi": "सरल बातचीत का अभ्यास करें",
+        "duration": "15-20 minutes"
+      }
+    ],
+    "assessmentCriteria": {
+      "level": "beginner",
+      "criteria": [
+        {
+          "aspect": "Vocabulary Usage",
+          "aspectHindi": "शब्दावली उपयोग",
+          "weight": "25%",
+          "description": "Correct use of lesson vocabulary",
+          "descriptionHindi": "पाठ शब्दावली का सही उपयोग"
+        },
+        {
+          "aspect": "Grammar Accuracy",
+          "aspectHindi": "व्याकरण सटीकता",
+          "weight": "30%",
+          "description": "Grammatical correctness",
+          "descriptionHindi": "व्याकरणिक सटीकता"
+        },
+        {
+          "aspect": "Pronunciation",
+          "aspectHindi": "उच्चारण",
+          "weight": "20%",
+          "description": "Clear and accurate pronunciation",
+          "descriptionHindi": "स्पष्ट और सटीक उच्चारण"
+        },
+        {
+          "aspect": "Cultural Understanding",
+          "aspectHindi": "सांस्कृतिक समझ",
+          "weight": "15%",
+          "description": "Understanding cultural context",
+          "descriptionHindi": "सांस्कृतिक संदर्भ की समझ"
+        },
+        {
+          "aspect": "Communication Fluency",
+          "aspectHindi": "संचार प्रवाह",
+          "weight": "10%",
+          "description": "Overall communication effectiveness",
+          "descriptionHindi": "समग्र संचार प्रभावशीलता"
+        }
+      ],
+      "passingScore": "70%",
+      "excellenceScore": "85%"
+    }
+  },
+  {
+    "id": 3,
+    "title": "Daily Routines",
+    "description": "Describe daily activities",
+    "level": "intermediate",
+    "content": "## Learning Content\n\nWake up, eat breakfast, go to work\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n",
+    "order": 3,
+    "titleHindi": "दैनिक दिनचर्या",
+    "descriptionHindi": "Describe daily activities (हिंदी अनुवाद)",
+    "contentHindi": "## लर्निंग कंटेंट\n\n## Learning Content\n\nWake up, eat breakfast, go to work\n\n### Examples\n\nHere are some practical examples:\n\n1. **Example 1**: [Context-specific example]\n2. **Example 2**: [Another relevant example]\n3. **Example 3**: [Real-world application]\n\n### Learning Tips\n\n- **Tip 1**: Practice pronunciation daily\n- **Tip 2**: Use flashcards for vocabulary\n- **Tip 3**: Engage in conversations\n\n### Practice Exercises\n\nComplete the exercises below to reinforce your learning:\n\n- Exercise 1: Matching activity\n- Exercise 2: Fill in the blanks\n- Exercise 3: Conversation practice\n\n\n\n### उदाहरण\n\nयहां कुछ व्यावहारिक उदाहरण दिए गए हैं:\n\n1. **उदाहरण 1**: [संदर्भ-विशिष्ट उदाहरण]\n2. **उदाहरण 2**: [एक और प्रासंगिक उदाहरण]\n3. **उदाहरण 3**: [वास्तविक दुनिया अनुप्रयोग]\n\n### सीखने के टिप्स\n\n- **टिप 1**: रोजाना उच्चारण का अभ्यास करें\n- **टिप 2**: शब्दावली के लिए फ्लैशकार्ड का उपयोग करें\n- **टिप 3**: बातचीत में संलग्न हों\n\n### अभ्यास व्यायाम\n\nअपने सीखने को मजबूत करने के लिए नीचे दिए गए व्यायाम पूरा करें:\n\n- व्यायाम 1: मिलान गतिविधि\n- व्यायाम 2: रिक्त स्थान भरें\n- व्यायाम 3: बातचीत अभ्यास\n\n",
+    "vocabulary": [
+      {
+        "english": "important",
+        "hindi": "महत्वपूर्ण",
+        "example": "This is very important",
+        "exampleHindi": "यह बहुत महत्वपूर्ण है"
+      },
+      {
+        "english": "beautiful",
+        "hindi": "सुंदर",
+        "example": "The view is beautiful",
+        "exampleHindi": "दृश्य सुंदर है"
+      },
+      {
+        "english": "difficult",
+        "hindi": "कठिन",
+        "example": "This problem is difficult",
+        "exampleHindi": "यह समस्या कठिन है"
+      },
+      {
+        "english": "interesting",
+        "hindi": "दिलचस्प",
+        "example": "The book is interesting",
+        "exampleHindi": "किताब दिलचस्प है"
+      },
+      {
+        "english": "necessary",
+        "hindi": "आवश्यक",
+        "example": "It is necessary to study",
+        "exampleHindi": "पढ़ना आवश्यक है"
+      },
+      {
+        "english": "successful",
+        "hindi": "सफल",
+        "example": "He is very successful",
+        "exampleHindi": "वह बहुत सफल है"
+      },
+      {
+        "english": "knowledge",
+        "hindi": "ज्ञान",
+        "example": "Knowledge is power",
+        "exampleHindi": "ज्ञान शक्ति है"
+      },
+      {
+        "english": "experience",
+        "hindi": "अनुभव",
+        "example": "She has good experience",
+        "exampleHindi": "उसका अच्छा अनुभव है"
+      }
+    ],
+    "objectives": [
+      "Build conversational skills for real-life situations",
+      "Understand grammar rules and their applications",
+      "Develop reading comprehension skills",
+      "वास्तविक जीवन स्थितियों के लिए बातचीत कौशल विकसित करें",
+      "व्याकरण नियमों और उनके अनुप्रयोगों को समझें",
+      "पठन समझ कौशल विकसित करें"
+    ],
+    "exercises": [
+      {
+        "type": "conversation",
+        "instructions": "Complete the dialogue with appropriate responses",
+        "instructionsHindi": "उपयुक्त प्रतिक्रियाओं के साथ संवाद पूरा करें",
+        "items": []
+      },
+      {
+        "type": "grammar",
+        "instructions": "Choose the correct grammatical form",
+        "instructionsHindi": "सही व्याकरणिक रूप चुनें",
+        "items": []
+      },
+      {
+        "type": "comprehension",
+        "instructions": "Read the passage and answer questions",
+        "instructionsHindi": "अनुच्छेद पढ़ें और प्रश्नों के उत्तर दें",
+        "items": []
+      }
+    ],
+    "culturalNotes": {
+      "title": "Cultural Context",
+      "description": "In Indian culture, greetings vary by region and relationship",
+      "examples": [
+        "Namaste for formal greetings",
+        "Hi/Hello for informal situations",
+        "Pranam for elders"
+      ],
+      "relevance": "Understanding cultural context helps in better language acquisition"
+    },
+    "culturalNotesHindi": {
+      "title": "सांस्कृतिक संदर्भ",
+      "examples": [
+        "औपचारिक अभिवादन के लिए नमस्ते",
+        "अनौपचारिक स्थितियों के लिए हाय/हैलो",
+        "बड़ों के लिए प्रणाम"
+      ],
+      "relevance": "सांस्कृतिक संदर्भ को समझना बेहतर भाषा अधिग्रहण में मदद करता है"
+    },
+    "audioReferences": [
+      {
+        "word": "important",
+        "wordHindi": "महत्वपूर्ण",
+        "audioFile": "audio/important.mp3",
+        "phoneticGuide": "[i-m-p-o-r-t-a-n-t]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "beautiful",
+        "wordHindi": "सुंदर",
+        "audioFile": "audio/beautiful.mp3",
+        "phoneticGuide": "[b-e-a-u-t-i-f-u-l]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "difficult",
+        "wordHindi": "कठिन",
+        "audioFile": "audio/difficult.mp3",
+        "phoneticGuide": "[d-i-f-f-i-c-u-l-t]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "interesting",
+        "wordHindi": "दिलचस्प",
+        "audioFile": "audio/interesting.mp3",
+        "phoneticGuide": "[i-n-t-e-r-e-s-t-i-n-g]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "necessary",
+        "wordHindi": "आवश्यक",
+        "audioFile": "audio/necessary.mp3",
+        "phoneticGuide": "[n-e-c-e-s-s-a-r-y]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "successful",
+        "wordHindi": "सफल",
+        "audioFile": "audio/successful.mp3",
+        "phoneticGuide": "[s-u-c-c-e-s-s-f-u-l]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "knowledge",
+        "wordHindi": "ज्ञान",
+        "audioFile": "audio/knowledge.mp3",
+        "phoneticGuide": "[k-n-o-w-l-e-d-g-e]",
+        "duration": "2-3 seconds"
+      },
+      {
+        "word": "experience",
+        "wordHindi": "अनुभव",
+        "audioFile": "audio/experience.mp3",
+        "phoneticGuide": "[e-x-p-e-r-i-e-n-c-e]",
+        "duration": "2-3 seconds"
+      }
+    ],
+    "practiceActivities": [
+      {
+        "name": "Conversation Practice",
+        "nameHindi": "बातचीत अभ्यास",
+        "description": "Engage in structured conversations",
+        "descriptionHindi": "संरचित बातचीत में संलग्न हों",
+        "duration": "20-30 minutes"
+      },
+      {
+        "name": "Writing Exercises",
+        "nameHindi": "लेखन व्यायाम",
+        "description": "Write short paragraphs on topics",
+        "descriptionHindi": "विषयों पर छोटे अनुच्छेद लिखें",
+        "duration": "25-35 minutes"
+      }
+    ],
+    "assessmentCriteria": {
+      "level": "intermediate",
+      "criteria": [
+        {
+          "aspect": "Vocabulary Usage",
+          "aspectHindi": "शब्दावली उपयोग",
+          "weight": "25%",
+          "description": "Correct use of lesson vocabulary",
+          "descriptionHindi": "पाठ शब्दावली का सही उपयोग"
+        },
+        {
+          "aspect": "Grammar Accuracy",
+          "aspectHindi": "व्याकरण सटीकता",
+          "weight": "30%",
+          "description": "Grammatical correctness",
+          "descriptionHindi": "व्याकरणिक सटीकता"
+        },
+        {
+          "aspect": "Pronunciation",
+          "aspectHindi": "उच्चारण",
+          "weight": "20%",
+          "description": "Clear and accurate pronunciation",
+          "descriptionHindi": "स्पष्ट और सटीक उच्चारण"
+        },
+        {
+          "aspect": "Cultural Understanding",
+          "aspectHindi": "सांस्कृतिक समझ",
+          "weight": "15%",
+          "description": "Understanding cultural context",
+          "descriptionHindi": "सांस्कृतिक संदर्भ की समझ"
+        },
+        {
+          "aspect": "Communication Fluency",
+          "aspectHindi": "संचार प्रवाह",
+          "weight": "10%",
+          "description": "Overall communication effectiveness",
+          "descriptionHindi": "समग्र संचार प्रभावशीलता"
+        }
+      ],
+      "passingScore": "70%",
+      "excellenceScore": "85%"
+    }
+  }
+]

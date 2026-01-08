@@ -29,13 +29,32 @@ interface CategoryData {
 }
 
 interface ProgressChartsProps {
-    activityData: ChartData[];
-    categoryData: CategoryData[];
+    activityData?: ChartData[];
+    categoryData?: CategoryData[];
 }
 
 const COLORS = ['#8b5cf6', '#ea580c', '#10b981', '#3b82f6', '#f59e0b'];
 
-export function ProgressCharts({ activityData, categoryData }: ProgressChartsProps) {
+// Default data for demo
+const defaultActivityData: ChartData[] = [
+    { date: 'Mon', xp: 120, lessons: 3 },
+    { date: 'Tue', xp: 180, lessons: 4 },
+    { date: 'Wed', xp: 90, lessons: 2 },
+    { date: 'Thu', xp: 200, lessons: 5 },
+    { date: 'Fri', xp: 150, lessons: 3 },
+    { date: 'Sat', xp: 220, lessons: 6 },
+    { date: 'Sun', xp: 100, lessons: 2 },
+];
+
+const defaultCategoryData: CategoryData[] = [
+    { name: 'Grammar', value: 35, color: '#8b5cf6' },
+    { name: 'Vocabulary', value: 25, color: '#ea580c' },
+    { name: 'Speaking', value: 20, color: '#10b981' },
+    { name: 'Listening', value: 15, color: '#3b82f6' },
+    { name: 'Writing', value: 5, color: '#f59e0b' },
+];
+
+export function ProgressCharts({ activityData = defaultActivityData, categoryData = defaultCategoryData }: ProgressChartsProps) {
     return (
         <div className="grid md:grid-cols-2 gap-6 w-full">
             {/* Activity Chart */}
@@ -47,7 +66,7 @@ export function ProgressCharts({ activityData, categoryData }: ProgressChartsPro
                 <Card className="h-[400px] border-none shadow-lg bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-slate-700 dark:text-slate-200">
-                            Activity History (XP)
+                            📈 Activity History (XP)
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="h-[320px]">
@@ -97,7 +116,7 @@ export function ProgressCharts({ activityData, categoryData }: ProgressChartsPro
                 <Card className="h-[400px] border-none shadow-lg bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-slate-700 dark:text-slate-200">
-                            Learning Focus
+                            🎯 Learning Focus
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="h-[320px]">

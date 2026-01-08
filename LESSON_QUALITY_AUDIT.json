@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-01-08T20:49:10.924Z",
+  "auditSummary": {
+    "totalLessons": 2,
+    "overallGrade": 8.2,
+    "currentGrade": 8.2,
+    "targetGrade": 9,
+    "benchmark": {
+      "duolingo": 9.2,
+      "babbel": 8.8,
+      "mysivi": 8.5,
+      "current": 3,
+      "target": 9
+    },
+    "gap": 0.8
+  },
+  "issues": {
+    "missingHindi": 0,
+    "insufficientVocabulary": 0,
+    "lessonsMissingHindi": [],
+    "lessonsInsufficientVocabulary": []
+  },
+  "lessons": [
+    {
+      "id": 1,
+      "title": "Introduction to Greetings",
+      "slug": "intro-greetings",
+      "difficulty": "Beginner",
+      "qualityScore": 8.05,
+      "vocabularyCount": 6,
+      "conversationLinesCount": 0,
+      "issues": [
+        "Missing Hindi translations for 6 vocabulary items"
+      ],
+      "missing": [
+        "vocabularyHindi"
+      ],
+      "recommendations": [
+        "Add Hindi title translation",
+        "Add Hindi description translation"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Common Verbs",
+      "slug": "common-verbs",
+      "difficulty": "Beginner",
+      "qualityScore": 8.35,
+      "vocabularyCount": 7,
+      "conversationLinesCount": 0,
+      "issues": [
+        "Missing Hindi translations for 7 vocabulary items"
+      ],
+      "missing": [
+        "vocabularyHindi"
+      ],
+      "recommendations": [
+        "Add Hindi title translation",
+        "Add Hindi description translation"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "category": "Content Enrichment",
+      "description": "Add learning objectives, practice exercises, and cultural notes to all lessons",
+      "impact": "Improves learning experience"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Audio Integration",
+      "description": "Add audio pronunciation references to all lessons",
+      "impact": "Enhances pronunciation learning"
+    }
+  ]
+}

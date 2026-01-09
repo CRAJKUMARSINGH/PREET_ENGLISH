@@ -1,132 +1,63 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import express from 'express';
+import { registerRoutes } from '../server/routes';
+import { createServer } from 'http';
 
-// Mock data for serverless deployment
-const mockLessons = [
-  {
-    id: 1,
-    title: "Basic Greetings",
-    slug: "basic-greetings",
-    description: "Learn essential English greetings",
-    content: "# Basic Greetings\n\nLearn how to greet people in English...",
-    difficulty: "Beginner",
-    order: 1
-  },
-  {
-    id: 2,
-    title: "Daily Conversations",
-    slug: "daily-conversations", 
-    description: "Common daily conversation phrases",
-    content: "# Daily Conversations\n\nPractice everyday English conversations...",
-    difficulty: "Beginner",
-    order: 2
-  }
-];
+const app = express();
 
-const mockUsers = [
-  {
-    id: 1,
-    username: "student",
-    password: "password123",
-    isAdmin: false
-  },
-  {
-    id: 2,
-    username: "admin",
-    password: "admin123",
-    isAdmin: true
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Initialize the app with routes
+let initialized = false;
+
+async function initializeApp() {
+  if (!initialized) {
+    try {
+      const httpServer = createServer(app);
+      await registerRoutes(httpServer, app);
+      initialized = true;
+      console.log('✅ Server routes initialized for Vercel');
+    } catch (error) {
+      console.error('❌ Failed to initialize server routes:', error);
+      throw error;
+    }
   }
-];
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Set CORS headers for all requests
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  const { url, method } = req;
-  
   try {
-    // Route handling
-    if (url === '/api/lessons' && method === 'GET') {
-      return res.status(200).json(mockLessons);
+    await initializeApp();
+    
+    // Set CORS headers for all requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
     }
     
-    if (url === '/api/login' && method === 'POST') {
-      const { username, password } = req.body || {};
-      
-      const user = mockUsers.find(u => u.username === username && u.password === password);
-      
-      if (user) {
-        return res.status(200).json({
-          id: user.id,
-          username: user.username,
-          isAdmin: user.isAdmin
-        });
-      } else {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-    }
+    // Convert Vercel request to Express request format
+    const expressReq = req as any;
+    const expressRes = res as any;
     
-    if (url === '/api/register' && method === 'POST') {
-      const { username, password } = req.body || {};
-      
-      if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
-      }
-      
-      // Check if user exists
-      const existingUser = mockUsers.find(u => u.username === username);
-      if (existingUser) {
-        return res.status(400).json({ error: 'User already exists' });
-      }
-      
-      // Create new user
-      const newUser = {
-        id: mockUsers.length + 1,
-        username,
-        password,
-        isAdmin: false
-      };
-      
-      mockUsers.push(newUser);
-      
-      return res.status(201).json({
-        id: newUser.id,
-        username: newUser.username,
-        isAdmin: newUser.isAdmin
-      });
-    }
+    // Add Express-like properties
+    expressReq.url = req.url;
+    expressReq.method = req.method;
+    expressReq.headers = req.headers;
+    expressReq.body = req.body;
+    expressReq.query = req.query;
+    expressReq.params = {};
     
-    if (url === '/api/user' && method === 'GET') {
-      // Return demo user for now
-      return res.status(200).json({
-        id: 1,
-        username: "demo",
-        isAdmin: false
-      });
-    }
-    
-    if (url === '/api/test' && method === 'GET') {
-      return res.status(200).json({ 
-        message: 'API is working!', 
-        timestamp: new Date().toISOString(),
-        method: req.method,
-        url: req.url
-      });
-    }
-    
-    // Default 404 for unmatched routes
-    return res.status(404).json({ error: 'Not found' });
+    // Handle the request with Express app
+    app(expressReq, expressRes);
     
   } catch (error) {
-    console.error('❌ API Error:', error);
-    return res.status(500).json({ 
+    console.error('❌ Vercel handler error:', error);
+    res.status(500).json({ 
       error: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'Unknown error'
     });

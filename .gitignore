@@ -143,3 +143,14 @@ ANALYSIS_*.md
 .kiro/temp/
 .vercel
 .env*.local
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Backup and temporary files
+*.backup
+*.tmp
+*.temp

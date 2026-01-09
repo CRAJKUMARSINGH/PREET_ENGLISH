@@ -7,6 +7,17 @@ import { PersonalizedLearningPath } from "@/components/PersonalizedLearningPath"
 import { CertificateGenerator } from "@/components/CertificateGenerator";
 import { ProgressCharts } from "@/components/ProgressCharts";
 import { XPAnimation } from "@/components/XPAnimation";
+import { LeagueSystem } from "@/components/gamification/LeagueSystem";
+import { GemEconomy } from "@/components/gamification/GemEconomy";
+import { PronunciationChecker } from "@/components/pronunciation/PronunciationChecker";
+import { NativeSpeakerChat } from "@/components/social/NativeSpeakerChat";
+import { BilingualReading } from "@/components/reading/BilingualReading";
+import { AdvancedSRS } from "@/components/learning/AdvancedSRS";
+// import { MultimodalAITutor } from "@/components/ai/MultimodalAITutor";
+import { ListeningComprehensionExercise } from "@/components/exercises/ListeningComprehensionExercise";
+import { ImageAssociationExercise } from "@/components/exercises/ImageAssociationExercise";
+import { RolePlayExercise } from "@/components/exercises/RolePlayExercise";
+import { DictationExercise } from "@/components/exercises/DictationExercise";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -19,7 +30,17 @@ import {
   Sparkles,
   BookOpen,
   Users,
-  MessageCircle
+  MessageCircle,
+  Trophy,
+  Gem,
+  Volume2,
+  Globe,
+  Languages,
+  Clock,
+  Headphones,
+  Image,
+  Keyboard,
+  Camera
 } from "lucide-react";
 
 export default function EnhancedDashboard() {
@@ -28,6 +49,7 @@ export default function EnhancedDashboard() {
   const [currentXP] = useState(1250);
   const [totalLessons] = useState(45);
   const [completedLessons] = useState(32);
+  const [showNativeSpeakerChat, setShowNativeSpeakerChat] = useState(false);
 
   const triggerXPAnimation = () => {
     setShowXP(true);
@@ -78,29 +100,69 @@ export default function EnhancedDashboard() {
 
         {/* Main Dashboard Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
+          <TabsList className="grid w-full grid-cols-16 text-xs overflow-x-auto">
+            <TabsTrigger value="overview" className="flex items-center gap-1 min-w-fit">
+              <TrendingUp className="w-3 h-3" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="ai-tutor" className="flex items-center gap-2">
-              <Brain className="w-4 h-4" />
+            <TabsTrigger value="multimodal-ai" className="flex items-center gap-1 min-w-fit">
+              <Camera className="w-3 h-3" />
+              AI Tutor+
+            </TabsTrigger>
+            <TabsTrigger value="leagues" className="flex items-center gap-1 min-w-fit">
+              <Trophy className="w-3 h-3" />
+              Leagues
+            </TabsTrigger>
+            <TabsTrigger value="gems" className="flex items-center gap-1 min-w-fit">
+              <Gem className="w-3 h-3" />
+              Gems
+            </TabsTrigger>
+            <TabsTrigger value="pronunciation" className="flex items-center gap-1 min-w-fit">
+              <Volume2 className="w-3 h-3" />
+              Pronunciation
+            </TabsTrigger>
+            <TabsTrigger value="native-chat" className="flex items-center gap-1 min-w-fit">
+              <Globe className="w-3 h-3" />
+              Native Chat
+            </TabsTrigger>
+            <TabsTrigger value="bilingual-reading" className="flex items-center gap-1 min-w-fit">
+              <Languages className="w-3 h-3" />
+              Reading
+            </TabsTrigger>
+            <TabsTrigger value="spaced-repetition" className="flex items-center gap-1 min-w-fit">
+              <Clock className="w-3 h-3" />
+              SRS
+            </TabsTrigger>
+            <TabsTrigger value="listening" className="flex items-center gap-1 min-w-fit">
+              <Headphones className="w-3 h-3" />
+              Listening
+            </TabsTrigger>
+            <TabsTrigger value="image-association" className="flex items-center gap-1 min-w-fit">
+              <Image className="w-3 h-3" />
+              Images
+            </TabsTrigger>
+            <TabsTrigger value="role-play" className="flex items-center gap-1 min-w-fit">
+              <Users className="w-3 h-3" />
+              Role Play
+            </TabsTrigger>
+            <TabsTrigger value="dictation" className="flex items-center gap-1 min-w-fit">
+              <Keyboard className="w-3 h-3" />
+              Dictation
+            </TabsTrigger>
+            <TabsTrigger value="ai-tutor" className="flex items-center gap-1 min-w-fit">
+              <Brain className="w-3 h-3" />
               AI Tutor
             </TabsTrigger>
-            <TabsTrigger value="voice" className="flex items-center gap-2">
-              <Mic className="w-4 h-4" />
-              Voice Assistant
+            <TabsTrigger value="voice" className="flex items-center gap-1 min-w-fit">
+              <Mic className="w-3 h-3" />
+              Voice
             </TabsTrigger>
-            <TabsTrigger value="learning-path" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Learning Path
+            <TabsTrigger value="learning-path" className="flex items-center gap-1 min-w-fit">
+              <Target className="w-3 h-3" />
+              Path
             </TabsTrigger>
-            <TabsTrigger value="progress" className="flex items-center gap-2">
-              <Award className="w-4 h-4" />
-              Progress
-            </TabsTrigger>
-            <TabsTrigger value="certificates" className="flex items-center gap-2">
-              <Award className="w-4 h-4" />
+            <TabsTrigger value="certificates" className="flex items-center gap-1 min-w-fit">
+              <Award className="w-3 h-3" />
               Certificates
             </TabsTrigger>
           </TabsList>
@@ -206,8 +268,299 @@ export default function EnhancedDashboard() {
                     Hindi Stories
                   </Button>
                 </div>
+                
+                {/* New Advanced Features */}
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-3 text-center">🚀 Advanced Learning Features</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="multimodal-ai"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-purple-200 hover:bg-purple-50"
+                    >
+                      <Camera className="w-6 h-6 text-purple-600" />
+                      Multimodal AI
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="listening"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-indigo-200 hover:bg-indigo-50"
+                    >
+                      <Headphones className="w-6 h-6 text-indigo-600" />
+                      Listening
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="image-association"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-pink-200 hover:bg-pink-50"
+                    >
+                      <Image className="w-6 h-6 text-pink-600" />
+                      Image Games
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="role-play"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-teal-200 hover:bg-teal-50"
+                    >
+                      <Users className="w-6 h-6 text-teal-600" />
+                      Role Play
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Hindi-Focused Features */}
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-3 text-center">🇮🇳 Hindi Speaker Specials</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="pronunciation"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-blue-200 hover:bg-blue-50"
+                    >
+                      <Volume2 className="w-6 h-6 text-blue-600" />
+                      Pronunciation Check
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="native-chat"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-green-200 hover:bg-green-50"
+                    >
+                      <Globe className="w-6 h-6 text-green-600" />
+                      Native Chat
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="bilingual-reading"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-purple-200 hover:bg-purple-50"
+                    >
+                      <Languages className="w-6 h-6 text-purple-600" />
+                      Bilingual Reading
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const tab = document.querySelector('[value="dictation"]') as HTMLElement;
+                        tab?.click();
+                      }} 
+                      variant="outline" 
+                      className="h-20 flex flex-col gap-2 border-orange-200 hover:bg-orange-50"
+                    >
+                      <Keyboard className="w-6 h-6 text-orange-600" />
+                      Dictation
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Leagues Tab */}
+          <TabsContent value="leagues">
+            <LeagueSystem />
+          </TabsContent>
+
+          {/* Gems Tab */}
+          <TabsContent value="gems">
+            <GemEconomy />
+          </TabsContent>
+
+          {/* Pronunciation Tab */}
+          <TabsContent value="pronunciation">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🎯 Pronunciation Practice</h2>
+                <p className="text-muted-foreground">
+                  Master English pronunciation with real-time feedback and Hindi speaker-specific guidance
+                </p>
+              </div>
+              
+              <PronunciationChecker
+                targetText="Hello, how are you today?"
+                hindiTranslation="नमस्ते, आज आप कैसे हैं?"
+                difficulty="beginner"
+                onComplete={(analysis) => {
+                  console.log('Pronunciation analysis:', analysis);
+                  // Handle completion - could update user progress, show achievements, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Native Speaker Chat Tab */}
+          <TabsContent value="native-chat">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🌍 Chat with Native Speakers</h2>
+                <p className="text-muted-foreground">
+                  Practice real conversations with verified native English speakers from around the world
+                </p>
+              </div>
+              
+              <NativeSpeakerChat
+                onClose={() => {
+                  // Handle chat close - could return to overview or show completion message
+                  console.log('Native speaker chat closed');
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Bilingual Reading Tab */}
+          <TabsContent value="bilingual-reading">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">📚 Bilingual Reading</h2>
+                <p className="text-muted-foreground">
+                  Read stories side-by-side in English and Hindi with synchronized audio and vocabulary support
+                </p>
+              </div>
+              
+              <BilingualReading
+                onComplete={(comprehensionScore) => {
+                  console.log('Reading comprehension score:', comprehensionScore);
+                  // Handle completion - could update reading progress, unlock new stories, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Spaced Repetition System Tab */}
+          <TabsContent value="spaced-repetition">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🧠 Spaced Repetition System</h2>
+                <p className="text-muted-foreground">
+                  Scientifically optimized vocabulary review system for maximum retention and learning efficiency
+                </p>
+              </div>
+              
+              <AdvancedSRS
+                onComplete={(session) => {
+                  console.log('SRS session completed:', session);
+                  // Handle session completion - could update statistics, show achievements, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Multimodal AI Tutor Tab */}
+          <TabsContent value="multimodal-ai">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🤖 Advanced Multimodal AI Tutor</h2>
+                <p className="text-muted-foreground">
+                  Experience next-generation AI tutoring with voice, video, gesture recognition, and multiple AI personalities
+                </p>
+              </div>
+              
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <div className="text-6xl mb-4">🚀</div>
+                  <h3 className="text-xl font-bold mb-2">Coming Soon!</h3>
+                  <p className="text-muted-foreground">
+                    Advanced Multimodal AI Tutor with 5 personalities, emotion recognition, and gesture detection.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Listening Comprehension Tab */}
+          <TabsContent value="listening">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🎧 Listening Comprehension</h2>
+                <p className="text-muted-foreground">
+                  Improve your listening skills with authentic audio content and comprehension exercises
+                </p>
+              </div>
+              
+              <ListeningComprehensionExercise
+                onComplete={(score, timeSpent) => {
+                  console.log('Listening exercise completed:', { score, timeSpent });
+                  // Handle completion - could update progress, show achievements, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Image Association Tab */}
+          <TabsContent value="image-association">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🖼️ Image Association Games</h2>
+                <p className="text-muted-foreground">
+                  Learn vocabulary through visual association with interactive image-based exercises
+                </p>
+              </div>
+              
+              <ImageAssociationExercise
+                category="all"
+                difficulty="intermediate"
+                onComplete={(score, timeSpent) => {
+                  console.log('Image association completed:', { score, timeSpent });
+                  // Handle completion - could update vocabulary progress, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Role Play Tab */}
+          <TabsContent value="role-play">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">🎭 Interactive Role Play</h2>
+                <p className="text-muted-foreground">
+                  Practice real-world conversations through immersive role-playing scenarios
+                </p>
+              </div>
+              
+              <RolePlayExercise
+                onComplete={(performance) => {
+                  console.log('Role play completed:', performance);
+                  // Handle completion - could update conversation skills, etc.
+                }}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Dictation Tab */}
+          <TabsContent value="dictation">
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">✍️ Dictation Practice</h2>
+                <p className="text-muted-foreground">
+                  Improve your listening and spelling skills with guided dictation exercises
+                </p>
+              </div>
+              
+              <DictationExercise
+                onComplete={(results) => {
+                  console.log('Dictation completed:', results);
+                  // Handle completion - could update spelling/listening progress, etc.
+                }}
+              />
+            </div>
           </TabsContent>
 
           {/* AI Tutor Tab */}

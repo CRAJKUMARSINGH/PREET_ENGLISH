@@ -36,7 +36,15 @@
     "backup:db": "tsx scripts/backup-db.ts backup",
     "backup:list": "tsx scripts/backup-db.ts list",
     "config": "tsx scripts/backup-db.ts config",
-    "generate:lessons": "tsx generate-lessons.ts"
+    "generate:lessons": "tsx generate-lessons.ts",
+    "audit:lessons": "tsx scripts/comprehensive-lesson-audit.ts",
+    "enrich:lessons": "tsx scripts/enrich-all-lessons.ts",
+    "test:virtual-users": "tsx scripts/virtual-user-testing.ts",
+    "test:robustness": "tsx scripts/robustness-test-runner.ts",
+    "test:deployment": "tsx scripts/deployment-test-runner.ts",
+    "quality:pipeline": "tsx scripts/complete-quality-audit.ts",
+    "quality:full": "npm run quality:pipeline -- --test-deployment",
+    "competitive:analysis": "tsx scripts/competitive-improvements-implementation.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

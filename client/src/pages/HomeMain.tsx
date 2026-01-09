@@ -12,10 +12,13 @@ import { TodaysPractice } from "@/components/TodaysPractice";
 import { ConfidenceDashboard } from "@/components/ConfidenceDashboard";
 import { ComingSoon } from "@/components/ComingSoon";
 import { AITutor } from "@/components/AITutor";
+import { HolographicDashboard } from "@/components/advanced/HolographicDashboard";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useLessons } from "@/hooks/use-lessons";
 import { useProgress } from "@/hooks/use-progress";
 import { useUserStats, useDailyGoal, useLeaderboard } from "@/hooks/use-gamification";
-import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare, Bot, Brain, ArrowRight, Star } from "lucide-react";
+import { Loader2, Sparkles, MessageCircle, Award, Heart, GraduationCap, BookOpen, Mic, MessagesSquare, Bot, Brain, ArrowRight, Star, Layers } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
@@ -32,6 +35,7 @@ export default function Home() {
   const { t } = useTranslation();
   const { trackEvent } = useAnalytics();
   const [activeTab, setActiveTab] = useState<'lessons' | 'scenarios'>('lessons');
+  const [showHolographicDashboard, setShowHolographicDashboard] = useState(false);
 
   useEffect(() => {
     trackEvent("auth_success", { page: "home" });
@@ -306,6 +310,35 @@ export default function Home() {
           <div className="mt-8">
             <AITutor />
           </div>
+
+          {/* Quantum Holographic System Access */}
+          <div className="mt-8">
+            <Card className="glass-panel border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-purple-500/5">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-primary/10 rounded-xl">
+                      <Layers className="h-8 w-8 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">Quantum Holographic Learning System</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Access revolutionary quantum-enhanced learning features: Biometric optimization, 3D memory palaces, cultural immersion, and more
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    size="lg"
+                    onClick={() => setShowHolographicDashboard(!showHolographicDashboard)}
+                    className="flex items-center gap-2"
+                  >
+                    <Sparkles className="h-5 w-5" />
+                    {showHolographicDashboard ? 'Hide' : 'Launch'} Quantum System
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Right Column: Community & Achievements */}
@@ -348,6 +381,18 @@ export default function Home() {
         </div>
 
       </div>
+
+      {/* Quantum Holographic Dashboard */}
+      {showHolographicDashboard && (
+        <section className="mt-12">
+          <HolographicDashboard
+            defaultTab="overview"
+            onFeatureActivated={(feature) => {
+              trackEvent("holographic_feature_activated", { feature });
+            }}
+          />
+        </section>
+      )}
 
       <footer className="mt-20 py-10 border-t border-border/50 text-center">
         <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">

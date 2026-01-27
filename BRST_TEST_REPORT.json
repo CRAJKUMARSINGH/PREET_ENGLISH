@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-01-27T17:15:05.516Z",
+  "summary": {
+    "totalTests": 13,
+    "passedTests": 11,
+    "failedTests": 2,
+    "passRate": 84.61538461538461,
+    "grade": 8,
+    "status": "GOOD"
+  },
+  "results": [
+    {
+      "name": "All critical tables accessible",
+      "passed": true,
+      "message": "All database tables can be queried"
+    },
+    {
+      "name": "Lessons have Hindi translations",
+      "passed": true,
+      "message": "23/24 lessons (95.8%) have Hindi",
+      "details": {
+        "total": 24,
+        "withHindi": 23
+      }
+    },
+    {
+      "name": "Lessons have adequate vocabulary",
+      "passed": true,
+      "message": "21/24 lessons (87.5%) have 5+ vocabulary words",
+      "details": {
+        "total": 24,
+        "adequate": 21
+      }
+    },
+    {
+      "name": "No orphaned vocabulary records",
+      "passed": true,
+      "message": "All vocabulary linked to valid lessons",
+      "details": {
+        "total": 213,
+        "orphaned": 0
+      }
+    },
+    {
+      "name": "Stories have Hindi translations",
+      "passed": true,
+      "message": "8/8 stories have Hindi",
+      "details": {
+        "total": 8,
+        "withHindi": 8
+      }
+    },
+    {
+      "name": "Scenarios are complete",
+      "passed": true,
+      "message": "5/5 scenarios complete",
+      "details": {
+        "total": 5,
+        "complete": 5
+      }
+    },
+    {
+      "name": "Speaking topics have Hindi",
+      "passed": true,
+      "message": "6/6 topics have Hindi",
+      "details": {
+        "total": 6,
+        "withHindi": 6
+      }
+    },
+    {
+      "name": "Content has reasonable length",
+      "passed": false,
+      "message": "3/24 lessons have adequate content",
+      "details": {
+        "total": 24,
+        "adequate": 3
+      }
+    },
+    {
+      "name": "No duplicate lesson titles",
+      "passed": true,
+      "message": "All lesson titles unique",
+      "details": {
+        "total": 24,
+        "unique": 24
+      }
+    },
+    {
+      "name": "No null required fields",
+      "passed": true,
+      "message": "All required fields populated",
+      "details": {
+        "total": 24,
+        "valid": 24
+      }
+    },
+    {
+      "name": "Hindi text uses Devanagari script",
+      "passed": false,
+      "message": "1/24 lessons use proper script",
+      "details": {
+        "total": 24,
+        "valid": 1
+      }
+    },
+    {
+      "name": "Sufficient content available",
+      "passed": true,
+      "message": "24 lessons, 213 vocab, 8 stories",
+      "details": {
+        "lessons": 24,
+        "vocabulary": 213,
+        "stories": 8
+      }
+    },
+    {
+      "name": "No data corruption detected",
+      "passed": true,
+      "message": "All data appears valid",
+      "details": {
+        "total": 24,
+        "corrupted": 0
+      }
+    }
+  ]
+}

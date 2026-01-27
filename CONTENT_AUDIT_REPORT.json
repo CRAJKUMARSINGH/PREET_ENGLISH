@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-01-27T16:15:32.178Z",
+  "overallScore": 9.218998015873016,
+  "previousGrade": 3,
+  "improvement": 6.218998015873016,
+  "results": [
+    {
+      "category": "Database Lessons",
+      "status": "PASS",
+      "message": "24 lessons audited. Pass: 23, Fail: 1",
+      "details": {
+        "total": 24,
+        "pass": 23,
+        "fail": 1,
+        "avgScore": 8.270833333333334
+      },
+      "score": 8.270833333333334
+    },
+    {
+      "category": "Database Stories",
+      "status": "PASS",
+      "message": "8 stories audited. Pass rate: 8/8",
+      "score": 9.5
+    },
+    {
+      "category": "Database Scenarios",
+      "status": "PASS",
+      "message": "5 scenarios audited",
+      "score": 10
+    },
+    {
+      "category": "Database Listenings",
+      "status": "PASS",
+      "message": "4 listening exercises audited",
+      "score": 10
+    },
+    {
+      "category": "Database Speaking Topics",
+      "status": "PASS",
+      "message": "6 speaking topics audited",
+      "score": 10
+    },
+    {
+      "category": "Database Quizzes",
+      "status": "PASS",
+      "message": "7 quizzes audited",
+      "score": 8
+    },
+    {
+      "category": "Static Data: hindiLearningData",
+      "status": "PASS",
+      "message": "Quality score: 10.00/10",
+      "score": 10
+    },
+    {
+      "category": "Static Data: hindiStoriesData",
+      "status": "PASS",
+      "message": "Quality score: 8.00/10",
+      "score": 8
+    },
+    {
+      "category": "Static Data: speakingTopicsData",
+      "status": "PASS",
+      "message": "Quality score: 8.00/10",
+      "score": 8
+    },
+    {
+      "category": "Static Data: advancedVocabularyData",
+      "status": "PASS",
+      "message": "Quality score: 8.00/10",
+      "score": 8
+    },
+    {
+      "category": "Data Integration",
+      "status": "PASS",
+      "message": "4/4 data files integrated",
+      "score": 10
+    },
+    {
+      "category": "Hindi Readability",
+      "status": "PASS",
+      "message": "6/6 components have Hindi support",
+      "score": 10
+    },
+    {
+      "category": "Overall Content Quality",
+      "status": "PASS",
+      "message": "Average content quality across all categories",
+      "score": 9.29513888888889
+    },
+    {
+      "category": "App Flows",
+      "status": "PASS",
+      "message": "6/6 flows functional",
+      "score": 10
+    }
+  ],
+  "summary": {
+    "pass": 14,
+    "warning": 0,
+    "fail": 0
+  }
+}

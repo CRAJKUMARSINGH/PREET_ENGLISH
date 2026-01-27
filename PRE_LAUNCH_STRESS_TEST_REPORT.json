@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-01-27T18:29:35.003Z",
+  "summary": {
+    "totalTests": 6,
+    "passedTests": 6,
+    "failedTests": 0,
+    "passRate": 100,
+    "totalTime": 1297,
+    "launchReady": true
+  },
+  "users": {
+    "total": 75,
+    "withErrors": 0,
+    "avgLessonsCompleted": 22
+  },
+  "bottlenecks": [],
+  "results": [
+    {
+      "category": "Virtual User Creation",
+      "passed": true,
+      "message": "75 users created successfully"
+    },
+    {
+      "category": "Login System Test",
+      "passed": true,
+      "message": "35/35 successful logins (avg: 0ms)",
+      "details": {
+        "successfulLogins": 35,
+        "failedLogins": 0,
+        "avgLoginTime": 0.22857142857142856,
+        "maxLoginTime": 1
+      }
+    },
+    {
+      "category": "Lesson Navigation Test",
+      "passed": true,
+      "message": "24/24 lessons accessed (100.0%)",
+      "details": {
+        "totalNavigations": 1650,
+        "uniqueLessonsAccessed": 24,
+        "coveragePercent": 100,
+        "avgNavTime": 0.3690909090909091,
+        "maxNavTime": 7,
+        "failedNavigations": 0
+      }
+    },
+    {
+      "category": "Concurrent Access Test",
+      "passed": true,
+      "message": "75 users handled in 56ms",
+      "details": {
+        "totalTime": 56,
+        "avgPerUser": 0.7466666666666667
+      }
+    },
+    {
+      "category": "Database Performance Test",
+      "passed": true,
+      "message": "All database queries tested"
+    },
+    {
+      "category": "Bottleneck Analysis",
+      "passed": true,
+      "message": "No bottlenecks detected"
+    }
+  ]
+}

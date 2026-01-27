@@ -1,0 +1,299 @@
+{
+  "version": "1.0.0",
+  "createdAt": "2026-01-11T20:52:17.998Z",
+  "protectedFiles": [
+    {
+      "path": "tests/load-test-chandrayaan.ts",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 16200
+    },
+    {
+      "path": "tests/performance-monitor.ts",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 6374
+    },
+    {
+      "path": "tests/run-chandrayaan-test.ts",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 4899
+    },
+    {
+      "path": "tests/quick-start.sh",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 3673
+    },
+    {
+      "path": "tests/quick-start.bat",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 3444
+    },
+    {
+      "path": "tests/README.md",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 9460
+    },
+    {
+      "path": "tests/test-results-template.md",
+      "type": "test",
+      "critical": true,
+      "exists": true,
+      "size": 3543
+    },
+    {
+      "path": "tests/setup.ts",
+      "type": "test",
+      "critical": false,
+      "exists": true,
+      "size": 2041
+    },
+    {
+      "path": "tests/verify-client-data.ts",
+      "type": "test",
+      "critical": false,
+      "exists": true,
+      "size": 5271
+    },
+    {
+      "path": "archived_prep/AUDIT_REPORT_FULL.md",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 6001
+    },
+    {
+      "path": "archived_prep/check-all-lesson-sources.cjs",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 2938
+    },
+    {
+      "path": "archived_prep/comprehensive-lesson-access-test.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 6389
+    },
+    {
+      "path": "archived_prep/comprehensive-user-test.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 15306
+    },
+    {
+      "path": "archived_prep/FINAL_TEST_SUMMARY.md",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 6218
+    },
+    {
+      "path": "archived_prep/generate-lessons.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 6732
+    },
+    {
+      "path": "archived_prep/PROGRAMMATIC_TEST_REPORT.md",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 1574
+    },
+    {
+      "path": "archived_prep/programmatic-lesson-access-test.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 13965
+    },
+    {
+      "path": "archived_prep/security-test.js",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 9249
+    },
+    {
+      "path": "archived_prep/seed-interactive-lessons.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 3282
+    },
+    {
+      "path": "archived_prep/test-random-user-lessons.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 4145
+    },
+    {
+      "path": "archived_prep/verify-lesson-integration.ts",
+      "type": "legacy",
+      "critical": false,
+      "exists": true,
+      "size": 10663
+    },
+    {
+      "path": "CHANDRAYAAN_TEST_GUIDE.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 11357
+    },
+    {
+      "path": "CHANDRAYAAN_TEST_IMPLEMENTATION.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 12803
+    },
+    {
+      "path": "PHASE1_COMPLETION_SUMMARY.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 10263
+    },
+    {
+      "path": "FINAL_COMPLETION_REPORT.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 9494
+    },
+    {
+      "path": "DEPLOYMENT_READY.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 6192
+    },
+    {
+      "path": "MD_FILES_CONTRIBUTION_ANALYSIS_DETAILED.md",
+      "type": "documentation",
+      "critical": true,
+      "exists": true,
+      "size": 12885
+    },
+    {
+      "path": "REF_APP_ASSESSMENT.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 6613
+    },
+    {
+      "path": "TESTING_RESULTS.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 5603
+    },
+    {
+      "path": "TESTING_SUMMARY.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 8469
+    },
+    {
+      "path": "TEST_RESULTS_DETAILED.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 5046
+    },
+    {
+      "path": "ROBUSTNESS_TEST_README.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 5666
+    },
+    {
+      "path": "LAUNCH_READINESS_CHECKLIST.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 6108
+    },
+    {
+      "path": "LAUNCH_READINESS_COMPLETE.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 8903
+    },
+    {
+      "path": "LAUNCH_READINESS_SUMMARY.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 8079
+    },
+    {
+      "path": "LAUNCH_READINESS_TEST_GUIDE.md",
+      "type": "documentation",
+      "critical": false,
+      "exists": true,
+      "size": 7798
+    },
+    {
+      "path": "audit-report.json",
+      "type": "backup",
+      "critical": false,
+      "exists": true,
+      "size": 3189
+    },
+    {
+      "path": "LESSON_QUALITY_AUDIT.json",
+      "type": "backup",
+      "critical": false,
+      "exists": true,
+      "size": 1970
+    },
+    {
+      "path": "enriched-lessons.json",
+      "type": "backup",
+      "critical": false,
+      "exists": true,
+      "size": 40537
+    },
+    {
+      "path": "mission_report.log",
+      "type": "backup",
+      "critical": false,
+      "exists": true,
+      "size": 7866
+    },
+    {
+      "path": "mission_report.txt",
+      "type": "backup",
+      "critical": false,
+      "exists": true,
+      "size": 7852
+    }
+  ],
+  "summary": {
+    "total": 41,
+    "present": 41,
+    "missing": 0,
+    "critical": 13
+  }
+}

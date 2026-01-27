@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: preet-english-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:./preet_english.db
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/health

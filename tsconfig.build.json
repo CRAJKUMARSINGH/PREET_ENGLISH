@@ -1,0 +1,22 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "client/src/**/*",
+        "shared/**/*",
+        "server/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+        "scripts/**/*",
+        "tests/**/*",
+        "**/*.test.ts",
+        "**/*.test.tsx"
+    ],
+    "compilerOptions": {
+        "noEmit": true,
+        "skipLibCheck": true,
+        "strict": false
+    }
+}

@@ -1,0 +1,63 @@
+# Cache Protection Configuration
+# This file prevents critical test and legacy files from being deleted during cache operations
+
+# Protected Directories - DO NOT DELETE
+!tests/
+!archived_prep/
+!ARCHIVE/
+!action-plan/
+!ACTION_PLAN/
+
+# Protected File Patterns
+!**/*.test.ts
+!**/*.test.tsx
+!**/*.spec.ts
+!**/*.spec.tsx
+!**/test-*.ts
+!**/test-*.js
+!**/test-*.cjs
+!**/*-test.ts
+!**/*-test.js
+!**/*-test.cjs
+!**/CHANDRAYAAN_*.md
+!**/TESTING_*.md
+!**/TEST_*.md
+!**/ROBUSTNESS_*.md
+!**/LAUNCH_*.md
+!**/PHASE*.md
+!**/FINAL_*.md
+!**/DEPLOYMENT_*.md
+!**/VERIFICATION_*.md
+!**/COMPLETE_*.md
+!**/IMPLEMENTATION_*.md
+!**/INTEGRATION_*.md
+!**/QUALITY_*.md
+!**/SECURITY_*.md
+!**/CRITICAL_*.md
+!**/CLEANUP_*.md
+!**/UPGRADE_*.md
+!**/KIMI_*.md
+!**/MD_FILES_*.md
+!**/REF_APP_*.md
+!**/DETAILED_*.md
+!**/GITHUB_*.md
+!**/VERCEL_*.md
+!**/SUPABASE_*.md
+!**/RAILWAY_*.md
+!**/CURRICULUM_*.md
+!**/LESSON_*.md
+!**/BACKUP_*.md
+!**/ARCHIVE/**
+!**/action-plan/**
+!**/ACTION_PLAN/**
+
+# Protect database backups
+!**/*.db-backup
+!**/*.db.bak
+!**/backup_*.db
+
+# Protect logs and reports
+!**/mission_report.*
+!**/audit-report.json
+!**/LESSON_QUALITY_AUDIT.json
+!**/enriched-lessons.json

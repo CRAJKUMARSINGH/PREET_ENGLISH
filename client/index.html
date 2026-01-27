@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <title>Preet English - Learn English with Hindi Support | प्रीत इंग्लिश</title>
+    <meta name="description" content="Learn English effectively with Hindi translations and support. 1625+ interactive lessons, speaking practice, vocabulary builder, and gamified learning for Hindi speakers." />
+    <meta name="keywords" content="english learning, hindi support, learn english, english speaking, vocabulary, grammar lessons, hindi to english, language learning" />
+    <meta name="author" content="Preet English" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Preet English - Learn English with Hindi Support" />
+    <meta property="og:description" content="Comprehensive English learning platform for Hindi speakers with 1625+ lessons, speaking practice, and gamified learning." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://preetenglish.netlify.app/" />
+    <meta property="og:image" content="https://preetenglish.netlify.app/og-image.jpg" />
+    <meta property="og:image:alt" content="Preet English - Learn English with Hindi Support" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Preet English - Learn English with Hindi Support" />
+    <meta name="twitter:description" content="Comprehensive English learning platform for Hindi speakers with 1625+ lessons, speaking practice, and gamified learning." />
+    <meta name="twitter:image" content="https://preetenglish.netlify.app/og-image.jpg" />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="msapplication-TileColor" content="#4F46E5" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Preet English" />
+    
+    <!-- Addy Osmani's Web Vitals Optimization - PREET_ENGLISH App -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" 
+          rel="stylesheet" 
+          crossorigin="anonymous">
+    
+    <!-- Critical CSS Preload -->
+    <link rel="preload" href="/src/index.css" as="style">
+    <link rel="preload" href="/src/main.tsx" as="script">
+    
+    <!-- Resource Hints for Better Loading -->
+    <link rel="dns-prefetch" href="//api.preetenglish.com">
+    <link rel="dns-prefetch" href="//supabase.preetenglish.com">
+    
+    <!-- Preload critical resources -->
+    <link rel="prefetch" href="/api/lessons" as="fetch" crossorigin="anonymous">
+    <link rel="prefetch" href="/api/user" as="fetch" crossorigin="anonymous">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration REMOVED for local dev -->
+    <!-- <script src="/sw-register.js"></script> -->
+  </body>
+</html>

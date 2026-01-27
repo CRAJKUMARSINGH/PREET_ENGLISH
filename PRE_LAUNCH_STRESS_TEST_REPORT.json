@@ -1,17 +1,23 @@
 {
-  "timestamp": "2026-01-27T18:29:35.003Z",
+  "timestamp": "2026-01-27T18:38:35.946Z",
   "summary": {
     "totalTests": 6,
     "passedTests": 6,
     "failedTests": 0,
     "passRate": 100,
-    "totalTime": 1297,
+    "totalTime": 1603,
     "launchReady": true
   },
   "users": {
     "total": 75,
     "withErrors": 0,
-    "avgLessonsCompleted": 22
+    "avgLessonsCompleted": 22,
+    "minLessonsCompleted": 22,
+    "maxLessonsCompleted": 22,
+    "usersMeeting90Percent": 75,
+    "userSuccessRate": 100,
+    "target90Percent": 22,
+    "totalLessons": 24
   },
   "bottlenecks": [],
   "results": [
@@ -27,30 +33,34 @@
       "details": {
         "successfulLogins": 35,
         "failedLogins": 0,
-        "avgLoginTime": 0.22857142857142856,
-        "maxLoginTime": 1
+        "avgLoginTime": 0.2,
+        "maxLoginTime": 2
       }
     },
     {
       "category": "Lesson Navigation Test",
       "passed": true,
-      "message": "24/24 lessons accessed (100.0%)",
+      "message": "75/75 users completed 90%+ lessons",
       "details": {
         "totalNavigations": 1650,
+        "usersAt90Percent": 75,
+        "usersBelow90Percent": 0,
+        "userSuccessRate": 100,
         "uniqueLessonsAccessed": 24,
-        "coveragePercent": 100,
-        "avgNavTime": 0.3690909090909091,
-        "maxNavTime": 7,
-        "failedNavigations": 0
+        "overallCoveragePercent": 100,
+        "avgNavTime": 0.5036363636363637,
+        "maxNavTime": 60,
+        "failedNavigations": 0,
+        "targetLessonsPerUser": 22
       }
     },
     {
       "category": "Concurrent Access Test",
       "passed": true,
-      "message": "75 users handled in 56ms",
+      "message": "75 users handled in 59ms",
       "details": {
-        "totalTime": 56,
-        "avgPerUser": 0.7466666666666667
+        "totalTime": 59,
+        "avgPerUser": 0.7866666666666666
       }
     },
     {
@@ -62,6 +72,608 @@
       "category": "Bottleneck Analysis",
       "passed": true,
       "message": "No bottlenecks detected"
+    }
+  ],
+  "userDetails": [
+    {
+      "username": "beginner_user_1",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 20,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_2",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 15,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_3",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 18,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_4",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_5",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 13,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_6",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 15,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_7",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 13,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_8",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 7,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_9",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 76,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_10",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 25,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_11",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_12",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 15,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_13",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_14",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_15",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_16",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_17",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_18",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_19",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 7,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_20",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_21",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_22",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_23",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_24",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "beginner_user_25",
+      "level": "beginner",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 7,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_1",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_2",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_3",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_4",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_5",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_6",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_7",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_8",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 7,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_9",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_10",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_11",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_12",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 15,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_13",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_14",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_15",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_16",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_17",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_18",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_19",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_20",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_21",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 12,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_22",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 12,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_23",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 12,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_24",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "intermediate_user_25",
+      "level": "intermediate",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_1",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 7,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_2",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_3",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_4",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_5",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_6",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_7",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_8",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 12,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_9",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 8,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_10",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_11",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_12",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_13",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 13,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_14",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 17,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_15",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 11,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_16",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_17",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 9,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_18",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_19",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 12,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_20",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 5,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_21",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_22",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 6,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_23",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 15,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_24",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 13,
+      "errors": []
+    },
+    {
+      "username": "advanced_user_25",
+      "level": "advanced",
+      "lessonsCompleted": 22,
+      "coveragePercent": "91.7",
+      "navigationTime": 10,
+      "errors": []
     }
   ]
 }

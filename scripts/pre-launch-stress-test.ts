@@ -219,25 +219,28 @@ class PreLaunchStressTest {
   }
 
   private async testLessonNavigation(): Promise<void> {
-    console.log('\n📚 PHASE 3: Testing Lesson Navigation (90% Coverage)');
+    console.log('\n📚 PHASE 3: Testing Lesson Navigation (90% Coverage PER USER)');
     console.log('-'.repeat(80));
 
     // Get all lessons
     const allLessons = await db.select().from(lessons);
     const totalLessons = allLessons.length;
-    const targetCoverage = Math.ceil(totalLessons * 0.9); // 90% coverage
+    const targetLessonsPerUser = Math.ceil(totalLessons * 0.9); // 90% coverage per user
 
     console.log(`  📊 Total lessons: ${totalLessons}`);
-    console.log(`  🎯 Target coverage: ${targetCoverage} lessons (90%)`);
+    console.log(`  🎯 Target per user: ${targetLessonsPerUser} lessons (90%)`);
+    console.log(`  👥 Testing ${this.virtualUsers.length} users\n`);
 
     const lessonAccessCount = new Map<number, number>();
     const navigationTimes: number[] = [];
     let totalNavigations = 0;
     let failedNavigations = 0;
+    let usersBelow90Percent = 0;
 
-    // Each user navigates through random lessons
+    // Each user MUST navigate through at least 90% of lessons
     for (const user of this.virtualUsers) {
-      const lessonsToVisit = this.getRandomLessons(allLessons, targetCoverage);
+      const lessonsToVisit = this.getRandomLessons(allLessons, targetLessonsPerUser);
+      let userSuccessfulLessons = 0;
 
       for (const lesson of lessonsToVisit) {
         const startTime = Date.now();
@@ -260,6 +263,7 @@ class PreLaunchStressTest {
           user.navigationTime += navTime;
 
           if (lessonData.length > 0) {
+            userSuccessfulLessons++;
             user.lessonsCompleted++;
             lessonAccessCount.set(lesson.id, (lessonAccessCount.get(lesson.id) || 0) + 1);
 
@@ -276,15 +280,29 @@ class PreLaunchStressTest {
           user.errors.push(`Navigation error for lesson ${lesson.id}: ${error}`);
         }
       }
+
+      // Check if user met 90% target
+      const userCoveragePercent = (userSuccessfulLessons / totalLessons) * 100;
+      if (userCoveragePercent < 90) {
+        usersBelow90Percent++;
+        user.errors.push(`Only completed ${userSuccessfulLessons}/${totalLessons} lessons (${userCoveragePercent.toFixed(1)}%)`);
+        console.log(`  ⚠️  ${user.username}: ${userSuccessfulLessons}/${totalLessons} lessons (${userCoveragePercent.toFixed(1)}%)`);
+      } else {
+        console.log(`  ✅ ${user.username}: ${userSuccessfulLessons}/${totalLessons} lessons (${userCoveragePercent.toFixed(1)}%)`);
+      }
     }
 
     const avgNavTime = navigationTimes.reduce((a, b) => a + b, 0) / navigationTimes.length;
     const maxNavTime = Math.max(...navigationTimes);
     const uniqueLessonsAccessed = lessonAccessCount.size;
-    const coveragePercent = (uniqueLessonsAccessed / totalLessons) * 100;
+    const overallCoveragePercent = (uniqueLessonsAccessed / totalLessons) * 100;
+    const usersAt90Percent = this.virtualUsers.length - usersBelow90Percent;
+    const userSuccessRate = (usersAt90Percent / this.virtualUsers.length) * 100;
 
+    console.log(`\n  📊 SUMMARY:`);
     console.log(`  ✅ Total navigations: ${totalNavigations}`);
-    console.log(`  ✅ Unique lessons accessed: ${uniqueLessonsAccessed}/${totalLessons} (${coveragePercent.toFixed(1)}%)`);
+    console.log(`  ✅ Users meeting 90% target: ${usersAt90Percent}/${this.virtualUsers.length} (${userSuccessRate.toFixed(1)}%)`);
+    console.log(`  ✅ Overall lesson coverage: ${uniqueLessonsAccessed}/${totalLessons} (${overallCoveragePercent.toFixed(1)}%)`);
     console.log(`  ⏱️  Average navigation time: ${avgNavTime.toFixed(0)}ms`);
     console.log(`  ⏱️  Max navigation time: ${maxNavTime}ms`);
 
@@ -293,19 +311,31 @@ class PreLaunchStressTest {
       this.bottlenecks.push(`${failedNavigations} navigation failures detected`);
     }
 
+    if (usersBelow90Percent > 0) {
+      console.log(`  ⚠️  Users below 90%: ${usersBelow90Percent}`);
+      this.bottlenecks.push(`${usersBelow90Percent} users did not reach 90% lesson coverage`);
+    }
+
     if (avgNavTime > 500) {
       this.bottlenecks.push(`Average navigation time too high: ${avgNavTime.toFixed(0)}ms (target: <500ms)`);
     }
 
-    if (coveragePercent < 90) {
-      this.bottlenecks.push(`Lesson coverage below target: ${coveragePercent.toFixed(1)}% (target: 90%)`);
-    }
-
     this.addResult(
       'Lesson Navigation Test',
-      coveragePercent >= 90 && failedNavigations === 0,
-      `${uniqueLessonsAccessed}/${totalLessons} lessons accessed (${coveragePercent.toFixed(1)}%)`,
-      { totalNavigations, uniqueLessonsAccessed, coveragePercent, avgNavTime, maxNavTime, failedNavigations }
+      usersBelow90Percent === 0 && failedNavigations === 0,
+      `${usersAt90Percent}/${this.virtualUsers.length} users completed 90%+ lessons`,
+      { 
+        totalNavigations, 
+        usersAt90Percent,
+        usersBelow90Percent,
+        userSuccessRate,
+        uniqueLessonsAccessed, 
+        overallCoveragePercent, 
+        avgNavTime, 
+        maxNavTime, 
+        failedNavigations,
+        targetLessonsPerUser
+      }
     );
   }
 
@@ -482,7 +512,22 @@ class PreLaunchStressTest {
     console.log(`   Users with Errors: ${this.virtualUsers.filter(u => u.errors.length > 0).length}`);
     
     const avgLessonsCompleted = this.virtualUsers.reduce((sum, u) => sum + u.lessonsCompleted, 0) / this.virtualUsers.length;
+    const minLessonsCompleted = Math.min(...this.virtualUsers.map(u => u.lessonsCompleted));
+    const maxLessonsCompleted = Math.max(...this.virtualUsers.map(u => u.lessonsCompleted));
+    
     console.log(`   Average Lessons per User: ${avgLessonsCompleted.toFixed(1)}`);
+    console.log(`   Min Lessons per User: ${minLessonsCompleted}`);
+    console.log(`   Max Lessons per User: ${maxLessonsCompleted}`);
+    
+    // Calculate how many users met 90% target
+    const lessonsForReport = await db.select().from(lessons);
+    const totalLessonsForReport = lessonsForReport.length;
+    const target90PercentForReport = Math.ceil(totalLessonsForReport * 0.9);
+    const usersMeeting90ForReport = this.virtualUsers.filter(u => u.lessonsCompleted >= target90PercentForReport).length;
+    const userSuccessRateForReport = (usersMeeting90ForReport / this.virtualUsers.length) * 100;
+    
+    console.log(`   Users Meeting 90% Target: ${usersMeeting90ForReport}/${this.virtualUsers.length} (${userSuccessRateForReport.toFixed(1)}%)`);
+    console.log(`   Target Lessons per User: ${target90PercentForReport}/${totalLessonsForReport} (90%)`);
 
     console.log(`\n🚦 Launch Readiness:`);
     if (passRate >= 95 && this.bottlenecks.length < 3) {
@@ -512,10 +557,24 @@ class PreLaunchStressTest {
       users: {
         total: this.virtualUsers.length,
         withErrors: this.virtualUsers.filter(u => u.errors.length > 0).length,
-        avgLessonsCompleted
+        avgLessonsCompleted,
+        minLessonsCompleted,
+        maxLessonsCompleted,
+        usersMeeting90Percent: usersMeeting90ForReport,
+        userSuccessRate: userSuccessRateForReport,
+        target90Percent: target90PercentForReport,
+        totalLessons: totalLessonsForReport
       },
       bottlenecks: this.bottlenecks,
-      results: this.results
+      results: this.results,
+      userDetails: this.virtualUsers.map(u => ({
+        username: u.username,
+        level: u.level,
+        lessonsCompleted: u.lessonsCompleted,
+        coveragePercent: ((u.lessonsCompleted / totalLessonsForReport) * 100).toFixed(1),
+        navigationTime: u.navigationTime,
+        errors: u.errors
+      }))
     };
 
     fs.writeFileSync('PRE_LAUNCH_STRESS_TEST_REPORT.json', JSON.stringify(report, null, 2));

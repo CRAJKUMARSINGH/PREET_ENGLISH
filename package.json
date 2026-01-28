@@ -62,7 +62,15 @@
     "test:integration": "npm run test -- --testPathPattern=\"tests/integration|tests/server\"",
     "test:e2e": "npm run test -- --testPathPattern=\"tests/e2e\"",
     "test:property": "npm run test -- --testPathPattern=\"tests/property\"",
-    "test:data": "npm run test -- --testPathPattern=\"tests/data\""
+    "test:data": "npm run test -- --testPathPattern=\"tests/data\"",
+    "celebrity:launch": "tsx scripts/run-celebrity-launch-validation.ts",
+    "celebrity:orchestrate": "tsx scripts/master-celebrity-launch-orchestrator.ts",
+    "celebrity:mechanical": "tsx scripts/mechanical-verification-framework.ts",
+    "celebrity:content-depth": "tsx scripts/content-depth-validator.ts",
+    "celebrity:scenarios": "tsx scripts/celebrity-launch-scenarios.ts",
+    "celebrity:infrastructure": "tsx scripts/celebrity-content-infrastructure.ts",
+    "quality:enhanced": "tsx scripts/run-quality-tests.ts",
+    "test:comprehensive-enhanced": "jest tests/comprehensive-quality-suite.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

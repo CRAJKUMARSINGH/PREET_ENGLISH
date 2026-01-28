@@ -4,13 +4,39 @@ import { setupAuth } from "./auth";
 import { registerRoutes } from "./routes";
 import rateLimit from "express-rate-limit";
 import logger from "./logger";
+import { globalErrorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+import { HealthMonitor, performanceMonitor } from "./middleware/monitoring.js";
+import { db } from "./db.js";
 
 const app = express();
 const httpServer = createServer(app);
 
+// Initialize health monitoring
+const healthMonitor = new HealthMonitor();
+
+// Add health checks
+healthMonitor.addCheck('database', async () => {
+  try {
+    const { users } = await import('../shared/schema.js');
+    await db.select().from(users).limit(1);
+    return true;
+  } catch {
+    return false;
+  }
+});
+
+healthMonitor.addCheck('memory', async () => {
+  const usage = process.memoryUsage();
+  const maxMemory = 512 * 1024 * 1024; // 512MB
+  return usage.heapUsed < maxMemory;
+});
+
 // Basic middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+
+// Performance monitoring
+app.use(performanceMonitor);
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -46,13 +72,19 @@ app.use((req, res, next) => {
 setupAuth(app);
 
 // API Health Check (Enhanced)
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "healthy",
+app.get("/api/health", async (req, res) => {
+  const healthResults = await healthMonitor.runAllChecks();
+  const isHealthy = Object.values(healthResults).every(result => result.status);
+  
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? "healthy" : "unhealthy",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     env: process.env.NODE_ENV || "development",
     version: "2.1.0",
+    checks: healthResults,
+    memory: process.memoryUsage(),
+    cpu: process.cpuUsage()
   });
 });
 
@@ -77,13 +109,9 @@ app.get("/api/health", (req, res) => {
   }
 })();
 
-// Error handler
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  const status = err.status || err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  logger.error(`Unhandled Error: ${message}`, { status, stack: err.stack });
-  res.status(status).json({ message });
-});
+// Error handlers (must be last)
+app.use(notFoundHandler);
+app.use(globalErrorHandler);
 
 // Clean exports
 export { app, httpServer };

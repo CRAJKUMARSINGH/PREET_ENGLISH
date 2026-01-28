@@ -1,0 +1,223 @@
+{
+  "timestamp": "2026-01-28T13:22:16.585Z",
+  "testType": "Fixed Real Load Test",
+  "summary": {
+    "totalRequests": 18,
+    "successful": 18,
+    "failed": 0,
+    "successRate": "100.0%",
+    "avgResponseTime": 153,
+    "maxResponseTime": 241,
+    "circuitBreakerActivations": 0,
+    "maxQueueBacklog": 8
+  },
+  "testUsers": {
+    "created": 15,
+    "total": 15
+  },
+  "results": [
+    {
+      "user": "realtest_user_1",
+      "success": true,
+      "responseTime": 142,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 0,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_2",
+      "success": true,
+      "responseTime": 123,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 0,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_3",
+      "success": true,
+      "responseTime": 125,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 0,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_1",
+      "success": true,
+      "responseTime": 79,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 8,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_2",
+      "success": true,
+      "responseTime": 82,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 6,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_3",
+      "success": true,
+      "responseTime": 82,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 6,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_4",
+      "success": true,
+      "responseTime": 80,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 6,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_5",
+      "success": true,
+      "responseTime": 144,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 2,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_6",
+      "success": true,
+      "responseTime": 137,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 4,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_7",
+      "success": true,
+      "responseTime": 141,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 2,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_8",
+      "success": true,
+      "responseTime": 143,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 2,
+        "activeOperations": 5,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_9",
+      "success": true,
+      "responseTime": 234,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 1,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_10",
+      "success": true,
+      "responseTime": 196,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 3,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_11",
+      "success": true,
+      "responseTime": 193,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 3,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_12",
+      "success": true,
+      "responseTime": 194,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 3,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_13",
+      "success": true,
+      "responseTime": 195,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 3,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_14",
+      "success": true,
+      "responseTime": 241,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 0,
+        "concurrentLimit": 5
+      }
+    },
+    {
+      "user": "realtest_user_15",
+      "success": true,
+      "responseTime": 229,
+      "status": 200,
+      "queueStatus": {
+        "queueLength": 0,
+        "activeOperations": 2,
+        "concurrentLimit": 5
+      }
+    }
+  ],
+  "verdict": {
+    "status": "READY FOR LAUNCH - RESILIENCE VALIDATED",
+    "icon": "🎉",
+    "message": "Authentication works and system shows resilience under load"
+  }
+}

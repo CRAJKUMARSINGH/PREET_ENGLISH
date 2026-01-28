@@ -13,9 +13,11 @@
  */
 
 import { db } from '../server/db';
-import { users, lessons, vocabulary, userProgress } from '../shared/schema';
-import { eq, and } from 'drizzle-orm';
+import { users, lessons, vocabulary, progress } from '../shared/schema';
+import { eq } from 'drizzle-orm';
 import * as fs from 'fs';
+import { LoginStressTester } from './login-bottleneck-stress-test.js';
+import { LessonNavigationTester } from './lesson-navigation-stress-test.js';
 
 interface VirtualUser {
   id: number;

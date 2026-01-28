@@ -2,7 +2,7 @@ import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzlePostgres } from "drizzle-orm/postgres-js";
 import BetterSqlite3 from "better-sqlite3";
 import postgresJs from "postgres";
-import * as schema from "../shared/schema";
+import * as schema from "../shared/schema.js";
 import { config } from "dotenv";
 config({ path: '.env.local' });
 var databaseUrl = process.env.DATABASE_URL;

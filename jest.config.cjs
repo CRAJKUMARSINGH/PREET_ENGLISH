@@ -1,6 +1,5 @@
 /** @type {import('jest').Config} */
 const config = {
-  // preset: 'ts-jest', // No longer needed as babel-jest will handle TypeScript
   testEnvironment: 'jsdom',
   verbose: true,
   roots: ['<rootDir>/tests'],
@@ -19,16 +18,11 @@ const config = {
     '^@types/(.*)$': '<rootDir>/types/$1',
   },
   transform: {
-    '^.+\.(ts|tsx|js|jsx)$': 'babel-jest',
+    '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
   },
-  // globals: { // No longer needed as ts-jest is not the primary transformer
-  //   'ts-jest': {
-  //     tsconfig: '<rootDir>/tsconfig.json',
-  //     compilerOptions: {
-  //       module: 'CommonJS',
-  //     },
-  //   },
-  // },
+  transformIgnorePatterns: [
+    'node_modules/(?!(wouter|@tanstack|regexparam)/)',
+  ],
   testMatch: [
     '**/*.test.(ts|tsx|js|jsx)',
     '**/__tests__/**/*.(ts|tsx|js|jsx)',

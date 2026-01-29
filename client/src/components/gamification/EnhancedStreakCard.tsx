@@ -68,7 +68,7 @@ export function EnhancedStreakCard({
           >
             {currentStreak}
             <span className="text-2xl ml-1">{getStreakEmoji(currentStreak)}</span>
-          </div>
+          </motion.div>
           <p className="text-sm text-muted-foreground">
             {currentStreak === 0 ? "Start your streak today!" : 
              currentStreak === 1 ? "Great start!" :

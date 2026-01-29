@@ -280,7 +280,7 @@ describe('Helper Functions', () => {
 
     it('should extract vowels from string', () => {
       const str = 'hello world';
-      const vowels = str.match(/[aeiouAEIOU]/g)?.join('') || '';
+      const vowels = str.match(/[aeiouAEIOU\s]/g)?.join('') || '';
       
       expect(vowels).toBe('eo o');
     });

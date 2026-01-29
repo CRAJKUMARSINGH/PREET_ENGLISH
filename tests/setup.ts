@@ -1,5 +1,28 @@
 import '@testing-library/jest-dom';
 
+// Polyfill TextEncoder/TextDecoder for Node.js environment
+if (typeof global.TextEncoder === 'undefined') {
+  const { TextEncoder, TextDecoder } = require('util');
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
+}
+
+// Mock SpeechSynthesisUtterance
+global.SpeechSynthesisUtterance = jest.fn().mockImplementation((text) => ({
+  text,
+  lang: 'en-US',
+  rate: 1,
+  pitch: 1,
+  volume: 1,
+  onstart: null,
+  onend: null,
+  onerror: null,
+  onpause: null,
+  onresume: null,
+  onmark: null,
+  onboundary: null,
+}));
+
 // Mock localStorage
 const localStorageMock = (() => {
   let store: { [key: string]: string } = {};

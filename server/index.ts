@@ -88,7 +88,7 @@ app.get("/api/health", async (req, res) => {
   });
 });
 
-// Register API Routes
+// Register API Routes and Setup Vite
 (async () => {
   try {
     await registerRoutes(httpServer, app);
@@ -104,14 +104,16 @@ app.get("/api/health", async (req, res) => {
       await setupVite(httpServer, app);
       logger.info("Vite development server enabled");
     }
+
+    // Error handlers (must be last)
+    app.use(notFoundHandler);
+    app.use(globalErrorHandler);
+    
   } catch (error) {
-    logger.error("Failed to register API routes:", error);
+    logger.error("Failed to setup server:", error);
+    process.exit(1);
   }
 })();
-
-// Error handlers (must be last)
-app.use(notFoundHandler);
-app.use(globalErrorHandler);
 
 // Clean exports
 export { app, httpServer };

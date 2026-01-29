@@ -1,248 +1,129 @@
 export interface SpeakingTopic {
   id: number;
   title: string;
-  titleHindi: string;
-  description: string;
-  descriptionHindi: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  hindiTitle: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Advanced';
+  emoji: string;
   category: string;
-  duration: number; // in minutes
-  keyPoints: string[];
-  keyPointsHindi: string[];
-  sampleQuestions: string[];
-  sampleQuestionsHindi: string[];
-  xpReward: number;
-  estimatedTime: string;
+  hindiThoughts: string[];
+  sentenceFrames: string[];
+  modelAnswer: string;
+  freePrompt: string;
+  confidenceTip: string;
 }
 
-export const speakingTopicsData: SpeakingTopic[] = [
+export const speakingTopics: SpeakingTopic[] = [
   {
     id: 1,
     title: "Introducing Yourself",
-    titleHindi: "अपना परिचय देना",
-    description: "Learn how to introduce yourself in English with confidence",
-    descriptionHindi: "अंग्रेजी में आत्मविश्वास के साथ अपना परिचय देना सीखें",
-    difficulty: "beginner",
+    hindiTitle: "अपना परिचय देना",
+    difficulty: "Easy",
+    emoji: "👋",
     category: "Personal",
-    duration: 5,
-    keyPoints: [
-      "State your name clearly",
-      "Mention your profession or studies",
-      "Share a brief background",
-      "Express your interests"
+    hindiThoughts: [
+      "मैं अपना नाम स्पष्ट रूप से बताऊंगा",
+      "मैं अपने काम के बारे में बताऊंगा",
+      "मैं अपनी रुचियों को साझा करूंगा"
     ],
-    keyPointsHindi: [
-      "अपना नाम स्पष्ट रूप से बताएं",
-      "अपने पेशे या अध्ययन का उल्लेख करें",
-      "संक्षिप्त पृष्ठभूमि साझा करें",
-      "अपनी रुचियों को व्यक्त करें"
+    sentenceFrames: [
+      "My name is ___",
+      "I work as a ___",
+      "I am from ___",
+      "My hobbies include ___"
     ],
-    sampleQuestions: [
-      "What is your name?",
-      "Where are you from?",
-      "What do you do?",
-      "What are your hobbies?"
-    ],
-    sampleQuestionsHindi: [
-      "आपका नाम क्या है?",
-      "आप कहाँ से हैं?",
-      "आप क्या करते हैं?",
-      "आपके शौक क्या हैं?"
-    ],
-    xpReward: 50,
-    estimatedTime: "5 mins"
+    modelAnswer: "Hello! My name is Priya Sharma. I work as a software engineer in Mumbai. I am originally from Delhi but moved here for my job. In my free time, I enjoy reading books, watching movies, and learning new languages like English. I'm excited to improve my English speaking skills.",
+    freePrompt: "अपने बारे में 2-3 मिनट बताएं",
+    confidenceTip: "Remember to speak slowly and clearly. It's okay to pause and think before speaking."
   },
   {
     id: 2,
     title: "Ordering Food",
-    titleHindi: "खाना ऑर्डर करना",
-    description: "Master the vocabulary and phrases for ordering food at restaurants",
-    descriptionHindi: "रेस्तरां में खाना ऑर्डर करने के लिए शब्दावली और वाक्यांश सीखें",
-    difficulty: "beginner",
+    hindiTitle: "खाना ऑर्डर करना",
+    difficulty: "Easy",
+    emoji: "🍽️",
     category: "Daily Life",
-    duration: 5,
-    keyPoints: [
-      "Ask for a table",
-      "Request the menu",
-      "Ask about dishes",
-      "Place your order",
-      "Request the bill"
+    hindiThoughts: [
+      "मैं मेन्यू देखूंगा और समझूंगा",
+      "मैं विनम्रता से ऑर्डर करूंगा",
+      "मैं अपनी पसंद बताऊंगा"
     ],
-    keyPointsHindi: [
-      "टेबल के लिए पूछें",
-      "मेन्यू के लिए अनुरोध करें",
-      "व्यंजनों के बारे में पूछें",
-      "अपना ऑर्डर दें",
-      "बिल के लिए अनुरोध करें"
+    sentenceFrames: [
+      "I would like to order ___",
+      "Can I have ___?",
+      "Is this dish ___?",
+      "The bill, please"
     ],
-    sampleQuestions: [
-      "Do you have a table for two?",
-      "What do you recommend?",
-      "Is this dish spicy?",
-      "Can I have the bill, please?"
-    ],
-    sampleQuestionsHindi: [
-      "क्या आपके पास दो लोगों के लिए टेबल है?",
-      "आप क्या सुझाते हैं?",
-      "क्या यह व्यंजन मसालेदार है?",
-      "क्या मुझे बिल दे सकते हैं, कृपया?"
-    ],
-    xpReward: 60,
-    estimatedTime: "5 mins"
+    modelAnswer: "Good evening! I would like to order dal makhani with butter naan, please. Can I also have a mango lassi? Is the dal very spicy? I prefer mild food. Thank you for your help. The bill, please.",
+    freePrompt: "रेस्तरां में खाना ऑर्डर करने का अभ्यास करें",
+    confidenceTip: "Don't worry about perfect pronunciation. Restaurant staff are used to helping customers."
   },
   {
     id: 3,
     title: "Asking for Directions",
-    titleHindi: "दिशा पूछना",
-    description: "Learn how to ask for and give directions confidently",
-    descriptionHindi: "आत्मविश्वास के साथ दिशा पूछना और देना सीखें",
-    difficulty: "beginner",
+    hindiTitle: "दिशा पूछना",
+    difficulty: "Medium",
+    emoji: "🗺️",
     category: "Travel",
-    duration: 5,
-    keyPoints: [
-      "Ask for directions politely",
-      "Understand directional terms",
-      "Ask about distance",
-      "Confirm directions",
-      "Thank the person"
+    hindiThoughts: [
+      "मैं विनम्रता से दिशा पूछूंगा",
+      "मैं दिशाओं को ध्यान से सुनूंगा",
+      "मैं धन्यवाद कहूंगा"
     ],
-    keyPointsHindi: [
-      "विनम्रता से दिशा पूछें",
-      "दिशात्मक शब्दों को समझें",
-      "दूरी के बारे में पूछें",
-      "दिशा की पुष्टि करें",
-      "व्यक्ति को धन्यवाद दें"
+    sentenceFrames: [
+      "Excuse me, how do I get to ___?",
+      "Is it far from here?",
+      "Should I take ___?",
+      "Thank you for your help"
     ],
-    sampleQuestions: [
-      "Excuse me, where is the station?",
-      "How far is it from here?",
-      "Should I go straight or turn?",
-      "Is it walking distance?"
-    ],
-    sampleQuestionsHindi: [
-      "माफ करिए, स्टेशन कहाँ है?",
-      "यहाँ से कितनी दूर है?",
-      "क्या मुझे सीधे जाना चाहिए या मुड़ना चाहिए?",
-      "क्या यह पैदल दूरी है?"
-    ],
-    xpReward: 55,
-    estimatedTime: "5 mins"
+    modelAnswer: "Excuse me, how do I get to the railway station from here? Is it walking distance or should I take an auto-rickshaw? Which direction should I go? Thank you so much for your help. Have a good day!",
+    freePrompt: "किसी से रास्ता पूछने का अभ्यास करें",
+    confidenceTip: "Most people are happy to help with directions. Speak clearly and don't hesitate to ask again if you don't understand."
   },
   {
     id: 4,
     title: "Job Interview",
-    titleHindi: "नौकरी का साक्षात्कार",
-    description: "Prepare for job interviews with professional English",
-    descriptionHindi: "व्यावसायिक अंग्रेजी के साथ नौकरी के साक्षात्कार की तैयारी करें",
-    difficulty: "advanced",
+    hindiTitle: "नौकरी का साक्षात्कार",
+    difficulty: "Hard",
+    emoji: "💼",
     category: "Professional",
-    duration: 10,
-    keyPoints: [
-      "Introduce yourself professionally",
-      "Discuss your experience",
-      "Highlight your skills",
-      "Ask relevant questions",
-      "Close the interview positively"
+    hindiThoughts: [
+      "मैं अपनी योग्यताओं के बारे में बताऊंगा",
+      "मैं आत्मविश्वास से जवाब दूंगा",
+      "मैं अपने अनुभव साझा करूंगा"
     ],
-    keyPointsHindi: [
-      "पेशेवर रूप से अपना परिचय दें",
-      "अपने अनुभव पर चर्चा करें",
-      "अपने कौशल को उजागर करें",
-      "प्रासंगिक प्रश्न पूछें",
-      "साक्षात्कार को सकारात्मक रूप से समाप्त करें"
+    sentenceFrames: [
+      "I have experience in ___",
+      "My strength is ___",
+      "I am passionate about ___",
+      "I would like to contribute ___"
     ],
-    sampleQuestions: [
-      "Tell me about yourself",
-      "What are your strengths?",
-      "Why do you want this job?",
-      "What are your salary expectations?"
-    ],
-    sampleQuestionsHindi: [
-      "अपने बारे में बताइए",
-      "आपकी ताकत क्या हैं?",
-      "आप यह नौकरी क्यों चाहते हैं?",
-      "आपकी वेतन की अपेक्षाएं क्या हैं?"
-    ],
-    xpReward: 100,
-    estimatedTime: "10 mins"
+    modelAnswer: "Thank you for this opportunity. I have three years of experience in software development, particularly in web technologies. My strength is problem-solving and working well in teams. I am passionate about creating user-friendly applications. I would like to contribute my technical skills and fresh perspective to your company's growth.",
+    freePrompt: "नौकरी के साक्षात्कार के लिए तैयारी करें",
+    confidenceTip: "Prepare your answers beforehand. Practice speaking about your achievements and experiences confidently."
   },
   {
     id: 5,
-    title: "Making Phone Calls",
-    titleHindi: "फोन कॉल करना",
-    description: "Master telephone etiquette and common phrases",
-    descriptionHindi: "टेलीफोन शिष्टाचार और सामान्य वाक्यांश सीखें",
-    difficulty: "intermediate",
-    category: "Communication",
-    duration: 5,
-    keyPoints: [
-      "Greet the person",
-      "Introduce yourself",
-      "State your purpose",
-      "Listen actively",
-      "End the call politely"
-    ],
-    keyPointsHindi: [
-      "व्यक्ति को बधाई दें",
-      "अपना परिचय दें",
-      "अपने उद्देश्य को बताएं",
-      "सक्रिय रूप से सुनें",
-      "विनम्रता से कॉल समाप्त करें"
-    ],
-    sampleQuestions: [
-      "Hello, may I speak to John?",
-      "Could you take a message?",
-      "When will he be available?",
-      "Thank you for your time"
-    ],
-    sampleQuestionsHindi: [
-      "नमस्ते, क्या मैं जॉन से बात कर सकता हूँ?",
-      "क्या आप एक संदेश ले सकते हैं?",
-      "वह कब उपलब्ध होंगे?",
-      "आपके समय के लिए धन्यवाद"
-    ],
-    xpReward: 70,
-    estimatedTime: "5 mins"
-  },
-  {
-    id: 6,
-    title: "Describing Your Day",
-    titleHindi: "अपने दिन का वर्णन करना",
-    description: "Learn to describe daily activities and experiences",
-    descriptionHindi: "दैनिक गतिविधियों और अनुभवों का वर्णन करना सीखें",
-    difficulty: "intermediate",
+    title: "Shopping Experience",
+    hindiTitle: "खरीदारी का अनुभव",
+    difficulty: "Medium",
+    emoji: "🛍️",
     category: "Daily Life",
-    duration: 5,
-    keyPoints: [
-      "Use past tense correctly",
-      "Describe activities in sequence",
-      "Express feelings and emotions",
-      "Use time expressions",
-      "Add interesting details"
+    hindiThoughts: [
+      "मैं दुकानदार से विनम्रता से बात करूंगा",
+      "मैं कीमत के बारे में पूछूंगा",
+      "मैं अपनी पसंद बताऊंगा"
     ],
-    keyPointsHindi: [
-      "भूतकाल का सही उपयोग करें",
-      "गतिविधियों का क्रम में वर्णन करें",
-      "भावनाओं को व्यक्त करें",
-      "समय के भाव का उपयोग करें",
-      "दिलचस्प विवरण जोड़ें"
+    sentenceFrames: [
+      "How much does this cost?",
+      "Do you have this in ___?",
+      "Can I try this on?",
+      "I'll take this one"
     ],
-    sampleQuestions: [
-      "How was your day?",
-      "What did you do this morning?",
-      "Did you enjoy it?",
-      "What will you do tomorrow?"
-    ],
-    sampleQuestionsHindi: [
-      "आपका दिन कैसा था?",
-      "आपने आज सुबह क्या किया?",
-      "क्या आपने इसका आनंद लिया?",
-      "आप कल क्या करेंगे?"
-    ],
-    xpReward: 65,
-    estimatedTime: "5 mins"
+    modelAnswer: "Hello! I'm looking for a formal shirt for office wear. How much does this blue shirt cost? Do you have this in medium size? The quality looks good. Can I try this on? Yes, I'll take this one. Do you accept card payment?",
+    freePrompt: "दुकान में खरीदारी करने का अभ्यास करें",
+    confidenceTip: "Shopping is great practice for everyday English. Don't be afraid to ask questions about products."
   }
 ];
 
-// Alias for backward compatibility
-export const speakingTopics = speakingTopicsData;
+// For backward compatibility
+export const speakingTopicsData = speakingTopics;

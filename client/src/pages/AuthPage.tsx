@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
@@ -111,7 +112,7 @@ export default function AuthPage() {
                     >
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
-                                <features[currentFeature].icon className="h-6 w-6 text-primary" />
+                                {React.createElement(features[currentFeature].icon, { className: "h-6 w-6 text-primary" })}
                             </div>
                             <div>
                                 <h3 className="font-bold text-lg mb-1">{features[currentFeature].title}</h3>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Hind:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,10 +6,11 @@
 
 @layer base {
   :root {
-    /* Fonts */
+    /* Fonts - Grade 9 Typography System */
     --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
     --font-display: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --font-hindi: 'Noto Sans Devanagari', 'Hind', sans-serif;
 
     /* Light Mode - "Comfortable Modern" */
     --background: 210 20% 98%;
@@ -141,5 +142,223 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+/* ============================================================================
+   GRADE 9 TYPOGRAPHY SYSTEM - BILINGUAL SUPPORT
+   ============================================================================ */
+
+/* Hindi Text Optimization */
+.hindi-text {
+  font-family: var(--font-hindi);
+  font-size: 1.1rem; /* Hindi characters need slightly larger size */
+  line-height: 1.8; /* Better line spacing for Devanagari */
+  letter-spacing: 0.02em;
+  color: hsl(var(--foreground));
+}
+
+.hindi-text-sm {
+  font-family: var(--font-hindi);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.hindi-text-lg {
+  font-family: var(--font-hindi);
+  font-size: 1.25rem;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+}
+
+/* Bilingual Content Containers */
+.bilingual-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bilingual-container .english {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.bilingual-container .hindi {
+  font-family: var(--font-hindi);
+  font-size: 1.05em;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+/* Lesson Header Scaffolding */
+.lesson-header-container {
+  border-left: 4px solid hsl(var(--primary));
+  padding-left: 1rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, hsl(var(--accent)) 0%, transparent 100%);
+  padding: 1rem;
+  border-radius: var(--radius);
+}
+
+.lesson-header-container .title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.5rem;
+}
+
+.lesson-header-container .hindi-title {
+  font-family: var(--font-hindi);
+  font-size: 1.25rem;
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+/* Grade 9 Navigation Elements */
+.grade9-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.grade9-nav-item:hover {
+  background: hsl(var(--accent));
+  transform: translateX(2px);
+}
+
+.grade9-nav-item .english {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.grade9-nav-item .hindi {
+  font-family: var(--font-hindi);
+  font-size: 0.9em;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Content Quality Indicators */
+.quality-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: calc(var(--radius) / 2);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.quality-badge.grade-9 {
+  background: hsl(151 86% 95%);
+  color: hsl(151 86% 25%);
+  border: 1px solid hsl(151 86% 45%);
+}
+
+.quality-badge.grade-8 {
+  background: hsl(45 86% 95%);
+  color: hsl(45 86% 25%);
+  border: 1px solid hsl(45 86% 45%);
+}
+
+.quality-badge.needs-improvement {
+  background: hsl(0 86% 95%);
+  color: hsl(0 86% 25%);
+  border: 1px solid hsl(0 86% 45%);
+}
+
+/* Hindi Scaffolding Components */
+.hindi-scaffold {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hindi-scaffold .english-content {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.75rem;
+}
+
+.hindi-scaffold .hindi-explanation {
+  font-family: var(--font-hindi);
+  font-size: 1rem;
+  color: hsl(var(--primary));
+  background: hsl(var(--accent));
+  padding: 0.75rem;
+  border-radius: calc(var(--radius) / 2);
+  border-left: 3px solid hsl(var(--primary));
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .hindi-text {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .lesson-header-container .title {
+    font-size: 1.5rem;
+  }
+  
+  .lesson-header-container .hindi-title {
+    font-size: 1.1rem;
+  }
+  
+  .bilingual-container {
+    gap: 0.25rem;
+  }
+}
+
+/* Language-specific optimizations */
+[lang="hi"] {
+  font-family: var(--font-hindi);
+  font-size: 1.1em;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+[lang="en"] {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+/* Accessibility improvements for Hindi content */
+.hindi-text:focus,
+.hindi-scaffold:focus-within {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Print styles for Hindi content */
+@media print {
+  .hindi-text,
+  [lang="hi"] {
+    font-family: 'Noto Sans Devanagari', serif;
+    color: black !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .hindi-text {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+  }
+  
+  .hindi-scaffold .hindi-explanation {
+    background: transparent;
+    border: 2px solid hsl(var(--primary));
   }
 }

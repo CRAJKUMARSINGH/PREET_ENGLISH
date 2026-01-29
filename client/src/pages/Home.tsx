@@ -1,7 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { cn } from "@/lib/utils";
 import { LessonCard } from "@/components/LessonCard";
-import { StreakCard } from "@/components/StreakCard";
 import { DailyGoalCard } from "@/components/DailyGoalCard";
 import { AchievementBadge } from "@/components/AchievementBadge";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
@@ -10,9 +9,12 @@ import { SaraswatiMascot } from "@/components/SaraswatiMascot";
 import { CertificationCard } from "@/components/CertificationCard";
 import { ResourcesSection } from "@/components/ResourcesSection";
 import { TodaysPractice } from "@/components/TodaysPractice";
-import { AITutor } from "@/components/AITutor";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { HindiStoryCard } from "@/components/HindiStoryCard";
+import { EnhancedStreakCard } from "@/components/gamification/EnhancedStreakCard";
+import { SmartProgressCard } from "@/components/gamification/SmartProgressCard";
+import { EnhancedAITutor } from "@/components/EnhancedAITutor";
+import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLessons } from "@/hooks/use-lessons";
@@ -30,6 +32,8 @@ import {
   ArrowRight,
   Globe,
   Play,
+  Zap,
+  Target,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -191,35 +195,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Dashboard Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-        <StreakCard
+      {/* Enhanced Stats Dashboard Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <EnhancedStreakCard
           currentStreak={effectiveUserStats.currentStreak}
           longestStreak={effectiveUserStats.longestStreak}
           xpPoints={effectiveUserStats.xpPoints}
           level={effectiveUserStats.level}
+          todayCompleted={completedCount > 0}
         />
-        <div className="lg:col-span-2 glass-card rounded-[2rem] p-6 relative overflow-hidden group border-border/50">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-foreground">Course Progress</h3>
-              <p className="text-sm text-muted-foreground">{completedCount} of {totalLessons} lessons</p>
-            </div>
-            <div className="text-4xl font-black text-primary/20">{percentage}%</div>
-          </div>
-          <div className="h-3 bg-secondary rounded-full overflow-hidden">
-            <div className="h-full bg-primary shadow-[0_0_10px_rgba(28,231,131,0.5)] transition-all duration-1000" style={{ width: `${percentage}%` }} />
-          </div>
-
-          <div className="mt-6 flex justify-between items-center">
-            <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Next: Lesson {completedCount + 1}</div>
-            <Link href={`/lesson/${completedCount + 1}`}>
-              <button className="text-xs font-bold text-primary flex items-center gap-1 hover:gap-2 transition-all">
-                Continue <ArrowRight className="h-3 w-3" />
-              </button>
-            </Link>
-          </div>
-        </div>
+        <SmartProgressCard
+          completedLessons={completedCount}
+          totalLessons={totalLessons}
+          weeklyGoal={7}
+          weeklyCompleted={Math.min(completedCount, 7)}
+          estimatedTimeToComplete={totalLessons > 0 ? `${Math.ceil((totalLessons - completedCount) / 7)} weeks` : "0 weeks"}
+          nextRecommendedLesson={
+            lessons && lessons.length > completedCount ? {
+              id: lessons[completedCount]?.id || 1,
+              title: lessons[completedCount]?.title || "Next Lesson",
+              difficulty: lessons[completedCount]?.difficulty || "Beginner"
+            } : undefined
+          }
+        />
         <DailyGoalCard
           lessonsTarget={effectiveDailyGoal.lessonsTarget}
           lessonsCompleted={effectiveDailyGoal.lessonsCompleted}

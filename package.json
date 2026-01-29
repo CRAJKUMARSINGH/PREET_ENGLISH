@@ -70,7 +70,17 @@
     "celebrity:scenarios": "tsx scripts/celebrity-launch-scenarios.ts",
     "celebrity:infrastructure": "tsx scripts/celebrity-content-infrastructure.ts",
     "quality:enhanced": "tsx scripts/run-quality-tests.ts",
-    "test:comprehensive-enhanced": "jest tests/comprehensive-quality-suite.test.ts"
+    "test:comprehensive-enhanced": "jest tests/comprehensive-quality-suite.test.ts",
+    "test:real-world": "tsx scripts/real-world-test-orchestrator.ts",
+    "test:seed-users": "tsx scripts/seed-test-users.ts seed",
+    "test:cleanup-users": "tsx scripts/seed-test-users.ts cleanup",
+    "test:verify-users": "tsx scripts/seed-test-users.ts verify",
+    "test:k6-load": "k6 run tests/load/k6-config.js",
+    "test:chaos-injection": "tsx scripts/chaos-injection-test.ts",
+    "test:playwright-stress": "tsx tests/e2e/playwright-stress-test.ts",
+    "test:docker-up": "docker-compose -f docker-compose.test.yml up -d",
+    "test:docker-down": "docker-compose -f docker-compose.test.yml down -v",
+    "test:rajkumar-suite": "npm run test:real-world"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

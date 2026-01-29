@@ -1,0 +1,11 @@
+node_modules
+dist
+test-results
+coverage
+.git
+.env*
+! .env.docker
+.DS_Store
+*.log
+sqlite.db
+.vscode

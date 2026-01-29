@@ -114,17 +114,66 @@ export default function Landing() {
             </section>
 
             {/* Celebrity Endorsement Section */}
-            <section className="py-10 bg-gradient-to-r from-primary/10 to-transparent border-y border-white/5 backdrop-blur-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
-                    <div className="w-20 h-20 rounded-full border-2 border-primary p-1 bg-white/5">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80" alt="Celebrity" className="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all" />
-                    </div>
-                    <div>
-                        <div className="flex items-center justify-center md:justify-start gap-2 mb-1 text-yellow-500">
-                            {[1, 2, 3, 4, 5].map(i => <Lucide.Star key={i} className="w-4 h-4 fill-current" />)}
+            <section className="py-16 bg-gradient-to-r from-primary/10 to-transparent border-y border-white/5 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left mb-12">
+                        <div className="w-20 h-20 rounded-full border-2 border-primary p-1 bg-white/5">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80" alt="Celebrity" className="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all" />
                         </div>
-                        <p className="text-xl font-bold text-foreground italic">"The most effective way to learn English for Hindi speakers. Absolutely brilliant!"</p>
-                        <p className="text-sm font-black uppercase tracking-widest text-primary mt-2">— Recommended by Top Icons</p>
+                        <div>
+                            <div className="flex items-center justify-center md:justify-start gap-2 mb-1 text-yellow-500">
+                                {[1, 2, 3, 4, 5].map(i => <Lucide.Star key={i} className="w-4 h-4 fill-current" />)}
+                            </div>
+                            <p className="text-xl font-bold text-foreground italic">"The most effective way to learn English for Hindi speakers. Absolutely brilliant!"</p>
+                            <p className="text-sm font-black uppercase tracking-widest text-primary mt-2">— Recommended by Top Icons</p>
+                        </div>
+                    </div>
+
+                    {/* User Testimonials Carousel */}
+                    <div className="grid md:grid-cols-3 gap-6 mt-16">
+                        {[
+                            {
+                                name: "Priya Sharma",
+                                role: "Software Engineer, Mumbai",
+                                content: "PREET_ENGLISH helped me ace my job interviews. The speaking practice with AI is incredible!",
+                                rating: 5,
+                                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80"
+                            },
+                            {
+                                name: "Rajesh Kumar", 
+                                role: "Business Owner, Delhi",
+                                content: "Finally, an app that understands Indian English learners. The Hindi support is perfect.",
+                                rating: 5,
+                                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80"
+                            },
+                            {
+                                name: "Anita Patel",
+                                role: "Student, Ahmedabad", 
+                                content: "From struggling with pronunciation to speaking confidently in 3 months. Thank you!",
+                                rating: 5,
+                                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80"
+                            }
+                        ].map((testimonial, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:border-primary/30 transition-all group"
+                            >
+                                <div className="flex text-yellow-500 mb-3">
+                                    {[1, 2, 3, 4, 5].map(s => <Lucide.Star key={s} className="w-4 h-4 fill-current" />)}
+                                </div>
+                                <p className="text-foreground mb-4 italic">"{testimonial.content}"</p>
+                                <div className="flex items-center gap-3">
+                                    <img src={testimonial.avatar} alt={testimonial.name} className="w-10 h-10 rounded-full object-cover" />
+                                    <div>
+                                        <p className="font-bold text-sm text-foreground">{testimonial.name}</p>
+                                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </section>

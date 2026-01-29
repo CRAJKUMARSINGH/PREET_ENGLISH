@@ -12,6 +12,58 @@ const openai = new OpenAI({
   timeout: 30000,  // 30 seconds
 });
 
+// Enhanced caching for AI responses
+class AIResponseCache {
+  private cache = new Map<string, { response: string; timestamp: number; cost: number }>();
+  private readonly CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours for AI responses
+  
+  getCacheKey(prompt: string, model: string, maxTokens: number): string {
+    return `ai:${model}:${maxTokens}:${Buffer.from(prompt).toString('base64').slice(0, 50)}`;
+  }
+  
+  get(key: string): string | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    
+    if (Date.now() - entry.timestamp > this.CACHE_TTL) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return entry.response;
+  }
+  
+  set(key: string, response: string, cost: number): void {
+    this.cache.set(key, {
+      response,
+      timestamp: Date.now(),
+      cost
+    });
+    
+    // Cleanup old entries if cache gets too large
+    if (this.cache.size > 1000) {
+      const entries = Array.from(this.cache.entries());
+      entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+      
+      // Remove oldest 200 entries
+      for (let i = 0; i < 200; i++) {
+        this.cache.delete(entries[i][0]);
+      }
+    }
+  }
+  
+  getCacheStats() {
+    const entries = Array.from(this.cache.values());
+    return {
+      size: this.cache.size,
+      totalCost: entries.reduce((sum, entry) => sum + entry.cost, 0),
+      oldestEntry: entries.length > 0 ? Math.min(...entries.map(e => e.timestamp)) : null
+    };
+  }
+}
+
+const aiCache = new AIResponseCache();
+
 // Cost tracking interface
 interface UsageStats {
   totalTokens: number;
@@ -42,6 +94,14 @@ export async function generateFeedback(
   maxTokens: number = 500,
   model: 'gpt-4-turbo' | 'gpt-3.5-turbo' = 'gpt-3.5-turbo'
 ): Promise<string> {
+  // Check cache first
+  const cacheKey = aiCache.getCacheKey(prompt, model, maxTokens);
+  const cachedResponse = aiCache.get(cacheKey);
+  if (cachedResponse) {
+    console.log(`Cache hit for user ${userId}, saved API call`);
+    return cachedResponse;
+  }
+
   // Check user's daily quota
   const stats = getUserStats(userId);
   
@@ -64,13 +124,15 @@ export async function generateFeedback(
       messages: [
         {
           role: 'system',
-          content: 'You are Saraswati, a helpful Hindi-English bilingual tutor for PREET_ENGLISH. Provide encouraging, culturally sensitive feedback in both English and Hindi. Keep responses concise and actionable.'
+          content: 'You are Saraswati, a helpful Hindi-English bilingual tutor for PREET_ENGLISH. Provide encouraging, culturally sensitive feedback in both English and Hindi. Keep responses concise and actionable. Use simple English that Hindi speakers can understand easily.'
         },
         { role: 'user', content: prompt }
       ],
       max_tokens: maxTokens,
       temperature: 0.7,
     });
+    
+    const content = response.choices[0]?.message?.content || '';
     
     // Track usage
     const usage = response.usage;
@@ -84,13 +146,16 @@ export async function generateFeedback(
       stats.requestCount += 1;
       usageStats.set(userId, stats);
       
+      // Cache the response
+      aiCache.set(cacheKey, content, cost);
+      
       // Log high-cost requests
       if (cost > 0.10) {
-        console.warn(`High-cost OpenAI request: $${cost.toFixed(4)} for user ${userId}`);
+        console.warn(`High-cost OpenAI request: ${cost.toFixed(4)} for user ${userId}`);
       }
     }
     
-    return response.choices[0]?.message?.content || '';
+    return content;
     
   } catch (error: any) {
     if (error.status === 429) {
@@ -153,6 +218,29 @@ export async function generateStory(
   return generateFeedback(userId, prompt, 400, 'gpt-3.5-turbo');
 }
 
+// Generate conversation practice scenarios
+export async function generateConversationScenario(
+  userId: number,
+  scenario: string,
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+): Promise<string> {
+  const prompt = `
+    Create a realistic English conversation scenario for "${scenario}" at ${difficulty} level.
+    
+    Requirements:
+    1. Include 2-3 people in the conversation
+    2. Use vocabulary appropriate for Hindi speakers learning English
+    3. Include cultural context relevant to India
+    4. Provide Hindi translations for difficult phrases
+    5. Add pronunciation tips for challenging words
+    6. Keep it practical and useful for real-life situations
+    
+    Format: Present as a dialogue with speaker names, followed by key vocabulary and tips.
+  `;
+  
+  return generateFeedback(userId, prompt, 600, 'gpt-3.5-turbo');
+}
+
 // Helper function to get user stats
 function getUserStats(userId: number): UsageStats {
   const existing = usageStats.get(userId);
@@ -179,6 +267,11 @@ export function getAllAIUsage(): Array<{ userId: number } & UsageStats> {
     userId,
     ...stats,
   }));
+}
+
+// Get cache statistics (admin only)
+export function getAICacheStats() {
+  return aiCache.getCacheStats();
 }
 
 // Reset daily quotas (called by cron job)

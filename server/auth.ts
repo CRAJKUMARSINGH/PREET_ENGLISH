@@ -12,6 +12,9 @@ import { CircuitBreaker } from "./middleware/monitoring.js";
 import logger from "./logger.js";
 
 // Production-grade login queue and circuit breaker
+export let chaosEnabled = false;
+export const setChaos = (enabled: boolean) => { chaosEnabled = enabled; logger.warn(`Chaos Mode set to: ${enabled}`); };
+
 class LoginQueue {
     private queue: Array<{ resolve: Function; reject: Function; operation: Function }> = [];
     private processing = false;
@@ -97,7 +100,14 @@ async function authenticateUser(username: string, password: string): Promise<Use
     return await loginQueue.enqueue(async () => {
         return await loginCircuitBreaker.execute(async () => {
             const startTime = Date.now();
-            
+
+            // CHAOS INJECTION HOOK (For Local Testing without Toxiproxy)
+            if (chaosEnabled) {
+                logger.warn(`[CHAOS] Injecting 5000ms Latency for ${username}`);
+                await new Promise(resolve => setTimeout(resolve, 5000)); // 5s delay
+                throw new Error("Simulated Database Timeout - Circuit Breaker Test");
+            }
+
             try {
                 const user = await storage.getUserByUsername(username);
                 if (!user) {
@@ -107,7 +117,7 @@ async function authenticateUser(username: string, password: string): Promise<Use
 
                 const isValidPassword = await comparePasswords(password, user.password);
                 const duration = Date.now() - startTime;
-                
+
                 if (isValidPassword) {
                     logger.info(`Login successful for ${username} (${duration}ms)`);
                     return user;
@@ -211,10 +221,10 @@ export function setupAuth(app: Express) {
     app.post("/api/login", async (req, res, next) => {
         const startTime = Date.now();
         const { username, password } = req.body;
-        
+
         // Input validation
         if (!username || !password) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Username and password are required",
                 queueStatus: loginQueue.getQueueStatus()
             });
@@ -223,7 +233,7 @@ export function setupAuth(app: Express) {
         // Check circuit breaker status
         const circuitState = loginCircuitBreaker.getState();
         if (circuitState === 'OPEN') {
-            return res.status(503).json({ 
+            return res.status(503).json({
                 message: "Login service temporarily unavailable. Please try again in 30 seconds.",
                 retryAfter: 30,
                 queueStatus: loginQueue.getQueueStatus()
@@ -232,26 +242,26 @@ export function setupAuth(app: Express) {
 
         passport.authenticate("local", (err: any, user: User, info: any) => {
             const duration = Date.now() - startTime;
-            
+
             if (err) {
                 logger.error(`Login error for ${username} (${duration}ms):`, err);
                 return next(err);
             }
-            
+
             if (!user) {
                 logger.info(`Login failed for ${username} (${duration}ms): ${info?.message || 'Invalid credentials'}`);
-                return res.status(401).json({ 
+                return res.status(401).json({
                     message: info?.message || "Invalid username or password",
                     queueStatus: loginQueue.getQueueStatus()
                 });
             }
-            
+
             req.logIn(user, (err) => {
                 if (err) {
                     logger.error(`Session creation error for ${username} (${duration}ms):`, err);
                     return next(err);
                 }
-                
+
                 logger.info(`Login completed for ${username} (${duration}ms)`);
                 return res.json({
                     ...user,

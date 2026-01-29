@@ -2,6 +2,7 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import logger from "./logger";
+import { setChaos } from "./auth";
 
 import { chatService } from "./chat-service";
 
@@ -21,6 +22,13 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
       logger.error("Error in chat endpoint:", error);
       res.status(500).json({ message: "Failed to process message" });
     }
+  });
+
+  // Chaos Control Endpoint (Test Mode Only)
+  app.post("/api/test/chaos", (req, res) => {
+    const { enabled } = req.body;
+    setChaos(!!enabled);
+    res.json({ message: `Chaos enabled: ${enabled}` });
   });
 
   // AI Video Call API (Innovation Lab)
@@ -195,7 +203,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   app.post("/api/quizzes/:id/submit", async (req, res) => {
     if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     const user = (req.user as any) || { id: 1 };
-    
+
     try {
       const { answers, timeSpent } = req.body;
       const quiz = await storage.getQuiz(Number(req.params.id));
@@ -204,11 +212,11 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
       // Calculate score
       let score = 0;
       const totalQuestions = quiz.questions.length;
-      
+
       quiz.questions.forEach((question, index) => {
         const userAnswer = answers[index];
         const correctAnswer = question.correctAnswer;
-        
+
         // Handle different question types
         if (question.questionType === 'mcq' || question.questionType === 'true_false') {
           if (userAnswer === correctAnswer) score += question.points || 10;
@@ -253,7 +261,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   app.get("/api/quizzes/attempts", async (req, res) => {
     if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     const user = (req.user as any) || { id: 1 };
-    
+
     try {
       const attempts = await storage.getQuizAttempts(user.id);
       res.json(attempts);

@@ -1,0 +1,67 @@
+# Multi-stage Dockerfile for Real-World Load Testing
+# Optimized for test environment with monitoring and debugging capabilities
+
+FROM node:18-alpine AS base
+
+# Install system dependencies for testing
+RUN apk add --no-cache \
+    curl \
+    wget \
+    bash \
+    postgresql-client \
+    redis \
+    python3 \
+    py3-pip \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Set environment variables for Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig*.json ./
+
+# Install dependencies with dev dependencies for testing
+RUN npm ci --include=dev
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Create test user and directories
+RUN addgroup -g 1001 -S testuser && \
+    adduser -S testuser -u 1001 -G testuser && \
+    mkdir -p /app/logs /app/test-results /app/screenshots && \
+    chown -R testuser:testuser /app
+
+# Install additional test tools
+RUN npm install -g k6 artillery
+
+# Health check script
+COPY scripts/docker-healthcheck.sh /usr/local/bin/healthcheck
+RUN chmod +x /usr/local/bin/healthcheck
+
+# Test initialization script
+COPY scripts/test-init.sh /usr/local/bin/test-init
+RUN chmod +x /usr/local/bin/test-init
+
+USER testuser
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD /usr/local/bin/healthcheck
+
+# Default command runs the application with test configuration
+CMD ["/usr/local/bin/test-init"]

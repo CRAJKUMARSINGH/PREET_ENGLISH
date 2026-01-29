@@ -8,7 +8,7 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User } from "../shared/schema";
-import { CircuitBreaker } from "./middleware/monitoring.js";
+import { CircuitBreaker } from "./middleware/monitoring";
 import logger from "./logger.js";
 
 // Production-grade login queue and circuit breaker

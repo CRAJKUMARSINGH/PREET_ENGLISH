@@ -3,10 +3,70 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import logger from "./logger";
 import { setChaos } from "./auth";
+import { checkAIServiceHealth } from "./services/openai";
 
 import { chatService } from "./chat-service";
 
 export async function registerRoutes(_httpServer: Server, app: Express): Promise<void> {
+  // Health Check Endpoints
+  app.get("/api/health", (req, res) => {
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      version: process.env.npm_package_version || '1.0.0',
+      environment: process.env.NODE_ENV || 'development',
+      database: process.env.DATABASE_URL ? 'configured' : 'missing',
+      openai: process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'fallback-mode' ? 'configured' : 'fallback-mode',
+      session: process.env.SESSION_SECRET ? 'configured' : 'missing'
+    });
+  });
+
+  app.get("/api/ai/health", async (req, res) => {
+    try {
+      const health = await checkAIServiceHealth();
+      res.json(health);
+    } catch (error: any) {
+      res.status(500).json({
+        status: 'error',
+        message: error.message || 'Unknown error',
+        fallbackMode: true
+      });
+    }
+  });
+
+  // System Status Endpoint (for monitoring)
+  app.get("/api/status", async (req, res) => {
+    try {
+      // Test database connection
+      const dbTest = await storage.getUser(1).catch(() => null);
+      
+      // Get AI service status
+      const aiHealth = await checkAIServiceHealth();
+      
+      res.json({
+        status: 'operational',
+        services: {
+          database: dbTest !== undefined ? 'healthy' : 'error',
+          ai: aiHealth.status,
+          server: 'healthy'
+        },
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        environment: {
+          node: process.version,
+          platform: process.platform,
+          env: process.env.NODE_ENV
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        status: 'degraded',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
   // AI Chat API
   app.post("/api/chat", async (req, res) => {
     // Optional: Check auth

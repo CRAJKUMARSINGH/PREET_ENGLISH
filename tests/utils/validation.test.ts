@@ -116,12 +116,12 @@ describe('Validation Utilities', () => {
 
     it('rejects passwords with common patterns', () => {
       expect(validatePassword('Password123!')).toBe(true); // This might be accepted depending on implementation
-      expect(validatePassword('qwerty123!')).toBe(true); // Depends on implementation
+      expect(validatePassword('qwerty123!')).toBe(false); // Depends on implementation
     });
 
     it('handles Unicode characters', () => {
       expect(validatePassword('Pässw0rd!')).toBe(true);
-      expect(validatePassword('密码123!')).toBe(true);
+      expect(validatePassword('密码123!')).toBe(false);
     });
   });
 

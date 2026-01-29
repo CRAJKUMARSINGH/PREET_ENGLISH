@@ -4,6 +4,12 @@ const config = {
   verbose: true,
   roots: ['<rootDir>/tests'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  
+  // Fix worker hanging issues
+  maxWorkers: 1, // Force single worker to prevent hanging
+  forceExit: true, // Force exit after tests complete
+  detectOpenHandles: false, // Disable for now to prevent hanging
+  
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/client/src/$1',
     '^@shared/(.*)$': '<rootDir>/shared/$1',
@@ -43,13 +49,13 @@ const config = {
   ],
   coverageThreshold: {
     global: {
-      branches: 60, // Reduced for now
+      branches: 60,
       functions: 60,
       lines: 60,
       statements: 60,
     },
   },
-  testTimeout: 30000,
+  testTimeout: 15000, // Reduced timeout
   preset: 'ts-jest',
   globals: {
     'ts-jest': {
@@ -58,6 +64,16 @@ const config = {
         module: 'commonjs',
       },
     },
+  },
+  
+  // Additional cleanup configuration
+  clearMocks: true,
+  restoreMocks: true,
+  resetMocks: true,
+  
+  // Environment cleanup
+  testEnvironmentOptions: {
+    url: 'http://localhost:3000',
   },
 };
 

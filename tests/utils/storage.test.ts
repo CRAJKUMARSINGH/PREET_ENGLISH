@@ -1,19 +1,77 @@
 import { StorageManager } from '@/utils/storage';
 
+// Mock localStorage and sessionStorage for this test file
+const mockLocalStorage = (() => {
+  let store: { [key: string]: string } = {};
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
+    key: (index: number) => {
+      const keys = Object.keys(store);
+      return keys[index] || null;
+    }
+  };
+})();
+
+const mockSessionStorage = (() => {
+  let store: { [key: string]: string } = {};
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
+    key: (index: number) => {
+      const keys = Object.keys(store);
+      return keys[index] || null;
+    }
+  };
+})();
+
+// Override global storage objects
+Object.defineProperty(global, 'localStorage', {
+  value: mockLocalStorage,
+  writable: true
+});
+
+Object.defineProperty(global, 'sessionStorage', {
+  value: mockSessionStorage,
+  writable: true
+});
+
 describe('Storage Manager Utilities', () => {
   let storageManager: StorageManager;
 
   beforeEach(() => {
     storageManager = new StorageManager();
     // Clear storage before each test
-    localStorage.clear();
-    sessionStorage.clear();
+    mockLocalStorage.clear();
+    mockSessionStorage.clear();
   });
 
   afterEach(() => {
     // Clean up after each test
-    localStorage.clear();
-    sessionStorage.clear();
+    mockLocalStorage.clear();
+    mockSessionStorage.clear();
   });
 
   describe('LocalStorage Operations', () => {

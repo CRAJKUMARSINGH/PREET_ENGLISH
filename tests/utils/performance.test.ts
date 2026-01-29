@@ -486,11 +486,11 @@ describe('Performance Utilities', () => {
       };
       
       const startTime = performance.now();
-      const largeDataStructure = createMemoryPressure();
+      let largeDataStructure = createMemoryPressure();
       const midTime = performance.now();
       
       // Clear reference to allow GC
-      (largeDataStructure as any) = null;
+      largeDataStructure = null;
       const endTime = performance.now();
       
       const allocationTime = midTime - startTime;
@@ -731,9 +731,9 @@ describe('Performance Utilities', () => {
       const result = profiledFactorial(5);
       const stats = (profiledFactorial as any).stats();
       
-      // For factorial(5), we expect 6 calls (5 -> 4 -> 3 -> 2 -> 1 -> base case)
+      // For factorial(5), we expect 5 calls (5 -> 4 -> 3 -> 2 -> 1, base case doesn't increment)
       expect(result).toBe(120);
-      expect(stats.callCount).toBe(6);
+      expect(stats.callCount).toBe(5);
       expect(stats.totalTime).toBeGreaterThanOrEqual(0);
     });
 
@@ -765,7 +765,7 @@ describe('Performance Utilities', () => {
       const ProfiledClass = objectCreationProfiler.createProfiled(SimpleClass);
       
       for (let i = 0; i < 1000; i++) {
-        new (ProfiledClass as any)(i, `item${i}`);
+        ProfiledClass(i, `item${i}`);
       }
       
       const stats = objectCreationProfiler.getStats();

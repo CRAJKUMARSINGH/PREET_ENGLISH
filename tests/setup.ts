@@ -23,8 +23,8 @@ global.SpeechSynthesisUtterance = jest.fn().mockImplementation((text) => ({
   onboundary: null,
 }));
 
-// Mock localStorage
-const localStorageMock = (() => {
+// Mock localStorage with proper cleanup
+const createStorageMock = () => {
   let store: { [key: string]: string } = {};
   return {
     getItem: (key: string) => store[key] || null,
@@ -36,33 +36,39 @@ const localStorageMock = (() => {
     },
     clear: () => {
       store = {};
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
+    key: (index: number) => {
+      const keys = Object.keys(store);
+      return keys[index] || null;
     }
   };
-})();
+};
+
+const localStorageMock = createStorageMock();
+const sessionStorageMock = createStorageMock();
 
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+  value: localStorageMock,
+  writable: true
 });
 
-// Mock sessionStorage
-const sessionStorageMock = (() => {
-  let store: { [key: string]: string } = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    }
-  };
-})();
-
 Object.defineProperty(window, 'sessionStorage', {
-  value: sessionStorageMock
+  value: sessionStorageMock,
+  writable: true
+});
+
+// Also define on global for Node.js environment
+Object.defineProperty(global, 'localStorage', {
+  value: localStorageMock,
+  writable: true
+});
+
+Object.defineProperty(global, 'sessionStorage', {
+  value: sessionStorageMock,
+  writable: true
 });
 
 // Mock window.speechSynthesis
@@ -145,8 +151,44 @@ if (!global.structuredClone) {
 }
 
 // Suppress console errors during tests for cleaner output
+const originalError = console.error;
+const originalWarn = console.warn;
+
 console.error = jest.fn();
 console.warn = jest.fn();
+
+// Global cleanup after each test
+afterEach(() => {
+  // Clear all mocks
+  jest.clearAllMocks();
+  
+  // Clear storage
+  localStorageMock.clear();
+  sessionStorageMock.clear();
+  
+  // Clear any timers
+  jest.clearAllTimers();
+  
+  // Reset fetch mock
+  if (global.fetch && typeof global.fetch.mockClear === 'function') {
+    global.fetch.mockClear();
+  }
+});
+
+// Global cleanup after all tests
+afterAll(() => {
+  // Restore console methods
+  console.error = originalError;
+  console.warn = originalWarn;
+  
+  // Clear all timers
+  jest.clearAllTimers();
+  
+  // Force garbage collection if available
+  if (global.gc) {
+    global.gc();
+  }
+});
 
 // Add custom matchers
 expect.extend({

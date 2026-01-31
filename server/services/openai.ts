@@ -11,6 +11,7 @@ function initializeOpenAI() {
   if (!apiKey || apiKey === 'fallback-mode' || apiKey.length < 10) {
     console.warn('⚠️  OpenAI API key not configured - running in FALLBACK MODE');
     console.warn('   AI features will use pre-generated content');
+    console.warn('   Get API key from: https://platform.openai.com/api-keys');
     isAIConfigured = false;
     return;
   }
@@ -23,9 +24,25 @@ function initializeOpenAI() {
     });
     isAIConfigured = true;
     console.log('✅ OpenAI service initialized successfully');
+    
+    // Test the connection
+    testOpenAIConnection();
   } catch (error) {
     console.error('❌ Failed to initialize OpenAI service:', error);
     console.warn('   Falling back to pre-generated content');
+    isAIConfigured = false;
+  }
+}
+
+// Test OpenAI connection
+async function testOpenAIConnection() {
+  if (!openai || !isAIConfigured) return;
+  
+  try {
+    await openai.models.list();
+    console.log('✅ OpenAI connection test successful');
+  } catch (error) {
+    console.error('❌ OpenAI connection test failed:', error);
     isAIConfigured = false;
   }
 }

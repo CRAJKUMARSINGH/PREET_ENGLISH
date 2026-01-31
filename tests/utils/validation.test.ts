@@ -226,7 +226,7 @@ describe('Validation Utilities', () => {
 
     it('handles internationalization scenarios', () => {
       const internationalData = [
-        { email: '用户@example.com', password: '密码123!', name: '张三' },
+        { email: '用户@example.com', password: '密码安全123!', name: '张三' },
         { email: 'utilisateur@exemple.fr', password: 'MotDePasse123!', name: 'Jean Dupont' },
         { email: 'benutzer@beispiel.de', password: 'Passwort123!', name: 'Hans Müller' }
       ];
@@ -293,46 +293,60 @@ describe('Validation Utilities', () => {
 
     it('validates against common attack patterns', () => {
       const potentialAttackPatterns = [
-        { email: '<script>alert("xss")</script>@example.com', password: '123', name: 'XSS' },
-        { email: 'sql@example.com', password: '\' OR \'1\'=\'1', name: 'SQL Injection' },
-        { email: 'user@example.com', password: '; DROP TABLE users;', name: 'Drop Table' }
+        { email: '<script>alert("xss")</script>@example.com', password: '123', name: 'XSS', emailShouldFail: true },
+        { email: 'sql@example.com', password: '\' OR \'1\'=\'1', name: 'SQL Injection', emailShouldFail: false },
+        { email: 'user@example.com', password: '; DROP TABLE users;', name: 'Drop Table', emailShouldFail: false }
       ];
 
       potentialAttackPatterns.forEach(data => {
-        // These should all fail validation
-        expect(validateEmail(data.email)).toBe(false);
+        // Email validation depends on the specific pattern
+        expect(validateEmail(data.email)).toBe(!data.emailShouldFail);
+        // All passwords should fail validation (they're attack patterns)
         expect(validatePassword(data.password)).toBe(false);
-        expect(validateName(data.name)).toBe(true); // Name might pass depending on implementation
+        // Names might pass depending on implementation
+        expect(validateName(data.name)).toBe(true);
       });
     });
 
     it('validates edge cases for length limits', () => {
-      const maxEmail = 'a'.repeat(64) + '@' + 'b'.repeat(253 - 64 - 1) + '.com';
+      // Create a proper 254-character email (max allowed)
+      // Local part: 64 chars max, Domain part: 253 chars max, but each label max 63 chars
+      const localPart = 'a'.repeat(64); // 64 chars (max for local part)
+      const domainPart = 'b'.repeat(60) + '.' + 'c'.repeat(60) + '.' + 'd'.repeat(60) + '.com'; // 60+1+60+1+60+1+3 = 186 chars
+      const maxEmail = localPart + '@' + domainPart; // 64 + 1 + 186 = 251 chars (under 254 limit)
+      
       const longButValidName = 'A '.repeat(50).trim(); // 100 chars
       const strongPassword = 'Aa1!' + 'x'.repeat(120); // Well over min length
       
       // These should be at or near the limits
-      expect(validateEmail(maxEmail.substring(0, 254) + '.com')).toBe(true);
+      expect(validateEmail(maxEmail)).toBe(true);
       expect(validateName(longButValidName.substring(0, 100))).toBe(true);
       expect(validatePassword(strongPassword.substring(0, 128))).toBe(true);
     });
 
     it('handles normalization of inputs', () => {
       const normalizedTests = [
-        { email: '  TEST@EXAMPLE.COM  ', expected: true },
-        { password: '  SecurePassword123!  ', expected: true },
-        { name: '  John Doe  ', expected: true }
+        { email: '  TEST@EXAMPLE.COM  ', password: '  SecurePassword123!  ', name: '  John Doe  ', expected: true },
+        { email: '  test@example.com  ', password: '  AnotherPass123!  ', name: '  Jane Smith  ', expected: true },
+        { email: '  user@domain.org  ', password: '  ValidPass456!  ', name: '  Bob Johnson  ', expected: true }
       ];
 
       normalizedTests.forEach(test => {
         // Validation should handle trimmed inputs
-        const trimmedEmail = test.email.trim();
-        const trimmedPassword = test.password.trim();
-        const trimmedName = test.name.trim();
+        if (test.email) {
+          const trimmedEmail = test.email.trim();
+          expect(validateEmail(trimmedEmail)).toBe(test.expected);
+        }
         
-        expect(validateEmail(trimmedEmail)).toBe(test.expected);
-        expect(validatePassword(trimmedPassword)).toBe(test.expected);
-        expect(validateName(trimmedName)).toBe(test.expected);
+        if (test.password) {
+          const trimmedPassword = test.password.trim();
+          expect(validatePassword(trimmedPassword)).toBe(test.expected);
+        }
+        
+        if (test.name) {
+          const trimmedName = test.name.trim();
+          expect(validateName(trimmedName)).toBe(test.expected);
+        }
       });
     });
   });

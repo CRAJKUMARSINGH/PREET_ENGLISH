@@ -1,0 +1,56 @@
+﻿client/src/components/AnalyticsDashboard.tsx(26,28): error TS2339: Property 'getSummary' does not exist on type '{ init: () => void; track: (eventName: string, properties?: Record<string, any>) => void; getLiveStats: () => any; resetDemoStats: () => { activeUsers: number; lessonsCompleted: number; totalXPEarned: number; aiChatMessages: number; videoMinutesWatched: number; }; }'.
+client/src/components/HindiScaffold.tsx(10,28): error TS2865: Import 'BilingualText' conflicts with local value, so must be declared with a type-only import when 'isolatedModules' is enabled.
+client/src/components/LeaderboardCard.tsx(51,14): error TS2304: Cannot find name 'Lucide'.
+client/src/components/PronunciationPractice.tsx(6,10): error TS2305: Module '"@/lib/speechRecognition"' has no exported member 'speechRecognition'.
+client/src/hooks/use-auth.tsx(21,35): error TS2344: Type 'string' does not satisfy the constraint 'never'.
+  Type 'string' is not assignable to type 'never'.
+client/src/hooks/use-auth.tsx(152,65): error TS2339: Property 'username' does not exist on type '{}'.
+client/src/hooks/use-auth.tsx(191,47): error TS2339: Property 'username' does not exist on type '{}'.
+client/src/lib/speechRecognition.ts(20,24): error TS2304: Cannot find name 'SpeechRecognition'.
+client/src/lib/speechRecognition.ts(53,41): error TS2552: Cannot find name 'SpeechRecognitionEvent'. Did you mean 'SpeechRecognitionService'?
+client/src/lib/speechRecognition.ts(66,40): error TS2552: Cannot find name 'SpeechRecognitionErrorEvent'. Did you mean 'SpeechRecognitionService'?
+client/src/pages/LessonView.tsx(22,39): error TS2339: Property 'id' does not exist on type 'never'.
+client/src/pages/LessonView.tsx(429,32): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/LessonView.tsx(437,27): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/LessonView.tsx(439,43): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/StoryView.tsx(19,13): error TS2339: Property 'id' does not exist on type 'StringRouteParams<undefined>'.
+shared/schema-postgres.ts(445,66): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(445,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(446,70): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(446,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(447,77): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(447,87): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(448,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(448,100): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(449,73): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(449,83): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(450,68): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(450,78): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(451,82): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(451,92): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(452,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(452,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(453,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(453,94): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(454,75): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(454,85): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(455,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(455,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(456,88): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(457,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(458,79): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(459,74): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(459,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(460,89): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(461,93): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(461,103): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(462,69): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(462,79): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(463,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(463,86): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(464,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(464,94): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(465,81): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(465,91): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(466,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(466,94): error TS2322: Type 'boolean' is not assignable to type 'never'.

@@ -12,7 +12,9 @@ const databaseUrl = process.env.DATABASE_URL;
 // Fallback for development if no DATABASE_URL is set
 const defaultSqliteUrl = "file:sqlite.db";
 
-let db: any;
+// Define flexible DB type helper
+type DrizzleDB = ReturnType<typeof drizzleSqlite> | ReturnType<typeof drizzlePostgres>;
+let db: DrizzleDB;
 
 if (databaseUrl && databaseUrl.startsWith("postgres")) {
   // PostgreSQL for production (Vercel/Neon/Supabase)

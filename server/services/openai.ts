@@ -7,7 +7,7 @@ let isAIConfigured = false;
 // Initialize OpenAI with graceful fallback
 function initializeOpenAI() {
   const apiKey = process.env.OPENAI_API_KEY;
-  
+
   if (!apiKey || apiKey === 'fallback-mode' || apiKey.length < 10) {
     console.warn('⚠️  OpenAI API key not configured - running in FALLBACK MODE');
     console.warn('   AI features will use pre-generated content');
@@ -24,7 +24,7 @@ function initializeOpenAI() {
     });
     isAIConfigured = true;
     console.log('✅ OpenAI service initialized successfully');
-    
+
     // Test the connection
     testOpenAIConnection();
   } catch (error) {
@@ -37,7 +37,7 @@ function initializeOpenAI() {
 // Test OpenAI connection
 async function testOpenAIConnection() {
   if (!openai || !isAIConfigured) return;
-  
+
   try {
     await openai.models.list();
     console.log('✅ OpenAI connection test successful');
@@ -57,30 +57,30 @@ const FALLBACK_CONTENT = {
     "Good pronunciation! Try to speak a bit slower for clarity. Remember: each syllable should be clear. बहुत अच्छा! थोड़ा धीरे बोलने की कोशिश करें।",
     "Excellent! Your pronunciation is improving. Keep practicing daily for best results. बेहतरीन! आपका उच्चारण सुधर रहा है।"
   ],
-  
+
   stories: {
     beginner: [
       "Raj goes to the market every morning. He buys fresh vegetables and fruits. The shopkeeper is very friendly. Raj practices English while shopping. 'How much for these apples?' he asks. The shopkeeper smiles and answers in English. राज रोज़ सुबह बाज़ार जाता है और अंग्रेजी का अभ्यास करता है।",
-      
+
       "Priya loves reading books. She has a small library at home. Every evening, she reads English stories. Her favorite book is about friendship. Reading helps her learn new words daily. पिया को किताबें पढ़ना पसंद है और वह रोज़ नए शब्द सीखती है।"
     ],
-    
+
     intermediate: [
       "The annual school festival was approaching. Students were preparing various cultural programs. Amit decided to participate in the English debate competition. He practiced speaking confidently in front of the mirror. His topic was 'Technology in Education'. स्कूल का वार्षिक उत्सव आ रहा था और अमित अंग्रेजी वाद-विवाद प्रतियोगिता में भाग लेने की तैयारी कर रहा था।",
-      
+
       "Maya started her new job at an international company. On her first day, she had to introduce herself in English to her colleagues. She was nervous but remembered her practice sessions. 'Hello everyone, I'm Maya and I'm excited to work with this team,' she said confidently. माया ने अंतर्राष्ट्रीय कंपनी में नई नौकरी शुरू की और आत्मविश्वास से अपना परिचय दिया।"
     ],
-    
+
     advanced: [
       "The entrepreneurship summit brought together innovators from across India. Speakers discussed the challenges of building startups in tier-2 cities. The keynote emphasized the importance of English communication in global markets. Participants engaged in networking sessions, sharing ideas about sustainable business models. उद्यमिता शिखर सम्मेलन में भारत भर के नवाचारियों ने भाग लिया और वैश्विक बाज़ारों में अंग्रेजी संचार के महत्व पर चर्चा की।"
     ]
   },
-  
+
   conversation_scenarios: {
     'restaurant': "Waiter: Good evening! Welcome to our restaurant. Customer: Thank you. Could I see the menu, please? Waiter: Of course! Here's our menu. What would you like to drink? Customer: I'll have a mango lassi, please. Key phrases: 'Could I see...', 'I'll have...', 'Thank you'. वेटर और ग्राहक के बीच बातचीत।",
-    
+
     'shopping': "Shopkeeper: How can I help you today? Customer: I'm looking for a cotton shirt. Shopkeeper: What size do you need? Customer: Medium size, please. Do you have it in blue? Key phrases: 'I'm looking for...', 'What size...', 'Do you have...'. खरीदारी के दौरान बातचीत।",
-    
+
     'office': "Colleague: Good morning! How was your weekend? You: It was great! I visited my family. How about you? Colleague: I went to a movie with friends. You: That sounds fun! Which movie did you watch? Key phrases: 'How was...', 'How about you...', 'That sounds...'. ऑफिस में सहकर्मियों के साथ बातचीत।"
   }
 };
@@ -94,42 +94,42 @@ function getRandomFallback<T>(array: T[]): T {
 class AIResponseCache {
   private cache = new Map<string, { response: string; timestamp: number; cost: number }>();
   private readonly CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours for AI responses
-  
+
   getCacheKey(prompt: string, model: string, maxTokens: number): string {
     return `ai:${model}:${maxTokens}:${Buffer.from(prompt).toString('base64').slice(0, 50)}`;
   }
-  
+
   get(key: string): string | null {
     const entry = this.cache.get(key);
     if (!entry) return null;
-    
+
     if (Date.now() - entry.timestamp > this.CACHE_TTL) {
       this.cache.delete(key);
       return null;
     }
-    
+
     return entry.response;
   }
-  
+
   set(key: string, response: string, cost: number): void {
     this.cache.set(key, {
       response,
       timestamp: Date.now(),
       cost
     });
-    
+
     // Cleanup old entries if cache gets too large
     if (this.cache.size > 1000) {
       const entries = Array.from(this.cache.entries());
       entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
+
       // Remove oldest 200 entries
       for (let i = 0; i < 200; i++) {
         this.cache.delete(entries[i][0]);
       }
     }
   }
-  
+
   getCacheStats() {
     const entries = Array.from(this.cache.values());
     return {
@@ -188,23 +188,23 @@ export async function generateFeedback(
 
   // Check user's daily quota
   const stats = getUserStats(userId);
-  
+
   // Enforce daily limits
   if (stats.totalTokens > DAILY_LIMITS.TOKEN_LIMIT) {
     console.log(`Daily limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily AI limit reached)';
   }
-  
+
   if (stats.requestCount > DAILY_LIMITS.REQUEST_LIMIT) {
     console.log(`Request limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily request limit reached)';
   }
-  
+
   if (stats.estimatedCost > DAILY_LIMITS.COST_LIMIT) {
     console.log(`Cost limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily cost limit reached)';
   }
-  
+
   try {
     const response = await openai.chat.completions.create({
       model,
@@ -218,38 +218,38 @@ export async function generateFeedback(
       max_tokens: maxTokens,
       temperature: 0.7,
     });
-    
+
     const content = response.choices[0]?.message?.content || '';
-    
+
     // Track usage
     const usage = response.usage;
     if (usage) {
-      const cost = 
+      const cost =
         (usage.prompt_tokens / 1000) * PRICING[model].input +
         (usage.completion_tokens / 1000) * PRICING[model].output;
-      
+
       stats.totalTokens += usage.total_tokens;
       stats.estimatedCost += cost;
       stats.requestCount += 1;
       usageStats.set(userId, stats);
-      
+
       // Cache the response
       aiCache.set(cacheKey, content, cost);
-      
+
       // Log high-cost requests
       if (cost > 0.10) {
         console.warn(`High-cost OpenAI request: ${cost.toFixed(4)} for user ${userId}`);
       }
     }
-    
+
     return content;
-    
+
   } catch (error: any) {
     console.error(`OpenAI API error for user ${userId}:`, error.message);
-    
+
     // Return fallback content on any error
     let fallbackMessage = getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback);
-    
+
     if (error.status === 429) {
       fallbackMessage += ' (AI service busy - using backup content)';
     } else if (error.status === 401) {
@@ -258,7 +258,7 @@ export async function generateFeedback(
     } else {
       fallbackMessage += ' (AI service temporarily unavailable)';
     }
-    
+
     return fallbackMessage;
   }
 }
@@ -277,7 +277,7 @@ export async function generatePronunciationFeedback(
     Focus on specific sounds that need improvement and give practical tips.
     Keep it under 100 words total.
   `;
-  
+
   return generateFeedback(userId, prompt, 200, 'gpt-3.5-turbo');
 }
 
@@ -300,7 +300,7 @@ export async function generateStory(
     medium: '100-200 words',
     long: '200-300 words'
   };
-  
+
   const prompt = `
     Create a ${difficulty} level English story (${lengthMap[length]}) ${topic ? `about ${topic}` : ''}.
     Include:
@@ -311,7 +311,7 @@ export async function generateStory(
     
     Make it engaging and educational for PREET_ENGLISH learners.
   `;
-  
+
   try {
     return await generateFeedback(userId, prompt, 400, 'gpt-3.5-turbo');
   } catch (error) {
@@ -331,8 +331,8 @@ export async function generateConversationScenario(
   if (!isAIConfigured || !openai) {
     console.log(`Fallback mode: returning pre-generated conversation for user ${userId}`);
     const fallbackKey = scenario.toLowerCase();
-    return FALLBACK_CONTENT.conversation_scenarios[fallbackKey] || 
-           FALLBACK_CONTENT.conversation_scenarios['restaurant'];
+    return FALLBACK_CONTENT.conversation_scenarios[fallbackKey] ||
+      FALLBACK_CONTENT.conversation_scenarios['restaurant'];
   }
 
   const prompt = `
@@ -348,15 +348,15 @@ export async function generateConversationScenario(
     
     Format: Present as a dialogue with speaker names, followed by key vocabulary and tips.
   `;
-  
+
   try {
     return await generateFeedback(userId, prompt, 600, 'gpt-3.5-turbo');
   } catch (error) {
     console.log(`Conversation generation failed for user ${userId}, using fallback`);
     const fallbackKey = scenario.toLowerCase();
-    return (FALLBACK_CONTENT.conversation_scenarios[fallbackKey] || 
-            FALLBACK_CONTENT.conversation_scenarios['restaurant']) + 
-           ' (From our conversation library)';
+    return (FALLBACK_CONTENT.conversation_scenarios[fallbackKey] ||
+      FALLBACK_CONTENT.conversation_scenarios['restaurant']) +
+      ' (From our conversation library)';
   }
 }
 
@@ -404,14 +404,14 @@ export async function checkAIServiceHealth(): Promise<{
 function getUserStats(userId: number): UsageStats {
   const existing = usageStats.get(userId);
   const now = new Date();
-  
+
   // Reset if it's a new day
   if (existing && existing.lastReset.toDateString() !== now.toDateString()) {
     const reset = { totalTokens: 0, estimatedCost: 0, requestCount: 0, lastReset: now };
     usageStats.set(userId, reset);
     return reset;
   }
-  
+
   return existing || { totalTokens: 0, estimatedCost: 0, requestCount: 0, lastReset: now };
 }
 
@@ -440,6 +440,21 @@ export function resetDailyQuotas(): void {
 }
 
 // Set up daily reset at midnight
-setInterval(() => {
-  resetDailyQuotas();
-}, 24 * 60 * 60 * 1000);
+// Set up daily reset at midnight
+let resetInterval: NodeJS.Timeout | null = null;
+
+export function initDailyQuotaReset() {
+  if (resetInterval) return;
+
+  resetInterval = setInterval(() => {
+    resetDailyQuotas();
+  }, 24 * 60 * 60 * 1000);
+
+  // Clean up on process exit
+  process.on('SIGTERM', () => {
+    if (resetInterval) clearInterval(resetInterval);
+  });
+}
+
+// Initialize quota reset
+initDailyQuotaReset();

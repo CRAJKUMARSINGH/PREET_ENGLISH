@@ -6,10 +6,14 @@ import rateLimit from "express-rate-limit";
 import logger from "./logger";
 import { globalErrorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { HealthMonitor, performanceMonitor } from "./middleware/monitoring.js";
+import { chaosMiddleware } from "./middleware/chaos";
 import { db } from "./db.js";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Chaos Middleware (First, to affect everything)
+app.use(chaosMiddleware);
 
 // Initialize health monitoring
 const healthMonitor = new HealthMonitor();
@@ -51,14 +55,15 @@ app.use((req, res, next) => {
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === "test" || process.env.TEST_LOAD_PATTERN ? 50000 : 100, // Limit each IP to 100 requests per windowMs (50000 for tests)
+  max: process.env.NODE_ENV === "test" || process.env.TEST_LOAD_PATTERN || process.env.STRESS_TEST ? 50000 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: "Too many requests, please try again later." },
 });
 
 // Apply rate limiter to all API routes
-app.use("/api/", limiter);
+// Rate limiting disabled for Stress Test
+// app.use("/api/", limiter);
 
 // Security headers
 app.use((req, res, next) => {
@@ -75,7 +80,7 @@ setupAuth(app);
 app.get("/api/health", async (req, res) => {
   const healthResults = await healthMonitor.runAllChecks();
   const isHealthy = Object.values(healthResults).every(result => result.status);
-  
+
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? "healthy" : "unhealthy",
     timestamp: new Date().toISOString(),
@@ -93,7 +98,7 @@ app.get("/api/health", async (req, res) => {
   try {
     await registerRoutes(httpServer, app);
     logger.info("API routes registered successfully");
-    
+
     // Setup Vite for development or static serving for production
     if (process.env.NODE_ENV === "production") {
       const { serveStatic } = await import("./static");
@@ -108,7 +113,7 @@ app.get("/api/health", async (req, res) => {
     // Error handlers (must be last)
     app.use(notFoundHandler);
     app.use(globalErrorHandler);
-    
+
   } catch (error) {
     logger.error("Failed to setup server:", error);
     process.exit(1);

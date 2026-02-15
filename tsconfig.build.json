@@ -17,6 +17,12 @@
     "compilerOptions": {
         "noEmit": true,
         "skipLibCheck": true,
-        "strict": false
+        "strict": false,
+        "target": "es2020",
+        "lib": [
+            "es2020",
+            "dom",
+            "dom.iterable"
+        ]
     }
 }

@@ -17,7 +17,7 @@ export interface SpeechRecognitionOptions {
 }
 
 export class SpeechRecognitionService {
-  private recognition: SpeechRecognition | null = null;
+  private recognition: any = null;
   private isSupported = false;
   private isListening = false;
   private onResultCallback?: (result: SpeechRecognitionResult) => void;
@@ -29,8 +29,8 @@ export class SpeechRecognitionService {
 
   private initializeRecognition() {
     // Check for Web Speech API support
-    const SpeechRecognition = 
-      (window as any).SpeechRecognition || 
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
 
     if (SpeechRecognition) {
@@ -50,7 +50,7 @@ export class SpeechRecognitionService {
     this.recognition.interimResults = true;
     this.recognition.maxAlternatives = 1;
 
-    this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+    this.recognition.onresult = (event: any) => {
       const result = event.results[event.results.length - 1];
       const transcript = result[0].transcript;
       const confidence = result[0].confidence;
@@ -63,7 +63,7 @@ export class SpeechRecognitionService {
       });
     };
 
-    this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    this.recognition.onerror = (event: any) => {
       console.error('Speech recognition error:', event.error);
       this.onErrorCallback?.(event.error);
     };
@@ -158,7 +158,7 @@ export class SpeechRecognitionService {
       }
 
       const data = await response.json();
-      
+
       return {
         transcript: data.text || '',
         confidence: 0.9, // Whisper doesn't provide confidence scores
@@ -176,7 +176,7 @@ export class SpeechRecognitionService {
   getSupportedLanguages(): string[] {
     return [
       'en-US', 'en-GB', 'en-AU', 'en-CA', 'en-IN',
-      'hi-IN', 'hi', 
+      'hi-IN', 'hi',
       'es-ES', 'es-MX', 'fr-FR', 'de-DE', 'it-IT',
       'pt-BR', 'ru-RU', 'ja-JP', 'ko-KR', 'zh-CN'
     ];

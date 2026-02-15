@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { getBothLanguages, BilingualText } from '@/data/bilingualTranslations';
+import { getBothLanguages, type BilingualText } from '@/data/bilingualTranslations';
 
 interface HindiScaffoldProps {
   english: string;
@@ -18,9 +18,9 @@ interface HindiScaffoldProps {
   priority?: 'english' | 'hindi' | 'equal';
 }
 
-export function HindiScaffold({ 
-  english, 
-  hindi, 
+export function HindiScaffold({
+  english,
+  hindi,
   className,
   variant = 'default',
   showBoth = true,
@@ -88,21 +88,21 @@ interface BilingualTextProps {
   className?: string;
 }
 
-export function BilingualText({ 
-  textKey, 
-  useHindi = false, 
+export function BilingualText({
+  textKey,
+  useHindi = false,
   showBoth = false,
-  className 
+  className
 }: BilingualTextProps) {
   const text = getBothLanguages(textKey);
-  
+
   if (!text) {
     return <span className={className}>{textKey}</span>;
   }
 
   if (!showBoth) {
     return (
-      <span 
+      <span
         className={cn(useHindi ? 'hindi-text' : '', className)}
         lang={useHindi ? 'hi' : 'en'}
       >
@@ -140,8 +140,8 @@ export function QualityBadge({ score, className }: QualityBadgeProps) {
     <span className={cn('quality-badge', variant, className)}>
       <span>{grade}</span>
       <span className="hindi-text-sm" lang="hi">
-        {variant === 'grade-9' ? 'उत्कृष्ट' : 
-         variant === 'grade-8' ? 'अच्छा' : 'सुधार चाहिए'}
+        {variant === 'grade-9' ? 'उत्कृष्ट' :
+          variant === 'grade-8' ? 'अच्छा' : 'सुधार चाहिए'}
       </span>
     </span>
   );

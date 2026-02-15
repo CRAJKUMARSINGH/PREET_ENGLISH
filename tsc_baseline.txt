@@ -1,0 +1,102 @@
+﻿client/src/App.tsx(163,36): error TS2339: Property 'getCLS' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/App.tsx(163,44): error TS2339: Property 'getFID' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/App.tsx(163,52): error TS2339: Property 'getFCP' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/App.tsx(163,60): error TS2339: Property 'getLCP' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/App.tsx(163,68): error TS2339: Property 'getTTFB' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/components/AnalyticsDashboard.tsx(26,28): error TS2339: Property 'getSummary' does not exist on type '{ init: () => void; track: (eventName: string, properties?: Record<string, any>) => void; getLiveStats: () => any; resetDemoStats: () => { activeUsers: number; lessonsCompleted: number; totalXPEarned: number; aiChatMessages: number; videoMinutesWatched: number; }; }'.
+client/src/components/HindiScaffold.tsx(10,28): error TS2865: Import 'BilingualText' conflicts with local value, so must be declared with a type-only import when 'isolatedModules' is enabled.
+client/src/components/LeaderboardCard.tsx(51,14): error TS2304: Cannot find name 'Lucide'.
+client/src/components/PronunciationPractice.tsx(6,10): error TS2305: Module '"@/lib/speechRecognition"' has no exported member 'speechRecognition'.
+client/src/lib/grammarLogic.ts(64,40): error TS2802: Type 'Map<string, string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/lib/grammarLogic.ts(68,27): error TS2802: Type 'RegExpStringIterator<RegExpExecArray>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/lib/grammarLogic.ts(88,37): error TS2802: Type 'Map<string, RegExp>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/lib/grammarLogic.ts(91,27): error TS2802: Type 'RegExpStringIterator<RegExpExecArray>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/lib/performanceMonitoring.ts(9,15): error TS2339: Property 'getCLS' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(9,23): error TS2339: Property 'getFID' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(9,31): error TS2339: Property 'getFCP' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(9,39): error TS2339: Property 'getLCP' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(9,47): error TS2339: Property 'getTTFB' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(9,63): error TS2339: Property 'onFID' does not exist on type 'typeof import("C:/Users/Rajkumar/PREET_ENGLISH/node_modules/web-vitals/dist/modules/index")'.
+client/src/lib/performanceMonitoring.ts(50,18): error TS2339: Property 'hadRecentInput' does not exist on type 'PerformanceEntry'.
+client/src/lib/performanceMonitoring.ts(54,27): error TS2339: Property 'value' does not exist on type 'PerformanceEntry'.
+client/src/lib/speechRecognition.ts(20,24): error TS2304: Cannot find name 'SpeechRecognition'.
+client/src/lib/speechRecognition.ts(53,41): error TS2552: Cannot find name 'SpeechRecognitionEvent'. Did you mean 'SpeechRecognitionService'?
+client/src/lib/speechRecognition.ts(66,40): error TS2552: Cannot find name 'SpeechRecognitionErrorEvent'. Did you mean 'SpeechRecognitionService'?
+client/src/mocks/server.ts(2,10): error TS2305: Module '"msw"' has no exported member 'rest'.
+client/src/pages/Home.tsx(479,16): error TS2304: Cannot find name 'AITutor'.
+client/src/pages/LessonView.tsx(22,39): error TS2339: Property 'id' does not exist on type 'never'.
+client/src/pages/LessonView.tsx(429,32): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/LessonView.tsx(437,27): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/LessonView.tsx(439,43): error TS2304: Cannot find name 'speechRecognition'.
+client/src/pages/StoryView.tsx(19,13): error TS2339: Property 'id' does not exist on type 'StringRouteParams<undefined>'.
+client/src/utils/helpers.ts(25,14): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/utils/helpers.ts(105,14): error TS2802: Type 'Set<T>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+client/src/utils/validation.ts(55,170): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(85,33): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(86,33): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(87,32): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(88,73): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(100,35): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+client/src/utils/validation.ts(127,45): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+server/auth.ts(209,17): error TS2353: Object literal may only specify known properties, and 'isAdmin' does not exist in type '{ username?: any; password?: any; }'.
+server/middleware/monitoring.ts(113,26): error TS2802: Type 'Map<string, () => Promise<boolean>>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+server/middleware/monitoring.ts(122,34): error TS2802: Type 'Map<string, { status: boolean; timestamp: number; error?: string; }>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+server/routes.ts(303,9): error TS2353: Object literal may only specify known properties, and 'answers' does not exist in type '{ userId?: any; quizId?: any; score?: any; totalQuestions?: any; }'.
+shared/schema-postgres.ts(445,66): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(445,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(446,70): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(446,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(447,77): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(447,87): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(448,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(448,100): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(449,73): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(449,83): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(450,68): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(450,78): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(451,82): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(451,92): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(452,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(452,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(453,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(453,94): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(454,75): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(454,85): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(455,80): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(455,90): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(456,88): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(457,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(458,79): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(459,74): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(459,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(460,89): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(461,93): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(461,103): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(462,69): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(462,79): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(463,76): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(463,86): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(464,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(464,94): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(465,81): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(465,91): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(466,84): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema-postgres.ts(466,94): error TS2322: Type 'boolean' is not assignable to type 'never'.
+shared/schema.ts(390,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ username?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); password?: ZodTypeAny | ((schema: ZodArray<...>)...'.
+shared/schema.ts(393,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ title?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); ... 4 more ...; order?: ZodTypeAny | ((schema: ZodA...'.
+shared/schema.ts(396,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ lessonId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); word?: ZodTypeAny | ((schema: ZodArray<...>) => ...'.
+shared/schema.ts(399,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ lessonId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); speaker?: ZodTypeAny | ((schema: ZodArray<...>) ...'.
+shared/schema.ts(402,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); lessonId?: ZodTypeAny | ((schema: ZodArray<...>) =...'.
+shared/schema.ts(406,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ title?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); userId?: ZodTypeAny | ((schema: ZodArray<...>) => Z...'.
+shared/schema.ts(410,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ content?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); conversationId?: ZodTypeAny | ((schema: ZodArray<...'.
+shared/schema.ts(414,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); sessionType?: ZodTypeAny | ((schema: ZodArray<...>...'.
+shared/schema.ts(418,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ sessionId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); spokenText?: ZodTypeAny | ((schema: ZodArray<.....'.
+shared/schema.ts(422,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); }, { ...; }>'.
+shared/schema.ts(427,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); phoneme?: ZodTypeAny | ((schema: ZodArray<...>) =>...'.
+shared/schema.ts(431,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); scenarioType?: ZodTypeAny | ((schema: ZodArray<......'.
+shared/schema.ts(434,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); type?: ZodTypeAny | ((schema: ZodArray<...>) => Zo...'.
+shared/schema.ts(438,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); contentType?: ZodTypeAny | ((schema: ZodArray<...>...'.
+shared/schema.ts(442,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ title?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); difficulty?: ZodTypeAny | ((schema: ZodArray<...>) ...'.
+shared/schema.ts(445,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ quizId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); questionText?: ZodTypeAny | ((schema: ZodArray<......'.
+shared/schema.ts(448,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ userId?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); quizId?: ZodTypeAny | ((schema: ZodArray<...>) => ...'.
+shared/schema.ts(500,3): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'NoUnknownKeys<{ title?: ZodTypeAny | ((schema: ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<ZodArray<..., "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">, "many">) => ZodTypeAny); dayNumber?: ZodTypeAny | ((schema: ZodArray<...>) =...'.

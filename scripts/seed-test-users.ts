@@ -7,78 +7,104 @@ import { sql } from "drizzle-orm";
 
 const scryptAsync = promisify(scrypt);
 
-async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
 
-async function seedUsers(count: number = 500) {
-  console.log(`🚀 Seeding ${count} test users...`);
-  const batchSize = 50;
-  const batches = Math.ceil(count / batchSize);
+export class TestUserOrchestrator {
+  private async hashPassword(password: string) {
+    const salt = randomBytes(16).toString("hex");
+    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+    return `${buf.toString("hex")}.${salt}`;
+  }
 
-  // Common password for all test users
-  const hashedPassword = await hashPassword("TestPass123!");
+  async seedUsers(count: number = 500): Promise<{ success: boolean; created: number; errors: string[] }> {
+    console.log(`🚀 Seeding ${count} test users...`);
+    const batchSize = 50;
+    const batches = Math.ceil(count / batchSize);
+    const errors: string[] = [];
+    let created = 0;
 
-  for (let i = 0; i < batches; i++) {
-    const batchUsers: InsertUser[] = [];
-    for (let j = 0; j < batchSize; j++) {
-      const userIndex = i * batchSize + j;
-      if (userIndex >= count) break;
+    // Common password for all test users
+    const hashedPassword = await this.hashPassword("TestPass123!");
 
-      // Prefix with 'k6_user_' for easy identification and cleanup
-      batchUsers.push({
-        username: `k6_user_${userIndex}`,
-        password: hashedPassword,
-        isAdmin: false
-      });
-    }
+    for (let i = 0; i < batches; i++) {
+        const batchUsers: InsertUser[] = [];
+        for (let j = 0; j < batchSize; j++) {
+            const userIndex = i * batchSize + j;
+            if (userIndex >= count) break;
 
-    try {
-      // Check if we are using Postgres or SQLite to handle "ON CONFLICT" differently if needed
-      // But usually, we just want to insert. Since we cleanup first, simple insert is fine.
-      // Using a loop for safety against different DB driver capabilities in 'db' abstraction
-      for (const user of batchUsers) {
-        try {
-          await db.insert(users).values(user);
-        } catch (e) {
-          // Ignore duplicate key errors if we run seed twice
-          // console.warn(`Skipping duplicate: ${user.username}`);
+            // Prefix with 'k6_user_' for easy identification and cleanup
+            batchUsers.push({
+                username: `k6_user_${userIndex}`,
+                password: hashedPassword,
+                isAdmin: false
+            });
         }
-      }
-      console.log(`✅ Batch ${i + 1}/${batches} inserted.`);
-    } catch (error) {
-      console.error(`❌ Error in batch ${i + 1}:`, error);
+
+        try {
+            for (const user of batchUsers) {
+                try {
+                   await db.insert(users).values(user);
+                   created++;
+                } catch (e: any) {
+                    // Ignore duplicate key errors if we run seed twice
+                }
+            }
+            console.log(`✅ Batch ${i + 1}/${batches} inserted.`);
+        } catch (error: any) {
+            console.error(`❌ Error in batch ${i + 1}:`, error);
+            errors.push(`Batch ${i + 1} error: ${error.message}`);
+        }
+    }
+    console.log("🎉 Seeding complete.");
+    return { success: errors.length === 0, created, errors };
+  }
+
+  async cleanupTestUsers(): Promise<{ success: boolean; errors: string[] }> {
+    console.log("🧹 Cleaning up test users...");
+    try {
+        await db.delete(users).where(sql`username LIKE 'k6_user_%'`);
+        console.log("✨ Cleanup complete.");
+        return { success: true, errors: [] };
+    } catch (error: any) {
+        console.error("❌ Cleanup failed:", error);
+        return { success: false, errors: [error.message] };
     }
   }
-  console.log("🎉 Seeding complete.");
-}
 
-async function cleanupUsers() {
-  console.log("🧹 Cleaning up test users...");
-  await db.delete(users).where(sql`username LIKE 'k6_user_%'`);
-  console.log("✨ Cleanup complete.");
+  async verifyTestUsers(): Promise<{ count: number; sampleUsers: any[] }> {
+      const result = await db.select({ count: sql<number>`count(*)` }).from(users).where(sql`username LIKE 'k6_user_%'`);
+      const count = Number(result[0]?.count || 0);
+      console.log(`📊 Current Test Users: ${count}`);
+      
+      const samples = await db.query.users.findMany({
+          where: sql`username LIKE 'k6_user_%'`,
+          limit: 5
+      });
+      return { count, sampleUsers: samples };
+  }
 }
 
 async function main() {
+  const orchestrator = new TestUserOrchestrator();
   const command = process.argv[2];
+  
   if (command === "seed") {
-    await cleanupUsers(); // Ensure clean slate
-    await seedUsers();
+    await orchestrator.cleanupTestUsers(); // Ensure clean slate
+    await orchestrator.seedUsers();
   } else if (command === "cleanup") {
-    await cleanupUsers();
+    await orchestrator.cleanupTestUsers();
   } else if (command === "verify") {
-    const result = await db.select({ count: sql<number>`count(*)` }).from(users).where(sql`username LIKE 'k6_user_%'`);
-    // SQLite returns [{count: 500}], Postgres returns [{count: '500'}]
-    console.log(`📊 Current Test Users: ${result[0]?.count || 0}`);
+    await orchestrator.verifyTestUsers();
   } else {
-    console.log("Usage: uxt seed | cleanup | verify");
+    // If no command provided, and imported, do nothing.
+    if (process.argv[1] === import.meta.filename) {
+         console.log("Usage: uxt seed | cleanup | verify");
+    }
   }
-  process.exit(0);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

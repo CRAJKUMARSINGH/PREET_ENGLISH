@@ -4,24 +4,12 @@
 export function trackWebVitals() {
   // Dynamic import to avoid build issues with different web-vitals versions
   if (typeof window !== 'undefined') {
-    import('web-vitals').then((webVitals) => {
-      // Try different API versions
-      const { getCLS, getFID, getFCP, getLCP, getTTFB, onCLS, onFID, onFCP, onLCP, onTTFB } = webVitals;
-      
-      // Use the available API (v3 vs v4)
-      if (getCLS) {
-        getCLS(sendToAnalytics);
-        getFID && getFID(sendToAnalytics);
-        getFCP(sendToAnalytics);
-        getLCP(sendToAnalytics);
-        getTTFB(sendToAnalytics);
-      } else if (onCLS) {
-        onCLS(sendToAnalytics);
-        onFID && onFID(sendToAnalytics);
-        onFCP(sendToAnalytics);
-        onLCP(sendToAnalytics);
-        onTTFB(sendToAnalytics);
-      }
+    import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
+      onCLS(sendToAnalytics);
+      onINP(sendToAnalytics);
+      onFCP(sendToAnalytics);
+      onLCP(sendToAnalytics);
+      onTTFB(sendToAnalytics);
     }).catch(console.error);
   }
 }
@@ -29,7 +17,7 @@ export function trackWebVitals() {
 function sendToAnalytics(metric: any) {
   // Send metric to analytics service
   console.log(`${metric.name}: ${metric.value}`);
-  
+
   // In production, send to your analytics service
   // Example:
   // gtag('event', metric.name, {
@@ -46,17 +34,15 @@ export function setupLayoutShiftTracking() {
 
   new PerformanceObserver((entryList) => {
     for (const entry of entryList.getEntries()) {
+      const layoutShift = entry as any;
       // Only count layout shifts without recent user input
-      if (!entry.hadRecentInput) {
-        const firstSessionTime = entry.startTime - entry.duration;
-        const lastSessionTime = entry.startTime;
-        
-        clsValue += entry.value;
+      if (!layoutShift.hadRecentInput) {
+        clsValue += layoutShift.value;
         clsEntries.push(entry);
       }
     }
-  }).observe({type: 'layout-shift', buffered: true});
-  
+  }).observe({ type: 'layout-shift', buffered: true });
+
   // Log cumulative layout shift
   window.addEventListener('beforeunload', () => {
     console.log('Cumulative Layout Shift:', clsValue);
@@ -85,7 +71,7 @@ export function setupLongTaskTracking() {
           });
         }
       }
-    }).observe({entryTypes: ['longtask']});
+    }).observe({ entryTypes: ['longtask'] });
   }
 }
 
@@ -94,14 +80,14 @@ export function measureHydrationTime(componentName: string) {
   if (typeof window !== 'undefined') {
     const startMark = `hydrate_${componentName}_start`;
     const endMark = `hydrate_${componentName}_end`;
-    
+
     performance.mark(startMark);
-    
+
     // Call when component is fully hydrated
     return () => {
       performance.mark(endMark);
       performance.measure(`hydrate_${componentName}`, startMark, endMark);
-      
+
       const measure = performance.getEntriesByName(`hydrate_${componentName}`)[0];
       console.log(`${componentName} hydration time:`, measure.duration);
     };
@@ -127,22 +113,22 @@ export function initPerformanceMonitoring() {
   if (typeof window !== 'undefined') {
     // Track Core Web Vitals
     trackWebVitals();
-    
+
     // Set up layout shift tracking
     setupLayoutShiftTracking();
-    
+
     // Set up long task tracking
     setupLongTaskTracking();
-    
+
     // Log initial paint times
     setTimeout(() => {
       const fcp = performance.getEntriesByName('first-contentful-paint')[0];
       const lcp = performance.getEntriesByType('largest-contentful-paint')[0];
-      
+
       if (fcp) {
         console.log('First Contentful Paint:', fcp.startTime);
       }
-      
+
       if (lcp) {
         console.log('Largest Contentful Paint:', lcp.startTime);
       }

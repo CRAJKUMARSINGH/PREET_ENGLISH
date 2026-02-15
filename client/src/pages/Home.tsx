@@ -476,7 +476,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex-1 w-full max-w-md bg-background/50 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-xl">
-              <AITutor />
+              <EnhancedAITutor />
             </div>
           </div>
         </div>

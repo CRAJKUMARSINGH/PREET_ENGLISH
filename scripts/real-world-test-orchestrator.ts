@@ -8,10 +8,10 @@
 import { spawn, ChildProcess } from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import logger from '../server/logger.js';
-import { TestUserOrchestrator } from './seed-test-users.js';
-import { ChaosInjectionTester } from './chaos-injection-test.js';
-import { PlaywrightStressTester } from '../tests/e2e/playwright-stress-test.js';
+import logger from '../server/logger';
+import { TestUserOrchestrator } from './seed-test-users';
+import { ChaosInjectionTester } from './chaos-injection-test';
+import { PlaywrightStressTester } from '../tests/e2e/playwright-stress-test';
 
 interface TestPhaseResult {
   phase: string;
@@ -54,7 +54,7 @@ class RealWorldTestOrchestrator {
 
     const status = success ? '✅ PASS' : '❌ FAIL';
     logger.info(`${status} Phase: ${phase} (${duration}ms)`);
-    
+
     if (errors.length > 0) {
       logger.error(`Errors in ${phase}:`, errors);
     }
@@ -66,15 +66,15 @@ class RealWorldTestOrchestrator {
 
     try {
       const orchestrator = new TestUserOrchestrator();
-      
+
       // Clean up any existing test users first
       logger.info('Cleaning up existing test users...');
       const cleanupResult = await orchestrator.cleanupTestUsers();
-      
+
       // Seed new test users
       logger.info('Seeding 500 test users...');
       const seedResult = await orchestrator.seedUsers();
-      
+
       if (!seedResult.success) {
         this.addPhaseResult(
           'Test Data Orchestration',
@@ -88,7 +88,7 @@ class RealWorldTestOrchestrator {
 
       // Verify test users
       const verifyResult = await orchestrator.verifyTestUsers();
-      
+
       this.addPhaseResult(
         'Test Data Orchestration',
         true,
@@ -121,7 +121,7 @@ class RealWorldTestOrchestrator {
     try {
       // Start K6 load test
       const k6Result = await this.runK6LoadTest();
-      
+
       this.addPhaseResult(
         'K6 Load Testing',
         k6Result.success,
@@ -261,7 +261,7 @@ class RealWorldTestOrchestrator {
       k6Process.on('close', async (code) => {
         const success = code === 0;
         const errors: string[] = [];
-        
+
         if (stderr) {
           errors.push(`K6 stderr: ${stderr}`);
         }
@@ -272,7 +272,7 @@ class RealWorldTestOrchestrator {
           const resultsPath = path.join(process.cwd(), 'k6-results.json');
           const resultsContent = await fs.readFile(resultsPath, 'utf-8');
           const results = JSON.parse(resultsContent);
-          
+
           metrics = {
             totalRequests: results.metrics?.http_reqs?.count || 0,
             avgResponseTime: results.metrics?.http_req_duration?.avg || 0,
@@ -363,7 +363,7 @@ class RealWorldTestOrchestrator {
     const totalDuration = Date.now() - this.startTime;
     const successfulPhases = this.results.filter(r => r.success).length;
     const totalPhases = this.results.length;
-    
+
     const criticalFailures: string[] = [];
     const recommendations: string[] = [];
 
@@ -371,7 +371,7 @@ class RealWorldTestOrchestrator {
     this.results.forEach(result => {
       if (!result.success) {
         criticalFailures.push(`${result.phase}: ${result.errors.join(', ')}`);
-        
+
         // Generate specific recommendations
         if (result.phase.includes('Data Orchestration')) {
           recommendations.push('Check database connectivity and permissions');
@@ -399,11 +399,11 @@ class RealWorldTestOrchestrator {
 
     // Generate detailed report
     const reportContent = this.generateDetailedReport(orchestrationResult);
-    
+
     // Save report
     const reportPath = path.join(process.cwd(), 'REAL_WORLD_TEST_REPORT.md');
     await fs.writeFile(reportPath, reportContent);
-    
+
     // Save JSON report
     const jsonReportPath = path.join(process.cwd(), 'real-world-test-results.json');
     await fs.writeFile(jsonReportPath, JSON.stringify(orchestrationResult, null, 2));
@@ -414,7 +414,7 @@ class RealWorldTestOrchestrator {
   private generateDetailedReport(result: OrchestrationResult): string {
     const timestamp = new Date().toISOString();
     const status = result.success ? '✅ PASS' : '❌ FAIL';
-    
+
     return `# Real-World Resiliency & Load Testing Report
 
 **Generated:** ${timestamp}
@@ -435,25 +435,25 @@ ${result.phases.map(phase => `
 **Duration:** ${(phase.duration / 1000).toFixed(2)} seconds
 
 ${phase.success ? '**Results:**' : '**Errors:**'}
-${phase.success ? 
-  Object.entries(phase.details).map(([key, value]) => `- ${key}: ${JSON.stringify(value)}`).join('\n') :
-  phase.errors.map(error => `- ${error}`).join('\n')
-}
+${phase.success ?
+        Object.entries(phase.details).map(([key, value]) => `- ${key}: ${JSON.stringify(value)}`).join('\n') :
+        phase.errors.map(error => `- ${error}`).join('\n')
+      }
 `).join('\n')}
 
 ## Critical Failures
 
-${result.summary.criticalFailures.length > 0 ? 
-  result.summary.criticalFailures.map(failure => `- ${failure}`).join('\n') :
-  'No critical failures detected.'
-}
+${result.summary.criticalFailures.length > 0 ?
+        result.summary.criticalFailures.map(failure => `- ${failure}`).join('\n') :
+        'No critical failures detected.'
+      }
 
 ## Recommendations
 
 ${result.summary.recommendations.length > 0 ?
-  result.summary.recommendations.map(rec => `- ${rec}`).join('\n') :
-  'System performed within acceptable parameters.'
-}
+        result.summary.recommendations.map(rec => `- ${rec}`).join('\n') :
+        'System performed within acceptable parameters.'
+      }
 
 ## Compliance Assessment
 
@@ -464,10 +464,10 @@ ${result.summary.recommendations.length > 0 ?
 
 ## Next Steps
 
-${result.success ? 
-  '✅ System is ready for production deployment with validated resilience patterns.' :
-  '❌ Address critical failures before production deployment.'
-}
+${result.success ?
+        '✅ System is ready for production deployment with validated resilience patterns.' :
+        '❌ Address critical failures before production deployment.'
+      }
 
 ---
 *Report generated by Real-World Test Orchestrator*
@@ -486,7 +486,7 @@ ${result.success ?
         if (!dockerStarted) {
           throw new Error('Failed to start Docker environment');
         }
-        
+
         // Wait for services to be ready
         await new Promise(resolve => setTimeout(resolve, 30000));
       }
@@ -529,7 +529,7 @@ ${result.success ?
 
     } catch (error: any) {
       logger.error('❌ Test orchestration failed:', error);
-      
+
       this.addPhaseResult(
         'Test Orchestration',
         false,
@@ -570,7 +570,7 @@ async function main() {
   console.log(`✅ Overall Success: ${result.success}`);
   console.log(`⏱️  Total Duration: ${(result.totalDuration / 1000).toFixed(2)} seconds`);
   console.log(`📊 Phases Completed: ${result.summary.phasesCompleted}/${result.summary.phasesTotal}`);
-  
+
   if (result.summary.criticalFailures.length > 0) {
     console.log('\n❌ CRITICAL FAILURES:');
     result.summary.criticalFailures.forEach((failure, index) => {
@@ -593,8 +593,9 @@ async function main() {
   process.exit(result.success ? 0 : 1);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(console.error);
-}
+
+// Force execution for testing
+main().catch(console.error);
+
 
 export { RealWorldTestOrchestrator };

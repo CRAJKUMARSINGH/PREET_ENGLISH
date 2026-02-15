@@ -12,6 +12,10 @@ export * from "./hindiStoriesData";
 export * from "./speakingTopics";
 export * from "./advancedVocabularyData";
 export * from "./bilingualTranslations";
+export * from "./hindiListeningData";
+export * from "./hindiCommonPhrasesData";
+export * from "./hindiDialoguesData";
+export * from "./hindiRolePlayData";
 
 // Utility Exports
 export { lessonEngine, getEnrichedLessons, getNextLessonId, getPreviousLessonId } from "../utils/lessonEngine";
@@ -24,7 +28,11 @@ export const DATA_REGISTRY = {
     'hindiStoriesData', 
     'speakingTopics',
     'advancedVocabularyData',
-    'bilingualTranslations'
+    'bilingualTranslations',
+    'hindiListeningData',
+    'hindiCommonPhrasesData',
+    'hindiDialoguesData',
+    'hindiRolePlayData'
   ],
   utilities: [
     'lessonEngine',
@@ -48,6 +56,6 @@ export function validateDataRegistry(): { isValid: boolean; missingModules: stri
   };
 }
 
-// Legacy migration note
-// Note: Legacy files (hindiCommonPhrases, hindiRolePlay, etc.) have been migrated to the database
-// and are no longer exported here to prevent duplicate sources of truth. 
+// All data files are now integrated and exported
+// These files provide static data that complements the database content
+// and can be used for search, reference, and offline functionality. 

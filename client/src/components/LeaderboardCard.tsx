@@ -48,7 +48,7 @@ export function LeaderboardCard({ entries, currentUserRank }: LeaderboardCardPro
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="bg-purple-100 dark:bg-purple-900/30 p-2.5 rounded-xl text-purple-600 dark:text-purple-400">
-            <Lucide.Trophy className="h-5 w-5" />
+            <Trophy className="h-5 w-5" />
           </div>
           <div>
             <h3 className="font-bold text-lg font-display">Leaderboard</h3>

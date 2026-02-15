@@ -7,10 +7,10 @@ export function configureSessionSecurity(app: Express) {
   // Production-ready session configuration
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production',
+      secret: (process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('SESSION_SECRET required in production') })() : 'dev_secret_only_for_local_testing')),
       resave: false,
       saveUninitialized: false,
-      
+
       cookie: {
         secure: process.env.NODE_ENV === 'production',  // HTTPS only in production
         httpOnly: true,  // Prevent XSS attacks
@@ -18,7 +18,7 @@ export function configureSessionSecurity(app: Express) {
         sameSite: 'lax',  // CSRF protection
         domain: process.env.SESSION_COOKIE_DOMAIN,  // For subdomain sharing
       },
-      
+
       name: 'preet.sid',  // Custom name (security through obscurity)
     })
   );
@@ -39,10 +39,12 @@ export function configureSessionSecurity(app: Express) {
   });
 }
 
+import { type Request, type Response, type NextFunction } from 'express';
+
 // Middleware to require authentication
-export function requireAuth(req: any, res: any, next: any) {
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.session?.userId) {
-    return res.status(401).json({ 
+    return res.status(401).json({
       error: 'Authentication required',
       message: 'Please log in to access this feature'
     });
@@ -51,9 +53,9 @@ export function requireAuth(req: any, res: any, next: any) {
 }
 
 // Middleware to require admin privileges
-export function requireAdmin(req: any, res: any, next: any) {
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.session?.userId || !req.session?.isAdmin) {
-    return res.status(403).json({ 
+    return res.status(403).json({
       error: 'Admin access required',
       message: 'You do not have permission to access this resource'
     });

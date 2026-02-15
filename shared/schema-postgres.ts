@@ -442,28 +442,28 @@ export const contentRatingsRelations = relations(contentRatings, ({ one }) => ({
 }));
 
 // Insert schemas (Zod validation)
-export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
-export const insertLessonSchema = createInsertSchema(lessons).omit({ id: true, createdAt: true });
-export const insertVocabularySchema = createInsertSchema(vocabulary).omit({ id: true, createdAt: true });
-export const insertConversationLineSchema = createInsertSchema(conversationLines).omit({ id: true, createdAt: true });
-export const insertProgressSchema = createInsertSchema(progress).omit({ id: true, completedAt: true });
-export const insertQuizSchema = createInsertSchema(quizzes).omit({ id: true, createdAt: true });
-export const insertQuizQuestionSchema = createInsertSchema(quizQuestions).omit({ id: true, createdAt: true });
-export const insertQuizAttemptSchema = createInsertSchema(quizAttempts).omit({ id: true, startedAt: true });
-export const insertCertificationSchema = createInsertSchema(certifications).omit({ id: true, earnedAt: true });
-export const insertUserStatsSchema = createInsertSchema(userStats).omit({ id: true, createdAt: true });
-export const insertAchievementSchema = createInsertSchema(achievements).omit({ id: true, createdAt: true });
-export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({ id: true });
-export const insertDailyGoalSchema = createInsertSchema(dailyGoals).omit({ id: true });
-export const insertLeaderboardSchema = createInsertSchema(leaderboard).omit({ id: true });
-export const insertScenarioSchema = createInsertSchema(scenarios).omit({ id: true, createdAt: true });
-export const insertScenarioProgressSchema = createInsertSchema(scenarioProgress).omit({ id: true });
-export const insertVocabularyProgressSchema = createInsertSchema(vocabularyProgress).omit({ id: true, lastReviewedAt: true });
-export const insertStorySchema = createInsertSchema(stories).omit({ id: true, createdAt: true });
-export const insertListeningSchema = createInsertSchema(listenings).omit({ id: true, createdAt: true });
-export const insertSpeakingTopicSchema = createInsertSchema(speakingTopics).omit({ id: true, createdAt: true });
-export const insertActivityFeedSchema = createInsertSchema(activityFeed).omit({ id: true, createdAt: true });
-export const insertContentRatingSchema = createInsertSchema(contentRatings).omit({ id: true, createdAt: true });
+export const insertUserSchema = createInsertSchema(users);
+export const insertLessonSchema = createInsertSchema(lessons);
+export const insertVocabularySchema = createInsertSchema(vocabulary);
+export const insertConversationLineSchema = createInsertSchema(conversationLines);
+export const insertProgressSchema = createInsertSchema(progress);
+export const insertQuizSchema = createInsertSchema(quizzes);
+export const insertQuizQuestionSchema = createInsertSchema(quizQuestions);
+export const insertQuizAttemptSchema = createInsertSchema(quizAttempts);
+export const insertCertificationSchema = createInsertSchema(certifications);
+export const insertUserStatsSchema = createInsertSchema(userStats);
+export const insertAchievementSchema = createInsertSchema(achievements);
+export const insertUserAchievementSchema = createInsertSchema(userAchievements);
+export const insertDailyGoalSchema = createInsertSchema(dailyGoals);
+export const insertLeaderboardSchema = createInsertSchema(leaderboard);
+export const insertScenarioSchema = createInsertSchema(scenarios);
+export const insertScenarioProgressSchema = createInsertSchema(scenarioProgress);
+export const insertVocabularyProgressSchema = createInsertSchema(vocabularyProgress);
+export const insertStorySchema = createInsertSchema(stories);
+export const insertListeningSchema = createInsertSchema(listenings);
+export const insertSpeakingTopicSchema = createInsertSchema(speakingTopics);
+export const insertActivityFeedSchema = createInsertSchema(activityFeed);
+export const insertContentRatingSchema = createInsertSchema(contentRatings);
 
 // Type exports
 export type User = typeof users.$inferSelect;

@@ -1,0 +1,30 @@
+{
+  "lessons": {
+    "total": 1659,
+    "checked": 1659,
+    "withHindiContent": 1659,
+    "withVocabulary": 1657,
+    "withConversations": 1659,
+    "averageGrade": 9.998191681735985,
+    "issues": []
+  },
+  "dataFiles": {
+    "total": 9,
+    "integrated": 9,
+    "notIntegrated": [],
+    "missingExports": []
+  },
+  "appRoutes": {
+    "total": 32,
+    "accessible": 32,
+    "withHindiSupport": 11,
+    "issues": []
+  },
+  "overall": {
+    "grade": 9.5,
+    "status": "excellent",
+    "recommendations": [
+      "Add Hindi support to more routes"
+    ]
+  }
+}

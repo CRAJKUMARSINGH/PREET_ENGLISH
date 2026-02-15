@@ -18,7 +18,7 @@ type AuthContextType = {
     registerMutation: UseMutationResult<User, Error, InsertUser>;
 };
 
-type LoginData = Pick<InsertUser, "username" | "password">;
+type LoginData = { username: string; password: string };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     console.log('👤 Found stored user:', JSON.parse(storedUser));
                     return JSON.parse(storedUser);
                 }
-                
+
                 // Try to fetch from API
                 const res = await fetch("/api/user", {
                     credentials: 'include',
@@ -48,13 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         'Content-Type': 'application/json',
                     }
                 });
-                
+
                 if (res.status === 401) return undefined;
                 if (!res.ok) {
                     console.warn(`API user fetch failed: ${res.status} ${res.statusText}`);
                     return undefined;
                 }
-                
+
                 const userData = await res.json();
                 return userData;
             } catch (error) {
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const loginMutation = useMutation({
         mutationFn: async (credentials: LoginData) => {
             console.log('🔐 Login attempt:', credentials.username);
-            
+
             try {
                 // For production deployment, try API first
                 const response = await fetch('/api/login', {
@@ -90,47 +90,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 const userData = await response.json();
                 console.log('✅ Login successful:', userData);
                 return userData;
-                
+
             } catch (error) {
                 console.error('❌ Login API failed:', error);
-                
+
                 // Fallback to mock authentication for frontend-only deployment
                 if (error instanceof TypeError && error.message.includes('fetch')) {
                     console.log('🌐 Network error, using mock authentication');
-                    
+
                     toast({
                         title: "Demo Mode",
                         description: "Using demo authentication (API unavailable)",
                         variant: "default",
                     });
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
+
                     const mockUser = {
                         id: Date.now(),
                         username: credentials.username,
                         isAdmin: credentials.username === 'admin'
                     };
-                    
+
                     return mockUser;
                 }
-                
+
                 throw error;
             }
         },
         onSuccess: (user: User) => {
             console.log('🎉 Login successful!', user);
             queryClient.setQueryData(["/api/user"], user);
-            
+
             // Store user in localStorage for persistence
             localStorage.setItem('preet-english-user', JSON.stringify(user));
-            
+
             toast({
                 title: "Welcome back! 🎉",
                 description: `Successfully signed in as ${user.username}!`,
                 variant: "default",
             });
-            
+
             // Force redirect after a short delay
             setTimeout(() => {
                 console.log('🔄 Forcing redirect to dashboard...');
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const registerMutation = useMutation({
         mutationFn: async (credentials: InsertUser) => {
             console.log('📝 Registration attempt:', credentials.username);
-            
+
             try {
                 // Try API registration first
                 const response = await fetch('/api/register', {
@@ -170,47 +170,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 const userData = await response.json();
                 console.log('✅ Registration successful:', userData);
                 return userData;
-                
+
             } catch (error) {
                 console.error('❌ Registration API failed:', error);
-                
+
                 // Fallback to mock authentication for frontend-only deployment
                 if (error instanceof TypeError && error.message.includes('fetch')) {
                     console.log('🌐 Network error, using mock registration');
-                    
+
                     toast({
                         title: "Demo Mode",
                         description: "Using demo registration (API unavailable)",
                         variant: "default",
                     });
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
+
                     const mockUser = {
                         id: Date.now(),
                         username: credentials.username,
                         isAdmin: false
                     };
-                    
+
                     return mockUser;
                 }
-                
+
                 throw error;
             }
         },
         onSuccess: (user: User) => {
             console.log('🎉 Registration successful!', user);
             queryClient.setQueryData(["/api/user"], user);
-            
+
             // Store user in localStorage for persistence
             localStorage.setItem('preet-english-user', JSON.stringify(user));
-            
+
             toast({
                 title: "🎉 Welcome to PreetEnglish!",
                 description: `Account created successfully! Welcome, ${user.username}! Let's start learning English together.`,
                 variant: "default",
             });
-            
+
             // Force redirect after a short delay
             setTimeout(() => {
                 console.log('🔄 Forcing redirect to dashboard...');
@@ -239,10 +239,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         onSuccess: () => {
             queryClient.setQueryData(["/api/user"], null);
             queryClient.clear(); // Clear all cached data on logout
-            
+
             // Clear localStorage
             localStorage.removeItem('preet-english-user');
-            
+
             toast({
                 title: "Logged out successfully",
                 description: "See you next time!",

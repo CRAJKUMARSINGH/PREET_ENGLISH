@@ -386,68 +386,23 @@ export const culturalScenarioProgressRelations = relations(culturalScenarioProgr
 }));
 
 // Schemas
-export const insertUserSchema = createInsertSchema(users, {
-  id: undefined,
-});
-export const insertLessonSchema = createInsertSchema(lessons, {
-  id: undefined,
-});
-export const insertVocabularySchema = createInsertSchema(vocabulary, {
-  id: undefined,
-});
-export const insertConversationLineSchema = createInsertSchema(conversationLines, {
-  id: undefined,
-});
-export const insertProgressSchema = createInsertSchema(progress, {
-  id: undefined,
-  completedAt: undefined,
-});
-export const insertConversationSchema = createInsertSchema(conversations, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertMessageSchema = createInsertSchema(messages, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertSpeakingSessionSchema = createInsertSchema(speakingSessions, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertSpeakingAttemptSchema = createInsertSchema(speakingAttempts, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertUserSpeakingProfileSchema = createInsertSchema(userSpeakingProfiles, {
-  id: undefined,
-  createdAt: undefined,
-  updatedAt: undefined,
-});
-export const insertPronunciationProgressSchema = createInsertSchema(pronunciationProgress, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertCulturalScenarioProgressSchema = createInsertSchema(culturalScenarioProgress, {
-  id: undefined,
-});
-export const insertActivityFeedSchema = createInsertSchema(activityFeed, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertContentRatingSchema = createInsertSchema(contentRatings, {
-  id: undefined,
-  createdAt: undefined,
-});
-export const insertQuizSchema = createInsertSchema(quizzes, {
-  id: undefined,
-});
-export const insertQuizQuestionSchema = createInsertSchema(quizQuestions, {
-  id: undefined,
-});
-export const insertQuizAttemptSchema = createInsertSchema(quizAttempts, {
-  id: undefined,
-  completedAt: undefined,
-});
+export const insertUserSchema = createInsertSchema(users);
+export const insertLessonSchema = createInsertSchema(lessons);
+export const insertVocabularySchema = createInsertSchema(vocabulary);
+export const insertConversationLineSchema = createInsertSchema(conversationLines);
+export const insertProgressSchema = createInsertSchema(progress);
+export const insertConversationSchema = createInsertSchema(conversations);
+export const insertMessageSchema = createInsertSchema(messages);
+export const insertSpeakingSessionSchema = createInsertSchema(speakingSessions);
+export const insertSpeakingAttemptSchema = createInsertSchema(speakingAttempts);
+export const insertUserSpeakingProfileSchema = createInsertSchema(userSpeakingProfiles);
+export const insertPronunciationProgressSchema = createInsertSchema(pronunciationProgress);
+export const insertCulturalScenarioProgressSchema = createInsertSchema(culturalScenarioProgress);
+export const insertActivityFeedSchema = createInsertSchema(activityFeed);
+export const insertContentRatingSchema = createInsertSchema(contentRatings);
+export const insertQuizSchema = createInsertSchema(quizzes);
+export const insertQuizQuestionSchema = createInsertSchema(quizQuestions);
+export const insertQuizAttemptSchema = createInsertSchema(quizAttempts);
 
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -496,9 +451,7 @@ export const revisionTasks = sqliteTable("revision_tasks", {
   dateScheduled: text("date_scheduled"), // ISO date string
 });
 
-export const insertRevisionTaskSchema = createInsertSchema(revisionTasks, {
-  id: undefined,
-});
+export const insertRevisionTaskSchema = createInsertSchema(revisionTasks);
 
 export type RevisionTask = typeof revisionTasks.$inferSelect;
 export type InsertRevisionTask = z.infer<typeof insertRevisionTaskSchema>;

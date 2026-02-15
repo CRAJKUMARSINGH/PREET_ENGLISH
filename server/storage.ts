@@ -207,8 +207,9 @@ export class Storage {
     return await this.getUsers();
   }
 
-  async updateLesson(id: number, data: any): Promise<Lesson | undefined> {
+  async updateLesson(id: number, data: Partial<InsertLesson>): Promise<Lesson | undefined> {
     // Stub implementation
+    // Ideally use Zod here: const validated = insertLessonSchema.partial().parse(data);
     return await this.getLesson(id);
   }
 
@@ -267,7 +268,7 @@ export class Storage {
       const today = new Date().toISOString().split('T')[0];
       return p.completedAt.startsWith(today);
     }).length;
-    
+
     return {
       lessonsTarget: 3,
       lessonsCompleted: completedToday,
@@ -294,7 +295,7 @@ export class Storage {
       .innerJoin(users, eq(userStats.userId, users.id))
       .orderBy(desc(userStats.xpPoints))
       .limit(10);
-    
+
     return results.map((r: any, index: number) => ({
       rank: index + 1,
       user: { id: r.user.id, username: r.user.username },
@@ -310,7 +311,7 @@ export class Storage {
   // Quiz management
   async getQuizzes(): Promise<(Quiz & { questions: QuizQuestion[] })[]> {
     const allQuizzes = await db.select().from(quizzes).orderBy(quizzes.order);
-    
+
     const quizzesWithQuestions = await Promise.all(
       allQuizzes.map(async (quiz) => {
         const questions = await db
@@ -321,7 +322,7 @@ export class Storage {
         return { ...quiz, questions };
       })
     );
-    
+
     return quizzesWithQuestions;
   }
 
@@ -350,20 +351,20 @@ export class Storage {
 
   async submitQuizAttempt(insertAttempt: InsertQuizAttempt): Promise<QuizAttempt> {
     const [attempt] = await db.insert(quizAttempts).values(insertAttempt).returning();
-    
+
     // Update user stats if quiz passed
     if (attempt.passed) {
       const [stats] = await db
         .select()
         .from(userStats)
         .where(eq(userStats.userId, attempt.userId));
-      
+
       // Get quiz to get XP reward
       const [quiz] = await db
         .select()
         .from(quizzes)
         .where(eq(quizzes.id, attempt.quizId));
-      
+
       if (stats && quiz) {
         await db
           .update(userStats)
@@ -374,7 +375,7 @@ export class Storage {
           .where(eq(userStats.id, stats.id));
       }
     }
-    
+
     return attempt;
   }
 

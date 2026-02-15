@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-02-15T21:48:01.282Z",
+  "inventory": [
+    {
+      "tableName": "lessons",
+      "count": 1659,
+      "sampleIds": [
+        24,
+        1769595070314,
+        1769595070324,
+        1769595070329,
+        1769595070334
+      ],
+      "checksum": "W3siaWQiOjI0fSx7"
+    },
+    {
+      "tableName": "vocabulary",
+      "count": 17714,
+      "sampleIds": [
+        1,
+        2,
+        3,
+        118,
+        119
+      ],
+      "checksum": "W3siaWQiOjF9LHsi"
+    },
+    {
+      "tableName": "quizzes",
+      "count": 7,
+      "sampleIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "checksum": "W3siaWQiOjF9LHsi"
+    },
+    {
+      "tableName": "stories",
+      "count": 63,
+      "sampleIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "checksum": "W3siaWQiOjF9LHsi"
+    },
+    {
+      "tableName": "scenarios",
+      "count": 77,
+      "sampleIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "checksum": "W3siaWQiOjF9LHsi"
+    },
+    {
+      "tableName": "speaking_topics",
+      "count": 6,
+      "sampleIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "checksum": "W3siaWQiOjF9LHsi"
+    }
+  ],
+  "totalCount": 19526
+}

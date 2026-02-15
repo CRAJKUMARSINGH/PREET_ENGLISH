@@ -1,17 +1,8 @@
 
-import { scrypt, randomBytes } from "crypto";
-import { promisify } from "util";
 import { db } from "../server/db";
 import { users, userStats, userSpeakingProfiles } from "../shared/schema";
 import { eq } from "drizzle-orm";
-
-const scryptAsync = promisify(scrypt);
-
-async function hashPassword(password: string) {
-    const salt = randomBytes(16).toString("hex");
-    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-    return `${buf.toString("hex")}.${salt}`;
-}
+import { hashPassword } from "../server/lib/auth-utils";
 
 async function createBigulUser() {
     console.log("Creating user 'bigul'...");

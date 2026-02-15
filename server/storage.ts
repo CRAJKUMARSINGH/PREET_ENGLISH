@@ -24,7 +24,8 @@ import {
   type CulturalScenarioProgress, type InsertCulturalScenarioProgress,
   type Quiz, type InsertQuiz,
   type QuizQuestion, type InsertQuizQuestion,
-  type QuizAttempt, type InsertQuizAttempt
+  type QuizAttempt, type InsertQuizAttempt,
+  type UserStats
 } from "@shared/schema";
 
 export class Storage {
@@ -87,7 +88,7 @@ export class Storage {
       .innerJoin(lessons, eq(progress.lessonId, lessons.id))
       .where(eq(progress.userId, userId));
 
-    return results.map((r: any) => ({ ...r.progress, lesson: r.lesson }));
+    return results.map((r) => ({ ...r.progress, lesson: r.lesson }));
   }
 
   async markLessonComplete(userId: number, lessonId: number, completed: boolean): Promise<Progress> {
@@ -191,7 +192,7 @@ export class Storage {
       .innerJoin(users, eq(activityFeed.userId, users.id))
       .orderBy(desc(activityFeed.createdAt));
 
-    return results.map((r: any) => ({ ...r.feed, user: r.user }));
+    return results.map((r) => ({ ...r.feed, user: r.user }));
   }
 
   async addActivityFeedItem(insertActivity: InsertActivityFeed): Promise<ActivityFeed> {
@@ -222,12 +223,12 @@ export class Storage {
     return await this.getUser(userId);
   }
 
-  async getUserStats(userId: number): Promise<any> {
+  async getUserStats(userId: number): Promise<UserStats | null> {
     const [stats] = await db.select().from(userStats).where(eq(userStats.userId, userId));
     return stats || null;
   }
 
-  async createUserStats(userId: number): Promise<any> {
+  async createUserStats(userId: number): Promise<UserStats> {
     const [stats] = await db.insert(userStats).values({
       userId,
       xpPoints: 0,
@@ -243,7 +244,7 @@ export class Storage {
     return stats;
   }
 
-  async updateUserStats(userId: number, data: any): Promise<any> {
+  async updateUserStats(userId: number, data: Partial<UserStats>): Promise<UserStats> {
     const existing = await this.getUserStats(userId);
     if (!existing) {
       // Create new stats with provided data
@@ -296,7 +297,7 @@ export class Storage {
       .orderBy(desc(userStats.xpPoints))
       .limit(10);
 
-    return results.map((r: any, index: number) => ({
+    return results.map((r, index: number) => ({
       rank: index + 1,
       user: { id: r.user.id, username: r.user.username },
       xpEarned: r.stats.xpPoints,

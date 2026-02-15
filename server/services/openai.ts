@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { logger } from '../lib/logger';
 
 // Enhanced initialization with fallback mode
 let openai: OpenAI | null = null;
@@ -9,9 +10,9 @@ function initializeOpenAI() {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey || apiKey === 'fallback-mode' || apiKey.length < 10) {
-    console.warn('⚠️  OpenAI API key not configured - running in FALLBACK MODE');
-    console.warn('   AI features will use pre-generated content');
-    console.warn('   Get API key from: https://platform.openai.com/api-keys');
+    logger.warn('OpenAI API key not configured - running in FALLBACK MODE');
+    logger.warn('AI features will use pre-generated content');
+    logger.warn('Get API key from: https://platform.openai.com/api-keys');
     isAIConfigured = false;
     return;
   }
@@ -23,13 +24,13 @@ function initializeOpenAI() {
       timeout: 30000,  // 30 seconds
     });
     isAIConfigured = true;
-    console.log('✅ OpenAI service initialized successfully');
+    logger.info('OpenAI service initialized successfully');
 
     // Test the connection
     testOpenAIConnection();
   } catch (error) {
-    console.error('❌ Failed to initialize OpenAI service:', error);
-    console.warn('   Falling back to pre-generated content');
+    logger.error('Failed to initialize OpenAI service:', error);
+    logger.warn('Falling back to pre-generated content');
     isAIConfigured = false;
   }
 }
@@ -40,9 +41,9 @@ async function testOpenAIConnection() {
 
   try {
     await openai.models.list();
-    console.log('✅ OpenAI connection test successful');
+    logger.info('OpenAI connection test successful');
   } catch (error) {
-    console.error('❌ OpenAI connection test failed:', error);
+    logger.error('OpenAI connection test failed:', error);
     isAIConfigured = false;
   }
 }
@@ -174,7 +175,7 @@ export async function generateFeedback(
 ): Promise<string> {
   // If AI not configured, return fallback content
   if (!isAIConfigured || !openai) {
-    console.log(`Fallback mode: returning pre-generated content for user ${userId}`);
+    logger.debug(`Fallback mode: returning pre-generated content for user ${userId}`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback);
   }
 
@@ -182,7 +183,7 @@ export async function generateFeedback(
   const cacheKey = aiCache.getCacheKey(prompt, model, maxTokens);
   const cachedResponse = aiCache.get(cacheKey);
   if (cachedResponse) {
-    console.log(`Cache hit for user ${userId}, saved API call`);
+    logger.debug(`Cache hit for user ${userId}, saved API call`);
     return cachedResponse;
   }
 
@@ -191,17 +192,17 @@ export async function generateFeedback(
 
   // Enforce daily limits
   if (stats.totalTokens > DAILY_LIMITS.TOKEN_LIMIT) {
-    console.log(`Daily limit reached for user ${userId}, using fallback`);
+    logger.info(`Daily token limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily AI limit reached)';
   }
 
   if (stats.requestCount > DAILY_LIMITS.REQUEST_LIMIT) {
-    console.log(`Request limit reached for user ${userId}, using fallback`);
+    logger.info(`Request limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily request limit reached)';
   }
 
   if (stats.estimatedCost > DAILY_LIMITS.COST_LIMIT) {
-    console.log(`Cost limit reached for user ${userId}, using fallback`);
+    logger.info(`Cost limit reached for user ${userId}, using fallback`);
     return getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback) + ' (Daily cost limit reached)';
   }
 
@@ -238,14 +239,14 @@ export async function generateFeedback(
 
       // Log high-cost requests
       if (cost > 0.10) {
-        console.warn(`High-cost OpenAI request: ${cost.toFixed(4)} for user ${userId}`);
+        logger.warn(`High-cost OpenAI request: $${cost.toFixed(4)} for user ${userId}`);
       }
     }
 
     return content;
 
   } catch (error: any) {
-    console.error(`OpenAI API error for user ${userId}:`, error.message);
+    logger.error(`OpenAI API error for user ${userId}: ${error.message}`);
 
     // Return fallback content on any error
     let fallbackMessage = getRandomFallback(FALLBACK_CONTENT.pronunciation_feedback);
@@ -253,7 +254,7 @@ export async function generateFeedback(
     if (error.status === 429) {
       fallbackMessage += ' (AI service busy - using backup content)';
     } else if (error.status === 401) {
-      console.error('Invalid OpenAI API key');
+      logger.error('Invalid OpenAI API key');
       fallbackMessage += ' (AI service configuration issue)';
     } else {
       fallbackMessage += ' (AI service temporarily unavailable)';
@@ -290,7 +291,7 @@ export async function generateStory(
 ): Promise<string> {
   // If AI not configured, return fallback content
   if (!isAIConfigured || !openai) {
-    console.log(`Fallback mode: returning pre-generated story for user ${userId}`);
+    logger.debug(`Fallback mode: returning pre-generated story for user ${userId}`);
     const stories = FALLBACK_CONTENT.stories[difficulty] || FALLBACK_CONTENT.stories.beginner;
     return getRandomFallback(stories);
   }
@@ -315,7 +316,7 @@ export async function generateStory(
   try {
     return await generateFeedback(userId, prompt, 400, 'gpt-3.5-turbo');
   } catch (error) {
-    console.log(`Story generation failed for user ${userId}, using fallback`);
+    logger.debug(`Story generation failed for user ${userId}, using fallback`);
     const stories = FALLBACK_CONTENT.stories[difficulty] || FALLBACK_CONTENT.stories.beginner;
     return getRandomFallback(stories) + ' (Generated from our story library)';
   }
@@ -329,7 +330,7 @@ export async function generateConversationScenario(
 ): Promise<string> {
   // If AI not configured, return fallback content
   if (!isAIConfigured || !openai) {
-    console.log(`Fallback mode: returning pre-generated conversation for user ${userId}`);
+    logger.debug(`Fallback mode: returning pre-generated conversation for user ${userId}`);
     const fallbackKey = scenario.toLowerCase();
     return FALLBACK_CONTENT.conversation_scenarios[fallbackKey] ||
       FALLBACK_CONTENT.conversation_scenarios['restaurant'];
@@ -352,7 +353,7 @@ export async function generateConversationScenario(
   try {
     return await generateFeedback(userId, prompt, 600, 'gpt-3.5-turbo');
   } catch (error) {
-    console.log(`Conversation generation failed for user ${userId}, using fallback`);
+    logger.debug(`Conversation generation failed for user ${userId}, using fallback`);
     const fallbackKey = scenario.toLowerCase();
     return (FALLBACK_CONTENT.conversation_scenarios[fallbackKey] ||
       FALLBACK_CONTENT.conversation_scenarios['restaurant']) +
@@ -436,7 +437,7 @@ export function getAICacheStats() {
 // Reset daily quotas (called by cron job)
 export function resetDailyQuotas(): void {
   usageStats.clear();
-  console.log('Daily AI usage quotas reset');
+  logger.info('Daily AI usage quotas reset');
 }
 
 // Set up daily reset at midnight

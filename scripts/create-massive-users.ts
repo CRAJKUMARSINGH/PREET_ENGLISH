@@ -7,7 +7,9 @@ import { hashPassword } from "../server/lib/auth-utils";
 async function createMassiveUsers() {
     console.log("🚀 Starting Massive User Creation (Optimized Bulk Insert)...");
 
-    const hashedPassword = await hashPassword("TestPass123!");
+    // Use environment variable for test password (default fallback for backward compatibility)
+    const testPassword = process.env.TEST_USER_PASSWORD || "TestPass123!";
+    const hashedPassword = await hashPassword(testPassword);
 
     // Batch Size for SQLite limits (maximum variables usually 999, so ~200 rows with 4 cols each)
     const BATCH_SIZE = 100;

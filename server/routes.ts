@@ -490,3 +490,97 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
     }
   });
 }
+
+  // ============================================
+  // CACHE MANAGEMENT ENDPOINTS
+  // ============================================
+  
+  /**
+   * Clear cache manually
+   * POST /api/cache/clear
+   */
+  app.post("/api/cache/clear", async (req, res) => {
+    try {
+      const { cacheManager } = await import("./middleware/cacheManager");
+      const stats = cacheManager.clearCache();
+      res.json({
+        success: true,
+        message: 'Cache cleared successfully',
+        stats,
+        memory: cacheManager.getMemoryUsage(),
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to clear cache',
+        error: error.message,
+      });
+    }
+  });
+
+  /**
+   * Get cache statistics
+   * GET /api/cache/stats
+   */
+  app.get("/api/cache/stats", async (req, res) => {
+    try {
+      const { cacheManager } = await import("./middleware/cacheManager");
+      res.json({
+        stats: cacheManager.getStats(),
+        memory: cacheManager.getMemoryUsage(),
+        autoClearEnabled: cacheManager.isAutoClearEnabled(),
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
+  /**
+   * Start automatic cache clearing
+   * POST /api/cache/auto-clear/start
+   * Body: { interval: 30000 } // milliseconds
+   */
+  app.post("/api/cache/auto-clear/start", async (req, res) => {
+    try {
+      const { cacheManager } = await import("./middleware/cacheManager");
+      const intervalMs = parseInt(req.body.interval) || 30000;
+      cacheManager.startAutoClear(intervalMs);
+      res.json({
+        success: true,
+        message: `Auto-clear started with ${intervalMs}ms interval`,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to start auto-clear',
+        error: error.message,
+      });
+    }
+  });
+
+  /**
+   * Stop automatic cache clearing
+   * POST /api/cache/auto-clear/stop
+   */
+  app.post("/api/cache/auto-clear/stop", async (req, res) => {
+    try {
+      const { cacheManager } = await import("./middleware/cacheManager");
+      cacheManager.stopAutoClear();
+      res.json({
+        success: true,
+        message: 'Auto-clear stopped',
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to stop auto-clear',
+        error: error.message,
+      });
+    }
+  });
+
+  logger.info("✅ All routes registered successfully (including cache management)");
+}

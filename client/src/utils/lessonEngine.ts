@@ -48,7 +48,7 @@ class LessonEngine {
   public createIntegratedFlow(rawLessons: Lesson[]): LessonFlowMap {
     // Sort lessons by order to ensure logical 1 -> N flow
     const sorted = [...rawLessons].sort((a, b) => a.order - b.order);
-    
+
     // Enrich each lesson with metadata and navigation
     const enriched: EnrichedLesson[] = sorted.map((lesson, index) => {
       return this.enrichLesson(lesson, index, sorted);
@@ -65,13 +65,13 @@ class LessonEngine {
     // Populate maps
     enriched.forEach(lesson => {
       flowMap.byId.set(lesson.id, lesson);
-      
+
       // Group by category
       if (!flowMap.byCategory.has(lesson.category)) {
         flowMap.byCategory.set(lesson.category, []);
       }
       flowMap.byCategory.get(lesson.category)!.push(lesson);
-      
+
       // Group by difficulty
       if (!flowMap.byDifficulty.has(lesson.difficulty)) {
         flowMap.byDifficulty.set(lesson.difficulty, []);
@@ -138,16 +138,16 @@ class LessonEngine {
    */
   private findRelatedLessons(lesson: EnrichedLesson, flowMap: LessonFlowMap): EnrichedLesson[] {
     const related: EnrichedLesson[] = [];
-    
+
     // Same category, different difficulty
     const categoryLessons = flowMap.byCategory.get(lesson.category) || [];
-    const sameCategoryDifferentDifficulty = categoryLessons.filter(l => 
+    const sameCategoryDifferentDifficulty = categoryLessons.filter(l =>
       l.id !== lesson.id && l.difficulty !== lesson.difficulty
     );
-    
+
     // Same difficulty, different category
     const difficultyLessons = flowMap.byDifficulty.get(lesson.difficulty) || [];
-    const sameDifficultyDifferentCategory = difficultyLessons.filter(l => 
+    const sameDifficultyDifferentCategory = difficultyLessons.filter(l =>
       l.id !== lesson.id && l.category !== lesson.category
     );
 
@@ -165,7 +165,7 @@ class LessonEngine {
     // Use existing Hindi fields or generate intelligent defaults
     const title = lesson.hindiTitle || this.translateToHindi(lesson.title);
     const description = lesson.hindiDescription || this.generateHindiDescription(lesson);
-    
+
     return {
       title,
       description,
@@ -174,17 +174,16 @@ class LessonEngine {
     };
   }
 
-  /**
-   * Assesses if a lesson has adequate Hindi support
-   */
   private assessHindiReadiness(lesson: Lesson): boolean {
-    const hasHindiTitle = lesson.hindiTitle && lesson.hindiTitle.trim().length > 0;
-    const hasHindiDescription = lesson.hindiDescription && lesson.hindiDescription.trim().length > 0;
-    const hasDevanagariContent = this.containsDevanagari(lesson.hindiTitle || '') || 
-                                this.containsDevanagari(lesson.hindiDescription || '');
-    
+    const hasHindiTitle = !!(lesson.hindiTitle && lesson.hindiTitle.trim().length > 0);
+    const hasHindiDescription = !!(lesson.hindiDescription && lesson.hindiDescription.trim().length > 0);
+    const hasDevanagariContent = this.containsDevanagari(lesson.hindiTitle || '') ||
+      this.containsDevanagari(lesson.hindiDescription || '');
+
     return hasHindiTitle && hasHindiDescription && hasDevanagariContent;
   }
+
+
 
   /**
    * Calculates a quality score for the lesson (Grade 9 standard)
@@ -228,10 +227,10 @@ class LessonEngine {
     // Add time for exercises and interaction
     const readingMinutes = wordCount / 200;
     const totalMinutes = Math.ceil(readingMinutes * 1.5); // 50% extra for interaction
-    
+
     if (totalMinutes < 1) return "< 1 min";
     if (totalMinutes < 60) return `${totalMinutes} min`;
-    
+
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
@@ -277,9 +276,9 @@ class LessonEngine {
   private generateHindiDescription(lesson: Lesson): string {
     const difficulty = lesson.difficulty.toLowerCase();
     const category = lesson.category.toLowerCase();
-    
+
     let description = "इस पाठ में आप ";
-    
+
     if (category.includes('grammar')) {
       description += "व्याकरण के नियम";
     } else if (category.includes('vocabulary')) {
@@ -289,9 +288,9 @@ class LessonEngine {
     } else {
       description += "अंग्रेजी भाषा के महत्वपूर्ण पहलू";
     }
-    
+
     description += " सीखेंगे। ";
-    
+
     if (difficulty === 'beginner') {
       description += "यह शुरुआती स्तर का पाठ है।";
     } else if (difficulty === 'intermediate') {
@@ -364,22 +363,22 @@ class LessonEngine {
 
     // Check for gaps in sequence
     for (let i = 1; i < lessons.length; i++) {
-      if (lessons[i].order - lessons[i-1].order > 1) {
-        issues.push(`Gap in sequence between lesson ${lessons[i-1].order} and ${lessons[i].order}`);
+      if (lessons[i].order - lessons[i - 1].order > 1) {
+        issues.push(`Gap in sequence between lesson ${lessons[i - 1].order} and ${lessons[i].order}`);
       }
     }
 
     // Check Hindi readiness
     const hindiReadyCount = lessons.filter(l => l.metadata.hindiReadiness).length;
     const hindiCoverage = (hindiReadyCount / lessons.length) * 100;
-    
+
     if (hindiCoverage < 90) {
       issues.push(`Hindi coverage ${hindiCoverage.toFixed(1)}% below Grade 9 target (90%)`);
     }
 
     // Check quality scores
     const avgQuality = lessons.reduce((sum, l) => sum + l.metadata.qualityScore, 0) / lessons.length;
-    
+
     if (avgQuality < 80) {
       issues.push(`Average quality score ${avgQuality.toFixed(1)} below Grade 9 minimum (80)`);
     }

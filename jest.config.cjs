@@ -28,7 +28,14 @@ const config = {
     '^.*\\/lib\\/analytics$': '<rootDir>/tests/mocks/analytics.ts',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+        resolveJsonModule: true,
+      }
+    }],
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
   transformIgnorePatterns: [
@@ -57,14 +64,6 @@ const config = {
   },
   testTimeout: 15000, // Reduced timeout
   preset: 'ts-jest',
-  globals: {
-    'ts-jest': {
-      useESM: false,
-      tsconfig: {
-        module: 'commonjs',
-      },
-    },
-  },
   
   // Additional cleanup configuration
   clearMocks: true,

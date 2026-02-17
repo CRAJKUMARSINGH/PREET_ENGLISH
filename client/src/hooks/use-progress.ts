@@ -34,9 +34,9 @@ export function useMarkComplete() {
       });
 
       if (!res.ok) {
-        // Return mock progress for demo mode
-        console.warn('Failed to update progress, using mock response');
-        return { id: Date.now(), userId: 1, lessonId, completed, completedAt: new Date().toISOString() };
+        // Don't return mock data - throw error to let UI handle it
+        console.error('Failed to update progress:', res.status, res.statusText);
+        throw new Error('Failed to update progress. Please ensure you are logged in.');
       }
       return await res.json();
     },

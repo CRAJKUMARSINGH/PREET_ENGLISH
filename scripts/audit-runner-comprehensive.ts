@@ -2,7 +2,7 @@
 import { db } from "../server/db";
 import { lessons, vocabulary, conversationLines } from "../shared/schema";
 import { eq } from "drizzle-orm";
-import { createAuditPhaseRaw } from "./audit-phase-raw";
+import { AuditPhase } from "./audit-phase";
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -26,14 +26,15 @@ interface Lesson {
 async function runComprehensiveAudit() {
     console.log("🚀 Starting Comprehensive 'Grade 9' Audit Runner (Raw Mode)...");
 
-    const auditor = createAuditPhaseRaw();
+    const auditor = new AuditPhase();
     const summary = await auditor.performAudit();
 
     // Calculate detailed stats
-    const totalLessons = summary.results.filter(r => r.type === 'lesson').length;
-    const passedLessons = summary.results.filter(r => r.type === 'lesson' && r.status === 'pass').length;
-    const failedLessons = summary.results.filter(r => r.type === 'lesson' && r.status === 'fail').length;
-    const warningLessons = summary.results.filter(r => r.type === 'lesson' && r.status === 'warning').length;
+    const totalLessons = summary.results.filter((r: any) => r.type === 'lesson').length;
+    const passedLessons = summary.results.filter((r: any) => r.type === 'lesson' && r.status === 'pass').length;
+    const failedLessons = summary.results.filter((r: any) => r.type === 'lesson' && r.status === 'fail').length;
+    const warningLessons = summary.results.filter((r: any) => r.type === 'lesson' && r.status === 'warning').length;
+
 
     const qualityScore = summary.qualityScore || 0;
 
@@ -49,23 +50,24 @@ Generated at: ${new Date().toLocaleString()}
 
 ## 🚨 Critical Failures (Action Required)
 ${summary.results
-            .filter(r => r.status === 'fail')
-            .map(r => `- **[${r.type.toUpperCase()}] ${r.id}**: ${r.issues.join(', ')}`)
+            .filter((r: any) => r.status === 'fail')
+            .map((r: any) => `- **[${r.type.toUpperCase()}] ${r.id}**: ${r.issues.join(', ')}`)
             .slice(0, 50)
             .join('\n') || "No critical failures found!"}
-${summary.results.filter(r => r.status === 'fail').length > 50 ? `\n...and ${summary.results.filter(r => r.status === 'fail').length - 50} more.` : ''}
+${summary.results.filter((r: any) => r.status === 'fail').length > 50 ? `\n...and ${summary.results.filter((r: any) => r.status === 'fail').length - 50} more.` : ''}
 
 ## ⚠️ Warnings (To Enrich)
 ${summary.results
-            .filter(r => r.status === 'warning')
-            .map(r => `- **[${r.type.toUpperCase()}] ${r.id}**: ${r.issues.join(', ')}`)
+            .filter((r: any) => r.status === 'warning')
+            .map((r: any) => `- **[${r.type.toUpperCase()}] ${r.id}**: ${r.issues.join(', ')}`)
             .slice(0, 50) // Limit to 50 items to keep report readable
             .join('\n')}
-${summary.results.filter(r => r.status === 'warning').length > 50 ? `\n...and ${summary.results.filter(r => r.status === 'warning').length - 50} more.` : ''}
+${summary.results.filter((r: any) => r.status === 'warning').length > 50 ? `\n...and ${summary.results.filter((r: any) => r.status === 'warning').length - 50} more.` : ''}
 
 ## 💡 Improvements Suggestions
-- Improve cultural sensitivity in ${summary.results.filter(r => r.issues.some(i => i.includes('cultural'))).length} items.
-- Add audio to ${summary.results.filter(r => r.type === 'vocabulary' && !r.score).length} vocabulary words (check done separately).
+- Improve cultural sensitivity in ${summary.results.filter((r: any) => r.issues.some((i: string) => i.includes('cultural'))).length} items.
+- Add audio to ${summary.results.filter((r: any) => r.type === 'vocabulary' && !r.score).length} vocabulary words (check done separately).
+
 `;
 
     const reportPath = path.resolve(process.cwd(), 'AUDIT_REPORT_FULL.md');
@@ -73,8 +75,9 @@ ${summary.results.filter(r => r.status === 'warning').length > 50 ? `\n...and ${
 
     // EXPORT FAILED IDs for Mass Enrichment
     const failedIds = summary.results
-        .filter(r => r.type === 'lesson' && (r.status === 'fail' || r.status === 'warning'))
-        .map(r => parseInt(r.id.replace('lesson-', '')));
+        .filter((r: any) => r.type === 'lesson' && (r.status === 'fail' || r.status === 'warning'))
+        .map((r: any) => parseInt(r.id.replace('lesson-', '')));
+
 
     const jsonPath = path.resolve(process.cwd(), 'failed_lessons.json');
     fs.writeFileSync(jsonPath, JSON.stringify(failedIds, null, 2));

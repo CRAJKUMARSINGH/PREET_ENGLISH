@@ -59,6 +59,11 @@ export class ChatService {
     }
 
     async generateResponse(userMessage: string): Promise<string> {
+        // Validate input
+        if (!userMessage || typeof userMessage !== 'string' || userMessage.trim().length === 0) {
+            return "Namaste! 🙏 Please send me a message so I can help you learn English.";
+        }
+
         // 1. Try OpenAI if available
         if (this.openai) {
             try {
@@ -66,23 +71,34 @@ export class ChatService {
                     model: "gpt-4o-mini", // Fast & cheap
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
-                        { role: "user", content: userMessage }
+                        { role: "user", content: userMessage.trim() }
                     ],
                     max_tokens: 150,
                     temperature: 0.7,
                 });
-                return completion.choices[0].message.content || DEFAULT_FALLBACK;
-            } catch (error: any) {
-                console.error("❌ OpenAI Error:", error.message);
+                
+                const content = completion.choices[0]?.message?.content;
+                if (content && content.trim().length > 0) {
+                    return content;
+                }
+                // Fall through to fallback if content is empty
+            } catch (error: unknown) {
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                console.error("❌ OpenAI Error:", errorMessage);
                 // Fall through to fallback
             }
         }
 
-        // 2. Fallback Logic (Regex)
-        for (const pattern of FALLBACK_PATTERNS) {
-            if (pattern.regex.test(userMessage)) {
-                return pattern.response;
+        // 2. Fallback Logic (Regex) with error handling
+        try {
+            for (const pattern of FALLBACK_PATTERNS) {
+                if (pattern.regex && pattern.regex.test(userMessage)) {
+                    return pattern.response || DEFAULT_FALLBACK;
+                }
             }
+        } catch (error: unknown) {
+            console.error("❌ Fallback pattern matching error:", error);
+            // Continue to default fallback
         }
 
         return DEFAULT_FALLBACK;

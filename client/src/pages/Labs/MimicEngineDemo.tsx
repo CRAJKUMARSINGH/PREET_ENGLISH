@@ -57,7 +57,7 @@ export default function MimicEngineDemo() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       {/* Hero Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
@@ -69,9 +69,9 @@ export default function MimicEngineDemo() {
           </h1>
           <Trophy className="h-8 w-8 text-yellow-500" />
         </div>
-        
+
         <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
-          Revolutionary AI-powered pronunciation training with real-time waveform feedback. 
+          Revolutionary AI-powered pronunciation training with real-time waveform feedback.
           The feature that makes PREET_ENGLISH go viral! 🚀
         </p>
 
@@ -97,7 +97,7 @@ export default function MimicEngineDemo() {
 
       {/* Stats Dashboard */}
       {attempts > 0 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
@@ -109,7 +109,7 @@ export default function MimicEngineDemo() {
               <div className="text-sm text-muted-foreground">Average Score</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4 text-center">
               <Target className="h-8 w-8 text-blue-500 mx-auto mb-2" />
@@ -117,7 +117,7 @@ export default function MimicEngineDemo() {
               <div className="text-sm text-muted-foreground">Total Attempts</div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4 text-center">
               <Trophy className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
@@ -137,13 +137,14 @@ export default function MimicEngineDemo() {
               <CardTitle>Choose Your Challenge</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs value={selectedLevel} onValueChange={handleLevelChange}>
+              <Tabs value={selectedLevel} onValueChange={(v) => handleLevelChange(v as 'beginner' | 'intermediate' | 'advanced')}>
                 <TabsList className="grid w-full grid-cols-3">
+
                   <TabsTrigger value="beginner">Beginner</TabsTrigger>
                   <TabsTrigger value="intermediate">Intermediate</TabsTrigger>
                   <TabsTrigger value="advanced">Advanced</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value={selectedLevel} className="mt-4">
                   <div className="space-y-2">
                     {DEMO_PHRASES[selectedLevel].map((phrase, index) => (
@@ -200,14 +201,14 @@ export default function MimicEngineDemo() {
       </div>
 
       {/* Features Showcase */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
         className="mt-16"
       >
         <h2 className="text-3xl font-bold text-center mb-8">Why The Mimic Engine is Revolutionary</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="text-center">
             <CardContent className="p-6">
@@ -260,7 +261,7 @@ export default function MimicEngineDemo() {
       </motion.div>
 
       {/* Call to Action */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
@@ -268,7 +269,7 @@ export default function MimicEngineDemo() {
       >
         <h2 className="text-2xl font-bold mb-4">Ready to Perfect Your Pronunciation?</h2>
         <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-          Join thousands of learners who are already improving their English pronunciation with The Mimic Engine. 
+          Join thousands of learners who are already improving their English pronunciation with The Mimic Engine.
           Start your journey to confident English speaking today!
         </p>
         <div className="flex flex-wrap justify-center gap-4">

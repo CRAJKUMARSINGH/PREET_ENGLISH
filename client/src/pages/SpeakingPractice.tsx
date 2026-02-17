@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 import { useQuery } from "@tanstack/react-query";
 import { SpeakingTopic } from "@shared/schema";
+import { listeningExercises } from '@/data/hindiListeningData';
 
 export default function SpeakingPractice() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');

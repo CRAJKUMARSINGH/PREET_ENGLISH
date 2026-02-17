@@ -8,9 +8,11 @@ import { globalErrorHandler, notFoundHandler } from "./middleware/errorHandler.j
 import { HealthMonitor, performanceMonitor } from "./middleware/monitoring.js";
 import { chaosMiddleware } from "./middleware/chaos";
 import { db } from "./db.js";
+import { selectOne } from "./lib/db-helpers";
 
 const app = express();
 const httpServer = createServer(app);
+
 
 // Chaos Middleware (First, to affect everything)
 app.use(chaosMiddleware);
@@ -22,8 +24,9 @@ const healthMonitor = new HealthMonitor();
 healthMonitor.addCheck('database', async () => {
   try {
     const { users } = await import('../shared/schema.js');
-    await db.select().from(users).limit(1);
+    await selectOne<any>(db.select().from(users).limit(1));
     return true;
+
   } catch {
     return false;
   }
@@ -31,13 +34,13 @@ healthMonitor.addCheck('database', async () => {
 
 healthMonitor.addCheck('memory', async () => {
   const usage = process.memoryUsage();
-  const maxMemory = 512 * 1024 * 1024; // 512MB
+  const maxMemory = 1024 * 1024 * 1024; // 1GB
   return usage.heapUsed < maxMemory;
 });
 
 // Basic middleware
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 
 // Performance monitoring
 app.use(performanceMonitor);
@@ -52,7 +55,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rate limiting
+import helmet from "helmet";
+
+// Rate limiting configuration
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: process.env.NODE_ENV === "test" || process.env.TEST_LOAD_PATTERN || process.env.STRESS_TEST ? 50000 : 1000,
@@ -61,17 +66,32 @@ const limiter = rateLimit({
   message: { message: "Too many requests, please try again later." },
 });
 
-// Apply rate limiter to all API routes
-// Rate limiting disabled for Stress Test
-// app.use("/api/", limiter);
+// Security headers with Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.polyfill.io"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      imgSrc: ["'self'", "data:", "https://images.unsplash.com"],
+      connectSrc: ["'self'", "https://api.openai.com", "wss://*.replit.dev"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false, // Disable for Vite compatibility
+}));
 
-// Security headers
-app.use((req, res, next) => {
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("X-XSS-Protection", "1; mode=block");
-  next();
-});
+// Apply rate limiter to all API routes except in specific stress test modes
+if (process.env.NODE_ENV !== "test" && !process.env.STRESS_TEST && !process.env.TEST_LOAD_PATTERN) {
+  app.use("/api/", limiter);
+  logger.info("Rate limiting enabled for /api/ routes");
+} else {
+  logger.warn("Rate limiting DISABLED for stress testing/simulation mode");
+}
+
 
 // Setup Authentication
 setupAuth(app);
@@ -123,6 +143,19 @@ app.get("/api/health", async (req, res) => {
 // Clean exports
 export { app, httpServer };
 export default app;
+
+
+// Global error handlers
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 
 if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
   const port = parseInt(process.env.PORT || "5000", 10);

@@ -17,6 +17,7 @@ import { DialoguePractice } from "@/components/HindiConversation/DialoguePractic
 import { RolePlaySimulator } from "@/components/HindiConversation/RolePlaySimulator";
 import { CommonPhrases } from "@/components/HindiConversation/CommonPhrases";
 import { ListeningPractice } from "@/components/HindiConversation/ListeningPractice";
+import { dialogues } from '@/data/hindiDialoguesData';
 
 export default function HindiConversation() {
   const [activeTab, setActiveTab] = useState("dialogue");

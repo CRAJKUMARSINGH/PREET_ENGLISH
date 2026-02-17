@@ -18,6 +18,7 @@ import { VocabularyBuilder } from "@/components/HindiVocabulary/VocabularyBuilde
 import { WordAssociation } from "@/components/HindiVocabulary/WordAssociation";
 import { SynonymAntonym } from "@/components/HindiVocabulary/SynonymAntonym";
 import { ContextClues } from "@/components/HindiVocabulary/ContextClues";
+import { advancedVocabulary } from '@/data/advancedVocabularyData';
 
 export default function HindiVocabulary() {
   const [activeTab, setActiveTab] = useState("builder");

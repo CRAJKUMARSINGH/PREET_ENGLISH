@@ -42,9 +42,12 @@ async function audit() {
     console.log("🔍 Starting Comprehensive Content Audit...");
 
     // 1. Get Active Lessons
+    // @ts-ignore
     const activeLessons = await db.select().from(lessons);
-    const activeTitles = new Set(activeLessons.map(l => l.title.toLowerCase())); // Normalize for case-insensitive check
-    const activeIds = new Set(activeLessons.map(l => l.id));
+
+    const activeTitles = new Set(activeLessons.map((l: any) => l.title.toLowerCase())); // Normalize for case-insensitive check
+    const activeIds = new Set(activeLessons.map((l: any) => l.id));
+
 
     console.log(`✅ Active Lessons in DB: ${activeLessons.length}`);
 
@@ -78,30 +81,35 @@ async function audit() {
     console.log(`\n📊 Audit Results:`);
     console.log(`Found ${potentialLessons.length} potential lesson sources.`);
 
-    const missingLessons = potentialLessons.filter(l =>
+    const missingLessons = potentialLessons.filter((l: any) =>
         l.suggestedTitle && !activeTitles.has(l.suggestedTitle.toLowerCase())
     );
 
-    const missingIds = potentialLessons.filter(l =>
+
+    const missingIds = potentialLessons.filter((l: any) =>
         l.suggestedId && !activeIds.has(l.suggestedId)
     );
+
 
     console.log(`\n🚩 POTENTIALLY MISSING CONTENT (${missingLessons.length} files):`);
 
     if (missingLessons.length > 0) {
-        missingLessons.forEach(l => {
+        missingLessons.forEach((l: any) => {
             console.log(`   - [${l.suggestedId || '?'}] "${l.suggestedTitle}" (Found in: ${path.relative(process.cwd(), l.file)})`);
         });
+
     } else {
         console.log("   Great news! All scanned lesson titles seem to be present in the database.");
     }
 
     // Specific check for Unique "Uncle Ji" content
-    const uncleJiLesson = potentialLessons.find(l => l.file.includes('seedLesson5871.ts'));
+    const uncleJiLesson = potentialLessons.find((l: any) => l.file.includes('seedLesson5871.ts'));
+
     if (uncleJiLesson) {
         console.log(`\n🧐 Special Check: seedLesson5871.ts (Uncle Ji)`);
         // Check if 5871 exists in DB
-        const dbLesson = activeLessons.find(l => l.id === 5871);
+        const dbLesson = activeLessons.find((l: any) => l.id === 5871);
+
         if (dbLesson) {
             console.log(`   ID 5871 exists in DB as: "${dbLesson.title}"`);
             if (dbLesson.title !== "Introduction & Greetings") {

@@ -1,9 +1,19 @@
+import "./types";
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import logger from "./logger";
 import { setChaos } from "./auth";
 import { checkAIServiceHealth } from "./services/openai";
+import {
+  chatRequestSchema,
+  videoChatRequestSchema,
+  chaosControlSchema,
+  quizSubmissionSchema,
+  insertLessonSchema,
+  insertDailyGoalSchema,
+  insertUserStatsSchema
+} from "../shared/schema";
 
 import { chatService } from "./chat-service";
 
@@ -39,10 +49,10 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
     try {
       // Test database connection
       const dbTest = await storage.getUser(1).catch(() => null);
-      
+
       // Get AI service status
       const aiHealth = await checkAIServiceHealth();
-      
+
       res.json({
         status: 'operational',
         services: {
@@ -69,12 +79,12 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
   // AI Chat API
   app.post("/api/chat", async (req, res) => {
-    // Optional: Check auth
-    // if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-
     try {
-      const { message } = req.body;
-      if (!message) return res.status(400).json({ message: "Message is required" });
+      const result = chatRequestSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid request", errors: result.error.errors });
+      }
+      const { message } = result.data;
 
       const response = await chatService.generateResponse(message);
       res.json({ response });
@@ -86,7 +96,11 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
 
   // Chaos Control Endpoint (Test Mode Only)
   app.post("/api/test/chaos", (req, res) => {
-    const { enabled } = req.body;
+    const result = chaosControlSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ message: "Invalid request", errors: result.error.errors });
+    }
+    const { enabled } = result.data;
     setChaos(!!enabled);
     res.json({ message: `Chaos enabled: ${enabled}` });
   });
@@ -94,8 +108,11 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   // AI Video Call API (Innovation Lab)
   app.post("/api/ai/video-chat", async (req, res) => {
     try {
-      const { message, scenario } = req.body;
-      if (!message) return res.status(400).json({ message: "Message is required" });
+      const result = videoChatRequestSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid request", errors: result.error.errors });
+      }
+      const { message, scenario } = result.data;
 
       // Use the same chat service but wrap the response
       const textResponse = await chatService.generateResponse(
@@ -162,7 +179,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   // User Progress (Protected)
   app.get("/api/progress", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = req.user as any;
+    const user = req.user!;
     try {
       const progress = await storage.getProgress(user.id);
       res.json(progress);
@@ -174,7 +191,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
 
   app.post("/api/progress/:lessonId", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = req.user as any;
+    const user = req.user!;
     try {
       const progress = await storage.markLessonComplete(
         user.id,
@@ -189,9 +206,15 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
   // Create Lesson (Admin)
   app.post("/api/lessons", async (req, res) => {
-    // In a real app, check for admin
+    if (!req.isAuthenticated() || !req.user!.isAdmin) {
+      return res.status(403).json({ message: "Admin access required" });
+    }
     try {
-      const lesson = await storage.createLesson(req.body);
+      const result = insertLessonSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid lesson data", errors: result.error.errors });
+      }
+      const lesson = await storage.createLesson(result.data);
       res.status(201).json(lesson);
     } catch (error) {
       logger.error("Error creating lesson:", error);
@@ -200,8 +223,8 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
 
   app.post("/api/lessons/:id/complete", async (req, res) => {
-    if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = (req.user as any) || { id: 1 }; // Fallback for tests if not auth
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
     try {
       const progress = await storage.markLessonComplete(
         user.id,
@@ -214,6 +237,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
       res.status(500).json({ message: "Failed to complete lesson" });
     }
   });
+
 
   // Quizzes
   app.get("/api/quizzes", async (_req, res) => {
@@ -261,18 +285,40 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
 
   app.post("/api/quizzes/:id/submit", async (req, res) => {
-    if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = (req.user as any) || { id: 1 };
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
 
     try {
-      const { answers, timeSpent } = req.body;
+      const result = quizSubmissionSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid request", errors: result.error.errors });
+      }
+      const { answers, timeSpent } = result.data;
+
       const quiz = await storage.getQuiz(Number(req.params.id));
       if (!quiz) return res.status(404).json({ message: "Quiz not found" });
 
+      // Validate quiz has questions
+      const totalQuestions = quiz.questions.length;
+      if (totalQuestions === 0) {
+        return res.status(400).json({ message: "Quiz has no questions" });
+      }
+
+      // Validate answers array length matches questions
+      if (!Array.isArray(answers) || answers.length !== totalQuestions) {
+        return res.status(400).json({ 
+          message: `Invalid answers: expected ${totalQuestions} answers, got ${answers?.length || 0}` 
+        });
+      }
+
+      // Calculate total points and validate
+      const totalPoints = quiz.questions.reduce((sum, q) => sum + (q.points || 10), 0);
+      if (totalPoints === 0) {
+        return res.status(400).json({ message: "Quiz has no points configured" });
+      }
+
       // Calculate score
       let score = 0;
-      const totalQuestions = quiz.questions.length;
-
       quiz.questions.forEach((question, index) => {
         const userAnswer = answers[index];
         const correctAnswer = question.correctAnswer;
@@ -285,14 +331,21 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
             score += question.points || 10;
           }
         } else if (question.questionType === 'match') {
-          // For match questions, compare arrays
-          if (JSON.stringify(userAnswer) === JSON.stringify(JSON.parse(correctAnswer))) {
-            score += question.points || 10;
+          // For match questions, compare arrays with error handling
+          try {
+            const parsedCorrectAnswer = JSON.parse(correctAnswer);
+            if (JSON.stringify(userAnswer) === JSON.stringify(parsedCorrectAnswer)) {
+              score += question.points || 10;
+            }
+          } catch (error) {
+            logger.warn(`Invalid JSON in correctAnswer for question ${index + 1}:`, error);
+            // Skip this question if JSON is invalid
           }
         }
       });
 
-      const percentage = Math.round((score / (totalQuestions * 10)) * 100);
+      // Calculate percentage safely
+      const percentage = Math.round((score / totalPoints) * 100);
       const passed = percentage >= (quiz.passingScore || 70);
 
       const attempt = await storage.submitQuizAttempt({
@@ -301,7 +354,7 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
         score,
         totalQuestions,
         answers: JSON.stringify(answers),
-        timeSpent,
+        timeSpent: timeSpent || 0,
         passed,
       });
 
@@ -319,8 +372,8 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
 
   app.get("/api/quizzes/attempts", async (req, res) => {
-    if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = (req.user as any) || { id: 1 };
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
 
     try {
       const attempts = await storage.getQuizAttempts(user.id);
@@ -333,8 +386,8 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
 
   // User Stats
   app.get("/api/users/stats", async (req, res) => {
-    if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = (req.user as any) || { id: 1 };
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
     try {
       const stats = await storage.getUserStats(user.id);
       if (!stats) return res.status(404).json({ message: "Stats not found" });
@@ -346,14 +399,94 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
   });
 
   app.put("/api/users/stats", async (req, res) => {
-    if (req.isAuthenticated && !req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    const user = (req.user as any) || { id: 1 };
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
     try {
-      const stats = await storage.updateUserStats(user.id, req.body);
+      const result = insertUserStatsSchema.partial().safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid request", errors: result.error.errors });
+      }
+      const stats = await storage.updateUserStats(user.id, result.data);
       res.json(stats);
     } catch (error) {
       logger.error(`Error updating stats for user ${user?.id}:`, error);
       res.status(500).json({ message: "Failed to update stats" });
+    }
+  });
+
+  // Gamification Aggregated Endpoints (matching use-gamification.ts)
+  app.get("/api/gamification/stats", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
+    try {
+      const stats = await storage.getUserStats(user.id);
+      if (!stats) return res.status(404).json({ message: "Stats not found" });
+      res.json(stats);
+    } catch (error) {
+      logger.error(`Error fetching gamification stats:`, error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.put("/api/gamification/stats", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
+    try {
+      const result = insertUserStatsSchema.partial().safeParse(req.body);
+      if (!result.success) return res.status(400).json({ errors: result.error.errors });
+      const stats = await storage.updateUserStats(user.id, result.data);
+      res.json(stats);
+    } catch (error) {
+      logger.error(`Error updating gamification stats:`, error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.get("/api/gamification/daily-goal", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
+    try {
+      const goal = await storage.getDailyGoal(user.id);
+      res.json(goal);
+    } catch (error) {
+      logger.error(`Error fetching daily goal:`, error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.put("/api/gamification/daily-goal", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    const user = req.user!;
+    try {
+      const result = insertDailyGoalSchema.partial().safeParse(req.body);
+      if (!result.success) return res.status(400).json({ errors: result.error.errors });
+      const goal = await storage.updateDailyGoal(user.id, result.data);
+      res.json(goal);
+    } catch (error) {
+      logger.error(`Error updating daily goal:`, error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
+  app.get("/api/gamification/leaderboard", async (req, res) => {
+    // Leaderboard is public for viewing, but we mark current user if authenticated
+    try {
+      const leaderboard = await storage.getLeaderboard();
+      
+      // If user is authenticated, mark their entry
+      if (req.isAuthenticated() && req.user) {
+        const userId = req.user!.id;
+        const enrichedLeaderboard = leaderboard.map((entry) => ({
+          ...entry,
+          isCurrentUser: entry.user?.id === userId
+        }));
+        return res.json(enrichedLeaderboard);
+      }
+      
+      res.json(leaderboard);
+    } catch (error) {
+      logger.error(`Error fetching leaderboard:`, error);
+      res.status(500).json({ message: "Server error" });
     }
   });
 }

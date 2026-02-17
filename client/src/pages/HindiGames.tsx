@@ -7,6 +7,7 @@ import { GrammarMatchGame } from "@/components/HindiGames/GrammarMatchGame";
 import { WordScramble } from "@/components/HindiGames/WordScramble";
 import { FillBlanks } from "@/components/HindiGames/FillBlanks";
 import { SpellingBee } from "@/components/HindiGames/SpellingBee";
+import { rolePlayScenarios } from '@/data/hindiRolePlayData';
 
 export default function HindiGames() {
   const [activeTab, setActiveTab] = useState("match");

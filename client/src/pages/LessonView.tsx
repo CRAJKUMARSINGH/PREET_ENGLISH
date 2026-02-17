@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader2, ChevronLeft, ChevronRight, Home, BookOpen, Languages, Heart, XCircle, Sparkles, AlertCircle, Mic, Volume2 } from "lucide-react";
 import { speechRecognitionService } from "@/lib/speechRecognition";
 import { Layout } from "@/components/Layout";
+import { PageTransition } from "@/components/PageTransition";
 import { VocabularyItem } from "@/components/VocabularyItem";
 import { CelebrationModal } from "@/components/CelebrationModal";
 import { AudioButton } from "@/components/AudioButton";
@@ -32,13 +35,19 @@ export default function LessonView() {
   const { mutate: updateDailyGoal } = useUpdateDailyGoal();
   const { mutate: markComplete, isPending: isMarking } = useMarkComplete();
 
-  // Find prev/next lessons
-  const sortedLessons = allLessons?.sort((a: any, b: any) => a.order - b.order) || [];
-  const currentIndex = sortedLessons.findIndex((l: any) => l.id === id);
-  const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex !== -1 && currentIndex < sortedLessons.length - 1
-    ? sortedLessons[currentIndex + 1]
-    : null;
+  // Find prev/next lessons - Memoized
+  const sortedLessons = import.meta.env.SSR ? [] : (allLessons ? [...allLessons] : []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+  const { currentIndex, prevLesson, nextLesson } = (import.meta.env.SSR || !id)
+    ? { currentIndex: -1, prevLesson: null, nextLesson: null }
+    : (() => {
+      const idx = sortedLessons.findIndex((l: any) => l.id === id);
+      return {
+        currentIndex: idx,
+        prevLesson: idx > 0 ? sortedLessons[idx - 1] : null,
+        nextLesson: idx !== -1 && idx < sortedLessons.length - 1 ? sortedLessons[idx + 1] : null
+      };
+    })();
 
   // State for block-based progression
   const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
@@ -51,27 +60,20 @@ export default function LessonView() {
     window.scrollTo(0, 0);
   }, [id, currentBlockIndex]);
 
-  if (lessonLoading || !lessonData) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="h-10 w-10 animate-spin text-primary" />
-        </div>
-      </Layout>
-    );
-  }
-
-  // Parse blocks if they exist
-  let blocks: any[] = [];
-  try {
-    // Check if lesson has content that can be parsed as blocks
-    if (lessonData.content && lessonData.content.startsWith('{')) {
-      const parsed = JSON.parse(lessonData.content);
-      blocks = parsed.blocks || [];
+  // Parse blocks if they exist - Memoized
+  const blocks = (() => {
+    if (!lessonData || !lessonData.content) return [];
+    try {
+      if (lessonData.content.startsWith('{')) {
+        const parsed = JSON.parse(lessonData.content);
+        return parsed.blocks || [];
+      }
+    } catch (e) {
+      console.error("Failed to parse blocks:", e);
     }
-  } catch (e) {
-    console.error("Failed to parse blocks:", e);
-  }
+    return [];
+  })();
+
 
   const { vocabulary } = lessonData;
   const isPreviouslyCompleted = progressList?.some((p: any) => p.lessonId === id && p.completed);
@@ -146,100 +148,134 @@ export default function LessonView() {
     const hindiContent = contentParts[1] ? `## हिंदी${contentParts[1]}` : null;
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-8 animate-in slide-in-from-top-4 duration-700">
-          <Link href="/lessons">
-            <button className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6 group">
-              <div className="p-2 rounded-full bg-secondary/50 group-hover:bg-primary/20 transition-colors">
-                <ArrowLeft className="h-4 w-4" />
-              </div>
-              <span>Back to Lessons</span>
-            </button>
-          </Link>
+      <Layout>
+        <PageTransition>
+          <div className="max-w-5xl mx-auto px-4 py-8">
+            <div className="mb-8 animate-in slide-in-from-top-4 duration-700">
+              <Link href="/lessons">
+                <button 
+                  className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-6 group"
+                  aria-label="Return to lessons list"
+                >
+                  <div className="p-2 rounded-full bg-secondary/50 group-hover:bg-primary/20 transition-colors">
+                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <span>Back to Lessons</span>
+                </button>
+              </Link>
 
-          <div className="glass-panel p-8 md:p-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-3 opacity-10">
-              <BookOpen className="h-32 w-32" />
-            </div>
+              <div className="glass-panel p-8 md:p-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 opacity-10">
+                  <BookOpen className="h-32 w-32" />
+                </div>
 
-            <div className="flex flex-col gap-4 relative z-10">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
-                  Lesson {lessonData.order}
-                </span>
-                <span className={cn(
-                  "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border",
-                  lessonData.difficulty === "Beginner" && "bg-emerald-500/5 text-emerald-500 border-emerald-500/20",
-                  lessonData.difficulty === "Intermediate" && "bg-blue-500/5 text-blue-500 border-blue-500/20",
-                  lessonData.difficulty === "Advanced" && "bg-purple-500/5 text-purple-500 border-purple-500/20"
-                )}>
-                  {lessonData.difficulty}
-                </span>
-                {(isPreviouslyCompleted || isLessonCompleted) && (
-                  <span className="flex items-center gap-1 text-green-500 text-xs font-bold bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
-                    <CheckCircle className="h-3 w-3" /> Completed
-                  </span>
-                )}
-              </div>
+                <div className="flex flex-col gap-4 relative z-10">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
+                      Lesson {lessonData.order}
+                    </span>
+                    <span className={cn(
+                      "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border",
+                      lessonData.difficulty === "Beginner" && "bg-emerald-500/5 text-emerald-500 border-emerald-500/20",
+                      lessonData.difficulty === "Intermediate" && "bg-blue-500/5 text-blue-500 border-blue-500/20",
+                      lessonData.difficulty === "Advanced" && "bg-purple-500/5 text-purple-500 border-purple-500/20"
+                    )}>
+                      {lessonData.difficulty}
+                    </span>
+                    {(isPreviouslyCompleted || isLessonCompleted) && (
+                      <span className="flex items-center gap-1 text-green-500 text-xs font-bold bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                        <CheckCircle className="h-3 w-3" /> Completed
+                      </span>
+                    )}
+                  </div>
 
-              <h1 className="text-3xl md:text-5xl font-extrabold font-display leading-tight">
-                {lessonData.hindiTitle || lessonData.title}
-              </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                {lessonData.description}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-8 space-y-8">
-            <div className="glass-card p-6 md:p-8">
-              <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-blue-500">
-                <BookOpen className="h-5 w-5" /> English Content
-              </h3>
-              <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
-                <ReactMarkdown>{englishContent}</ReactMarkdown>
-              </div>
-            </div>
-
-            <div className="glass-card p-6 md:p-8 border-amber-500/20 bg-amber-500/5">
-              <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-amber-600">
-                <Languages className="h-5 w-5" /> हिंदी व्याख्या
-              </h3>
-              <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
-                {hindiContent ? <ReactMarkdown>{hindiContent}</ReactMarkdown> : <p className="italic text-muted-foreground">No translation available.</p>}
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar Vocabulary */}
-          <div className="lg:col-span-4 space-y-6">
-            {vocabulary && vocabulary.length > 0 && (
-              <div className="glass-card p-6 sticky top-24">
-                <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><Sparkles className="h-5 w-5 text-yellow-500" /> Key Vocabulary</h2>
-                <div className="grid gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                  {vocabulary.map((word: any) => <VocabularyItem key={word.id} word={word} />)}
+                  <h1 className="text-3xl md:text-5xl font-extrabold font-display leading-tight">
+                    {lessonData.hindiTitle || lessonData.title}
+                  </h1>
+                  <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+                    {lessonData.description}
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
 
-            <Button
-              onClick={handleComplete}
-              disabled={isPreviouslyCompleted || isLessonCompleted || isMarking}
-              className={cn(
-                "w-full py-8 text-lg font-bold rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]",
-                (isPreviouslyCompleted || isLessonCompleted)
-                  ? "bg-secondary text-muted-foreground cursor-not-allowed"
-                  : "bg-primary text-primary-foreground shadow-primary/20 hover:bg-primary/90"
-              )}
-            >
-              {isMarking ? <Loader2 className="h-6 w-6 animate-spin" /> : (isPreviouslyCompleted || isLessonCompleted) ? "Lesson Completed ✅" : "Complete Lesson"}
-            </Button>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-8 space-y-8">
+                <div className="glass-card p-6 md:p-8">
+                  <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-blue-500">
+                    <BookOpen className="h-5 w-5" /> English Content
+                  </h3>
+                  <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeSanitize]}
+                      components={{
+                        // Disable potentially dangerous elements
+                        script: () => null,
+                        iframe: () => null,
+                        object: () => null,
+                        embed: () => null,
+                      }}
+                    >
+                      {englishContent}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+
+                <div className="glass-card p-6 md:p-8 border-amber-500/20 bg-amber-500/5">
+                  <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-amber-600">
+                    <Languages className="h-5 w-5" /> हिंदी व्याख्या
+                  </h3>
+                  <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
+                    {hindiContent ? (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeSanitize]}
+                        components={{
+                          script: () => null,
+                          iframe: () => null,
+                          object: () => null,
+                          embed: () => null,
+                        }}
+                      >
+                        {hindiContent}
+                      </ReactMarkdown>
+                    ) : (
+                      <p className="italic text-muted-foreground">No translation available.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar Vocabulary */}
+              <div className="lg:col-span-4 space-y-6">
+                {vocabulary && vocabulary.length > 0 && (
+                  <div className="glass-card p-6 sticky top-24">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><Sparkles className="h-5 w-5 text-yellow-500" /> Key Vocabulary</h2>
+                    <div className="grid gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {vocabulary.map((word: any) => <VocabularyItem key={word.id} word={word} />)}
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  onClick={handleComplete}
+                  disabled={isPreviouslyCompleted || isLessonCompleted || isMarking}
+                  className={cn(
+                    "w-full py-8 text-lg font-bold rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]",
+                    (isPreviouslyCompleted || isLessonCompleted)
+                      ? "bg-secondary text-muted-foreground cursor-not-allowed"
+                      : "bg-primary text-primary-foreground shadow-primary/20 hover:bg-primary/90"
+                  )}
+                >
+                  {isMarking ? <Loader2 className="h-6 w-6 animate-spin" /> : (isPreviouslyCompleted || isLessonCompleted) ? "Lesson Completed ✅" : "Complete Lesson"}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </PageTransition>
+      </Layout>
     );
   };
 
@@ -284,8 +320,13 @@ export default function LessonView() {
         {/* Progress Header */}
         <div className="flex items-center gap-6 mb-12 animate-in fade-in slide-in-from-top-4">
           <Link href="/lessons">
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary w-12 h-12">
-              <XCircle className="h-6 w-6 text-muted-foreground" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full hover:bg-secondary w-12 h-12"
+              aria-label="Exit lesson and return to lessons list"
+            >
+              <XCircle className="h-6 w-6 text-muted-foreground" aria-hidden="true" />
             </Button>
           </Link>
           <div className="flex-1 h-4 bg-secondary/50 rounded-full overflow-hidden border border-border/50 shadow-inner">
@@ -426,7 +467,7 @@ export default function LessonView() {
                           blockFeedback === "correct" ? "bg-green-500 scale-110" : "bg-primary hover:bg-primary/90"
                         )}
                         onClick={() => {
-                          if (!speechRecognition.isSupported()) {
+                          if (!speechRecognitionService.isSupported()) {
                             toast({
                               title: "Not Supported",
                               description: "Speech recognition is not supported in this browser. Try Chrome!",
@@ -434,9 +475,9 @@ export default function LessonView() {
                             });
                             return;
                           }
-                          speechRecognition.startListening((res) => {
+                          speechRecognitionService.startListening((res: any) => {
                             if (res.isFinal) {
-                              const acc = speechRecognition.calculateAccuracy(res.transcript, currentBlock.phrase);
+                              const acc = speechRecognitionService.calculateAccuracy(res.transcript, (currentBlock as any).phrase);
                               if (acc >= 75) {
                                 setBlockFeedback("correct");
                                 toast({ title: "Excellent! 🌟", description: `Accuracy: ${acc}%` });
@@ -445,7 +486,10 @@ export default function LessonView() {
                                 toast({ title: "Try again! 💪", description: `Accuracy: ${acc}%`, variant: "destructive" });
                               }
                             }
+                          }, (err: string) => {
+                            toast({ title: "Error", description: err, variant: "destructive" });
                           });
+
                         }}
                       >
                         <Mic className={cn("w-16 h-16", blockFeedback === "correct" ? "animate-bounce" : "")} />

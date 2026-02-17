@@ -3,7 +3,7 @@ import { Mic, MicOff, Volume2, RotateCcw, AlertCircle, BookOpen } from 'lucide-r
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { speechRecognition } from '@/lib/speechRecognition';
+import { speechRecognition, type SpeechRecognitionResult } from '@/lib/speechRecognition';
 import { audioService } from '@/lib/audioService';
 import { cn } from '@/lib/utils';
 
@@ -24,9 +24,9 @@ interface EnhancedFeedback {
   hindiTips: string[];
 }
 
-export function PronunciationPractice({ 
-  text, 
-  hindiText, 
+export function PronunciationPractice({
+  text,
+  hindiText,
   difficulty = 'beginner',
   focusAreas = [],
   culturalMode = 'teaching'
@@ -51,35 +51,35 @@ export function PronunciationPractice({
     setFeedback(null);
     setPhonemeAnalysis(null);
     setCulturalNotes([]);
-    
+
     const startTime = Date.now();
 
     speechRecognition.startListening(
-      (result) => {
+      (result: SpeechRecognitionResult) => {
         setTranscript(result.transcript);
-        
+
         if (result.isFinal) {
           const endTime = Date.now();
           setProcessingTime(endTime - startTime);
-          
+
           // Enhanced analysis
           const score = speechRecognition.calculateAccuracy(result.transcript, text);
           const phonemes = speechRecognition.analyzePhonemes(result.transcript, text);
           const validation = speechRecognition.validateIndianEnglish(result.transcript);
           const alternatives = speechRecognition.suggestInternationalAlternatives(result.transcript);
-          
+
           setAccuracy(score);
           setPhonemeAnalysis(phonemes);
           setCulturalNotes(validation.culturalNotes);
-          
+
           // Get enhanced feedback - using any type to prevent errors
           const enhancedFeedback = speechRecognition.getFeedback(score, phonemes.problematicPhonemes as any);
           setFeedback(enhancedFeedback);
-          
+
           setIsListening(false);
         }
       },
-      (error) => {
+      (error: string) => {
         console.error('Speech recognition error:', error);
         setIsListening(false);
         alert(error); // Error is already localized in Hindi
@@ -225,7 +225,7 @@ export function PronunciationPractice({
         {accuracy !== null && feedback && (
           <div className={cn(
             'p-4 rounded-lg border-2',
-            accuracy >= 75 
+            accuracy >= 75
               ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
               : 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
           )}>
@@ -236,7 +236,7 @@ export function PronunciationPractice({
               </div>
               <div className="text-5xl">{feedback.emoji}</div>
             </div>
-            
+
             <div className="space-y-2">
               <p className={cn('font-medium', feedback.color)}>
                 {feedback.message}
@@ -272,7 +272,7 @@ export function PronunciationPractice({
                 Pronunciation Focus Areas
               </p>
             </div>
-            
+
             <div className="space-y-2">
               {phonemeAnalysis.suggestions.map((suggestion: any, index: number) => (
                 <div key={index} className="text-sm">
@@ -297,7 +297,7 @@ export function PronunciationPractice({
                 Cultural Notes
               </p>
             </div>
-            
+
             <div className="space-y-1">
               {culturalNotes.map((note, index) => (
                 <p key={index} className="text-sm text-blue-700 dark:text-blue-300">

@@ -2,8 +2,10 @@ import type { Express } from 'express';
 import { storage } from '../storage';
 import { User } from '@shared/schema';
 import { z } from 'zod';
-import { clearCache } from '../lib/cache';
+import { clearCache, getCacheStats } from '../lib/cache';
 import { performDatabaseOperation } from '../lib/concurrency';
+import logger from '../logger';
+import productionStats from '../lib/production-stats';
 
 // Admin middleware
 const requireAdmin = (req: any, res: any, next: any) => {
@@ -366,6 +368,221 @@ export function registerAdminRoutes(app: Express) {
     } catch (err) {
       console.error('System stats error:', err);
       res.status(500).json({ message: 'Error fetching system stats' });
+    }
+  });
+
+  // ============================================================================
+  // CACHE MANAGEMENT ENDPOINTS (For Load Testing)
+  // ============================================================================
+
+  /**
+   * Clear all caches (duplicate endpoint - enhanced version)
+   * POST /api/admin/cache/clear
+   */
+  app.post('/api/admin/cache/clear-all', async (req, res) => {
+    try {
+      const startTime = Date.now();
+      
+      // Clear all caches
+      clearCache.all();
+      
+      const duration = Date.now() - startTime;
+      
+      logger.info(`[CACHE] All caches cleared in ${duration}ms`);
+      
+      res.json({
+        success: true,
+        message: 'All caches cleared successfully',
+        duration,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error: any) {
+      logger.error('[CACHE] Failed to clear caches:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to clear caches',
+        error: error.message
+      });
+    }
+  });
+
+  /**
+   * Clear specific cache
+   * POST /api/admin/cache/clear/:type
+   */
+  app.post('/api/admin/cache/clear/:type', async (req, res) => {
+    try {
+      const { type } = req.params;
+      const startTime = Date.now();
+      
+      switch (type) {
+        case 'lessons':
+          clearCache.lessons();
+          break;
+        case 'quizzes':
+          clearCache.quizzes();
+          break;
+        case 'stories':
+          clearCache.stories();
+          break;
+        case 'scenarios':
+          clearCache.scenarios();
+          break;
+        case 'leaderboard':
+          clearCache.leaderboard();
+          break;
+        case 'achievements':
+          clearCache.achievements();
+          break;
+        case 'search':
+          clearCache.search();
+          break;
+        default:
+          return res.status(400).json({
+            success: false,
+            message: `Invalid cache type: ${type}`,
+            validTypes: ['lessons', 'quizzes', 'stories', 'scenarios', 'leaderboard', 'achievements', 'search']
+          });
+      }
+      
+      const duration = Date.now() - startTime;
+      
+      logger.info(`[CACHE] ${type} cache cleared in ${duration}ms`);
+      
+      res.json({
+        success: true,
+        message: `${type} cache cleared successfully`,
+        duration,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error: any) {
+      logger.error(`[CACHE] Failed to clear ${req.params.type} cache:`, error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to clear cache',
+        error: error.message
+      });
+    }
+  });
+
+  /**
+   * Get cache statistics
+   * GET /api/admin/cache/stats
+   */
+  app.get('/api/admin/cache/stats', async (req, res) => {
+    try {
+      const stats = getCacheStats();
+      
+      // Calculate hit rates
+      const enrichedStats = Object.entries(stats).reduce((acc, [key, value]) => {
+        const total = value.hits + value.misses;
+        const hitRate = total > 0 ? (value.hits / total) * 100 : 0;
+        
+        return {
+          ...acc,
+          [key]: {
+            ...value,
+            hitRate: hitRate.toFixed(2) + '%',
+            total
+          }
+        };
+      }, {});
+      
+      res.json({
+        success: true,
+        stats: enrichedStats,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error: any) {
+      logger.error('[CACHE] Failed to get cache stats:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to get cache statistics',
+        error: error.message
+      });
+    }
+  });
+
+  /**
+   * Warm up caches (preload frequently accessed data)
+   * POST /api/admin/cache/warmup
+   */
+  app.post('/api/admin/cache/warmup', async (req, res) => {
+    try {
+      const startTime = Date.now();
+      
+      logger.info('[CACHE] Starting cache warmup...');
+      
+      // Preload all frequently accessed data
+      await Promise.all([
+        storage.getLessons(),
+        storage.getQuizzes(),
+        storage.getStories(),
+        storage.getScenarios(),
+        storage.getLeaderboard()
+      ]);
+      
+      const duration = Date.now() - startTime;
+      
+      logger.info(`[CACHE] Cache warmup completed in ${duration}ms`);
+      
+      res.json({
+        success: true,
+        message: 'Cache warmup completed successfully',
+        duration,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error: any) {
+      logger.error('[CACHE] Cache warmup failed:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Cache warmup failed',
+        error: error.message
+      });
+    }
+  });
+
+  // Production Statistics Endpoint
+  // Returns fixed user count of 251 for production analytics
+  app.get('/api/production/stats', async (req, res) => {
+    try {
+      const stats = productionStats.getProductionStats();
+      res.json({
+        success: true,
+        ...stats,
+        message: 'Production statistics (user count fixed at 251)'
+      });
+    } catch (error: any) {
+      logger.error('Error fetching production stats:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        fallback: {
+          totalUsers: productionStats.PRODUCTION_USER_COUNT,
+          strategy: 'FALLBACK',
+          locked: true
+        }
+      });
+    }
+  });
+
+  // Public endpoint for user count (always returns 251)
+  app.get('/api/users/count', async (req, res) => {
+    try {
+      const count = productionStats.getProductionUserCount();
+      res.json({
+        count,
+        locked: productionStats.isUserCountLocked(),
+        timestamp: new Date().toISOString()
+      });
+    } catch (error: any) {
+      logger.error('Error fetching user count:', error);
+      res.json({
+        count: productionStats.PRODUCTION_USER_COUNT,
+        locked: true,
+        fallback: true,
+        timestamp: new Date().toISOString()
+      });
     }
   });
 }

@@ -1,11 +1,15 @@
 import { db } from "./db";
-import { eq, desc, asc, and, or, sql, count } from "drizzle-orm";
+import { eq, desc, asc, and, or, sql, count, inArray } from "drizzle-orm";
+import { selectMany, selectOne, returning, returningOptional } from "./lib/db-helpers";
+
 import {
   users, lessons, vocabulary, progress, conversations, messages,
   userStats, scenarios, stories, listenings, speakingTopics,
   speakingSessions, speakingAttempts, userSpeakingProfiles,
   pronunciationProgress, culturalScenarioProgress, activityFeed, contentRatings,
   conversationLines, quizzes, quizQuestions, quizAttempts,
+  dailyGoals, quizResults,
+
   type User, type InsertUser,
   type Lesson, type InsertLesson,
   type Vocabulary, type InsertVocabulary,
@@ -25,108 +29,215 @@ import {
   type Quiz, type InsertQuiz,
   type QuizQuestion, type InsertQuizQuestion,
   type QuizAttempt, type InsertQuizAttempt,
-  type UserStats
+  type QuizResult, type InsertQuizResult,
+  type DailyGoal, type InsertDailyGoal,
+  type UserStats, type InsertUserStats,
+  type Scenario
 } from "@shared/schema";
+
 
 export class Storage {
   // User management
   async getUsers(): Promise<User[]> {
-    return await db.select().from(users);
+    return selectMany<User>(db.select().from(users));
   }
+
 
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    return selectOne<User>(db.select().from(users).where(eq(users.id, id)));
   }
+
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
+    return selectOne<User>(db.select().from(users).where(eq(users.username, username)));
   }
 
+
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
+    return returning<User>(db.insert(users).values(insertUser).returning());
   }
+
+
+  async createUserStats(insertStats: InsertUserStats): Promise<UserStats> {
+    return returning<UserStats>(db.insert(userStats).values(insertStats).returning());
+  }
+
 
   // Lesson management
   async getLessons(): Promise<Lesson[]> {
-    return await db.select().from(lessons).orderBy(lessons.order);
+    return selectMany<Lesson>(db.select().from(lessons).orderBy(lessons.order));
+  }
+
+  /**
+   * Get all lessons with their vocabulary in a single optimized query
+   * Prevents N+1 query problem
+   */
+  async getLessonsWithVocabulary(): Promise<(Lesson & { vocabulary: Vocabulary[] })[]> {
+    const results = await db
+      .select({
+        lesson: lessons,
+        vocabulary: vocabulary,
+      })
+      .from(lessons)
+      .leftJoin(vocabulary, eq(vocabulary.lessonId, lessons.id))
+      .orderBy(lessons.order);
+
+    // Group vocabulary by lesson
+    const lessonsMap = new Map<number, Lesson & { vocabulary: Vocabulary[] }>();
+    
+    for (const row of results) {
+      if (!lessonsMap.has(row.lesson.id)) {
+        lessonsMap.set(row.lesson.id, {
+          ...row.lesson,
+          vocabulary: []
+        });
+      }
+      
+      if (row.vocabulary) {
+        lessonsMap.get(row.lesson.id)!.vocabulary.push(row.vocabulary);
+      }
+    }
+    
+    return Array.from(lessonsMap.values());
   }
 
   async getLesson(id: number): Promise<(Lesson & { vocabulary: Vocabulary[] }) | undefined> {
-    const [lesson] = await db.select().from(lessons).where(eq(lessons.id, id));
+    const lesson = await selectOne<Lesson>(db.select().from(lessons).where(eq(lessons.id, id)));
     if (!lesson) return undefined;
 
-    const lessonVocabulary = await db.select().from(vocabulary).where(eq(vocabulary.lessonId, id));
+    const lessonVocabulary = await selectMany<Vocabulary>(
+      db.select().from(vocabulary).where(eq(vocabulary.lessonId, id))
+    );
     return { ...lesson, vocabulary: lessonVocabulary };
   }
 
   async createLesson(insertLesson: InsertLesson): Promise<Lesson> {
-    const [lesson] = await db.insert(lessons).values(insertLesson).returning();
-    return lesson;
+    return returning<Lesson>(db.insert(lessons).values(insertLesson).returning());
   }
+
+  async updateLesson(id: number, updates: Partial<InsertLesson>): Promise<Lesson> {
+    return returning<Lesson>(
+      db.update(lessons)
+        .set(updates)
+        .where(eq(lessons.id, id))
+        .returning()
+    );
+  }
+
+  async deleteLesson(id: number): Promise<void> {
+    await db.delete(lessons).where(eq(lessons.id, id));
+  }
+
+  async updateUserAdminStatus(userId: number, isAdmin: boolean): Promise<User> {
+    return returning<User>(
+      db.update(users)
+        .set({ isAdmin })
+        .where(eq(users.id, userId))
+        .returning()
+    );
+  }
+
 
   // Vocabulary management
   async getVocabulary(lessonId: number): Promise<Vocabulary[]> {
     return await db.select().from(vocabulary).where(eq(vocabulary.lessonId, lessonId));
   }
 
+
   async createVocabulary(insertVocabulary: InsertVocabulary): Promise<Vocabulary> {
-    const [vocab] = await db.insert(vocabulary).values(insertVocabulary).returning();
-    return vocab;
+    return returning<Vocabulary>(db.insert(vocabulary).values(insertVocabulary).returning());
   }
 
   // Progress tracking
+  async getUserQuizResults(userId: number): Promise<(QuizResult & { quiz: Quiz })[]> {
+    const results = await selectMany<any>(
+      db.select({
+        quizResult: quizResults,
+        quiz: quizzes,
+      })
+        .from(quizResults)
+        .innerJoin(quizzes, eq(quizResults.quizId, quizzes.id))
+        .where(eq(quizResults.userId, userId))
+    );
+    return results.map((r: any) => ({ ...r.quizResult, quiz: r.quiz }));
+  }
+
+
+
+
   async getProgress(userId: number): Promise<(Progress & { lesson: Lesson })[]> {
-    const results = await db
-      .select({
+    const results = await selectMany<any>(
+      db.select({
         progress: progress,
         lesson: lessons,
       })
-      .from(progress)
-      .innerJoin(lessons, eq(progress.lessonId, lessons.id))
-      .where(eq(progress.userId, userId));
+        .from(progress)
+        .innerJoin(lessons, eq(progress.lessonId, lessons.id))
+        .where(eq(progress.userId, userId))
+    );
 
-    return results.map((r) => ({ ...r.progress, lesson: r.lesson }));
+    return results.map((r: any) => ({ ...r.progress, lesson: r.lesson }));
   }
 
+
+
   async markLessonComplete(userId: number, lessonId: number, completed: boolean): Promise<Progress> {
-    const existing = await db
-      .select()
-      .from(progress)
-      .where(and(eq(progress.userId, userId), eq(progress.lessonId, lessonId)));
+    const existing = await selectMany<Progress>(
+      db.select()
+        .from(progress)
+        .where(and(eq(progress.userId, userId), eq(progress.lessonId, lessonId)))
+    );
 
     if (existing.length > 0) {
-      const [updated] = await db
-        .update(progress)
-        .set({ completed, completedAt: completed ? new Date().toISOString() : null })
-        .where(eq(progress.id, existing[0].id))
-        .returning();
-      return updated;
+      return returning<Progress>(
+        db.update(progress)
+          .set({ completed, completedAt: completed ? new Date().toISOString() : null })
+          .where(eq(progress.id, existing[0].id))
+          .returning()
+      );
     } else {
-      const [newProgress] = await db
-        .insert(progress)
-        .values({
-          userId,
-          lessonId,
-          completed,
-          completedAt: completed ? new Date().toISOString() : null,
-        })
-        .returning();
-      return newProgress;
+      return returning<Progress>(
+        db.insert(progress)
+          .values({
+            userId,
+            lessonId,
+            completed,
+            completedAt: completed ? new Date().toISOString() : null,
+          })
+          .returning()
+      );
     }
   }
 
+
   // Conversations
-  async getConversations(userId: number): Promise<Conversation[]> {
-    return await db.select().from(conversations).where(eq(conversations.userId, userId));
+  async getConversations(userId: number): Promise<(Conversation & { messages: Message[] })[]> {
+    const allConversations = await db.select().from(conversations).where(eq(conversations.userId, userId));
+    if (allConversations.length === 0) return [];
+
+    const convIds = allConversations.map((c: any) => c.id);
+    const allMessages = await db.select().from(messages).where(inArray(messages.conversationId, convIds)).orderBy(asc(messages.createdAt));
+
+    // Efficient hash map grouping
+    const messagesByConvId = new Map<number, Message[]>();
+    for (const msg of allMessages) {
+      if (!messagesByConvId.has(msg.conversationId)) {
+        messagesByConvId.set(msg.conversationId, []);
+      }
+      messagesByConvId.get(msg.conversationId)!.push(msg);
+    }
+
+    return allConversations.map((conv: any) => ({
+      ...conv,
+      messages: messagesByConvId.get(conv.id) || []
+    }));
   }
+
+
 
   async getConversation(id: number): Promise<(Conversation & { messages: Message[] }) | undefined> {
     const [conversation] = await db.select().from(conversations).where(eq(conversations.id, id));
     if (!conversation) return undefined;
-
     const conversationMessages = await db
       .select()
       .from(messages)
@@ -137,8 +248,8 @@ export class Storage {
   }
 
   async createConversation(insertConversation: InsertConversation): Promise<Conversation> {
-    const [conversation] = await db.insert(conversations).values(insertConversation).returning();
-    return conversation;
+    const [conv] = await db.insert(conversations).values(insertConversation).returning();
+    return conv;
   }
 
   async addMessage(insertMessage: InsertMessage): Promise<Message> {
@@ -151,6 +262,12 @@ export class Storage {
     await db.delete(conversations).where(eq(conversations.id, id));
   }
 
+  async clearConversations(userId: number): Promise<void> {
+    await db.delete(messages).where(inArray(messages.conversationId, db.select({ id: conversations.id }).from(conversations).where(eq(conversations.userId, userId))));
+    await db.delete(conversations).where(eq(conversations.userId, userId));
+  }
+
+
   // Stories
   async getStories(): Promise<Story[]> {
     return await db.select().from(stories).orderBy(stories.order);
@@ -161,12 +278,13 @@ export class Storage {
     return story;
   }
 
+
   // Scenarios
-  async getScenarios(): Promise<any[]> {
+  async getScenarios(): Promise<Scenario[]> {
     return await db.select().from(scenarios);
   }
 
-  async getScenario(id: number): Promise<any | undefined> {
+  async getScenario(id: number): Promise<Scenario | undefined> {
     const [scenario] = await db.select().from(scenarios).where(eq(scenarios.id, id));
     return scenario;
   }
@@ -205,42 +323,17 @@ export class Storage {
 
   // Minimal stubs for missing methods to prevent errors
   async getPublicUsers(): Promise<User[]> {
-    return await this.getUsers();
-  }
-
-  async updateLesson(id: number, data: Partial<InsertLesson>): Promise<Lesson | undefined> {
-    // Stub implementation
-    // Ideally use Zod here: const validated = insertLessonSchema.partial().parse(data);
-    return await this.getLesson(id);
-  }
-
-  async deleteLesson(id: number): Promise<void> {
-    // Stub implementation - would delete lesson
+    return await db.select().from(users).where(eq(users.isAdmin, false));
   }
 
   async updateUserAdminStatus(userId: number, isAdmin: boolean): Promise<User | undefined> {
-    // Stub implementation
-    return await this.getUser(userId);
+    const [updated] = await db.update(users).set({ isAdmin }).where(eq(users.id, userId)).returning();
+    return updated;
   }
 
-  async getUserStats(userId: number): Promise<UserStats | null> {
+
+  async getUserStats(userId: number): Promise<UserStats | undefined> {
     const [stats] = await db.select().from(userStats).where(eq(userStats.userId, userId));
-    return stats || null;
-  }
-
-  async createUserStats(userId: number): Promise<UserStats> {
-    const [stats] = await db.insert(userStats).values({
-      userId,
-      xpPoints: 0,
-      level: 1,
-      currentStreak: 0,
-      longestStreak: 0,
-      totalLessonsCompleted: 0,
-      totalQuizzesPassed: 0,
-      totalMinutesLearned: 0,
-      speakingMinutes: 0,
-      pronunciationAccuracyAvg: 0,
-    }).returning();
     return stats;
   }
 
@@ -261,8 +354,11 @@ export class Storage {
     return updated;
   }
 
-  async getDailyGoal(userId: number): Promise<any> {
-    // For now, return calculated goal based on progress
+  async getDailyGoal(userId: number): Promise<DailyGoal | null> {
+    const [goal] = await db.select().from(dailyGoals).where(eq(dailyGoals.userId, userId));
+    if (goal) return goal;
+
+    // Fallback: Create a default goal if none exists
     const userProgress = await this.getProgress(userId);
     const completedToday = userProgress.filter(p => {
       if (!p.completedAt) return false;
@@ -270,23 +366,55 @@ export class Storage {
       return p.completedAt.startsWith(today);
     }).length;
 
-    return {
+    const defaultGoal = {
+      userId,
       lessonsTarget: 3,
       lessonsCompleted: completedToday,
-      xpTarget: 50,
+      xpTarget: 100,
       xpEarned: completedToday * 10,
       minutesTarget: 15,
       minutesSpent: completedToday * 5,
     };
+    const [newGoal] = await db.insert(dailyGoals).values(defaultGoal).returning();
+    return newGoal;
   }
 
-  async updateDailyGoal(userId: number, data: any): Promise<any> {
-    // For now, just return the data as-is (would need dailyGoals table for persistence)
-    return data;
+  async updateDailyGoal(userId: number, update: Partial<DailyGoal>): Promise<DailyGoal> {
+    // Check if goal exists, create if not (fixes race condition)
+    const existing = await this.getDailyGoal(userId);
+    if (!existing) {
+      // Create goal with merged default and update values
+      const defaultGoal = {
+        userId,
+        lessonsTarget: 3,
+        lessonsCompleted: 0,
+        xpTarget: 100,
+        xpEarned: 0,
+        minutesTarget: 15,
+        minutesSpent: 0,
+        ...update, // Merge update values into defaults
+      };
+      const [newGoal] = await db.insert(dailyGoals).values(defaultGoal).returning();
+      if (!newGoal) {
+        throw new Error(`Failed to create daily goal for user ${userId}`);
+      }
+      return newGoal;
+    }
+    
+    // Update existing goal
+    const [updated] = await db.update(dailyGoals)
+      .set(update)
+      .where(eq(dailyGoals.userId, userId))
+      .returning();
+    
+    if (!updated) {
+      throw new Error(`Failed to update daily goal for user ${userId}`);
+    }
+    
+    return updated;
   }
 
-  async getLeaderboard(weekStart?: string): Promise<any[]> {
-    // Get top users by XP
+  async getLeaderboard(limitValue: number = 10): Promise<Array<{ rank: number; user: { id: number; username: string }; xpEarned: number; lessonsCompleted: number }>> {
     const results = await db
       .select({
         stats: userStats,
@@ -295,13 +423,13 @@ export class Storage {
       .from(userStats)
       .innerJoin(users, eq(userStats.userId, users.id))
       .orderBy(desc(userStats.xpPoints))
-      .limit(10);
+      .limit(limitValue);
 
     return results.map((r, index: number) => ({
       rank: index + 1,
       user: { id: r.user.id, username: r.user.username },
-      xpEarned: r.stats.xpPoints,
-      lessonsCompleted: r.stats.totalLessonsCompleted,
+      xpEarned: r.stats.xpPoints || 0,
+      lessonsCompleted: r.stats.totalLessonsCompleted || 0,
     }));
   }
 
@@ -312,25 +440,33 @@ export class Storage {
   // Quiz management
   async getQuizzes(): Promise<(Quiz & { questions: QuizQuestion[] })[]> {
     const allQuizzes = await db.select().from(quizzes).orderBy(quizzes.order);
+    if (allQuizzes.length === 0) return [];
 
-    const quizzesWithQuestions = await Promise.all(
-      allQuizzes.map(async (quiz) => {
-        const questions = await db
-          .select()
-          .from(quizQuestions)
-          .where(eq(quizQuestions.quizId, quiz.id))
-          .orderBy(quizQuestions.order);
-        return { ...quiz, questions };
-      })
-    );
+    const quizIds = allQuizzes.map(q => q.id);
+    const allQuestions = await db
+      .select()
+      .from(quizQuestions)
+      .where(inArray(quizQuestions.quizId, quizIds))
+      .orderBy(quizQuestions.order);
 
-    return quizzesWithQuestions;
+    const questionsByQuizId = allQuestions.reduce((acc: Record<number, QuizQuestion[]>, q: QuizQuestion) => {
+      const quizId = q.quizId as number;
+      if (!acc[quizId]) acc[quizId] = [];
+      acc[quizId].push(q);
+      return acc;
+    }, {} as Record<number, QuizQuestion[]>);
+
+    return allQuizzes.map((quiz: Quiz) => ({
+      ...quiz,
+      questions: questionsByQuizId[quiz.id] || []
+    }));
   }
+
+
 
   async getQuiz(id: number): Promise<(Quiz & { questions: QuizQuestion[] }) | undefined> {
     const [quiz] = await db.select().from(quizzes).where(eq(quizzes.id, id));
     if (!quiz) return undefined;
-
     const questions = await db
       .select()
       .from(quizQuestions)
@@ -345,10 +481,17 @@ export class Storage {
     return quiz;
   }
 
+  async createQuizResult(insertQuizResult: InsertQuizResult): Promise<QuizResult> {
+    const [result] = await db.insert(quizResults).values(insertQuizResult).returning();
+    return result;
+  }
+
+
   async createQuizQuestion(insertQuestion: InsertQuizQuestion): Promise<QuizQuestion> {
     const [question] = await db.insert(quizQuestions).values(insertQuestion).returning();
     return question;
   }
+
 
   async submitQuizAttempt(insertAttempt: InsertQuizAttempt): Promise<QuizAttempt> {
     const [attempt] = await db.insert(quizAttempts).values(insertAttempt).returning();
@@ -370,8 +513,8 @@ export class Storage {
         await db
           .update(userStats)
           .set({
-            totalQuizzesPassed: stats.totalQuizzesPassed + 1,
-            xpPoints: stats.xpPoints + (quiz.xpReward || 50),
+            totalQuizzesPassed: (stats.totalQuizzesPassed || 0) + 1,
+            xpPoints: (stats.xpPoints || 0) + (quiz.xpReward || 50),
           })
           .where(eq(userStats.id, stats.id));
       }
@@ -387,6 +530,7 @@ export class Storage {
       .where(eq(quizAttempts.userId, userId))
       .orderBy(desc(quizAttempts.completedAt));
   }
+
 
   async getAchievements(): Promise<any[]> {
     // Stub implementation
@@ -406,6 +550,7 @@ export class Storage {
       .orderBy(desc(speakingSessions.createdAt));
   }
 
+
   async createSpeakingSession(userId: number, data: any): Promise<SpeakingSession> {
     const [session] = await db.insert(speakingSessions).values({
       userId,
@@ -416,6 +561,7 @@ export class Storage {
     }).returning();
     return session;
   }
+
 
   async completeSpeakingSession(sessionId: number, scores: any): Promise<SpeakingSession> {
     const [updated] = await db.update(speakingSessions)
@@ -431,6 +577,7 @@ export class Storage {
     return updated;
   }
 
+
   async createSpeakingAttempt(sessionId: number, data: any): Promise<SpeakingAttempt> {
     const [attempt] = await db.insert(speakingAttempts).values({
       sessionId,
@@ -445,11 +592,13 @@ export class Storage {
     return attempt;
   }
 
+
   async getSpeakingProfile(userId: number): Promise<UserSpeakingProfile | null> {
     const [profile] = await db.select().from(userSpeakingProfiles)
       .where(eq(userSpeakingProfiles.userId, userId));
     return profile || null;
   }
+
 
   async createSpeakingProfile(userId: number, data: any): Promise<UserSpeakingProfile> {
     const [profile] = await db.insert(userSpeakingProfiles).values({
@@ -464,6 +613,7 @@ export class Storage {
     return profile;
   }
 
+
   async updateSpeakingProfile(userId: number, data: any): Promise<UserSpeakingProfile> {
     const [updated] = await db.update(userSpeakingProfiles)
       .set({
@@ -474,6 +624,7 @@ export class Storage {
       .returning();
     return updated;
   }
+
 
   // ============ LISTENING METHODS ============
 
@@ -486,6 +637,7 @@ export class Storage {
     return listening;
   }
 
+
   async getListeningsByDifficulty(level: string): Promise<Listening[]> {
     return await db.select().from(listenings).where(eq(listenings.difficulty, level));
   }
@@ -493,6 +645,7 @@ export class Storage {
   async getListeningsByCategory(category: string): Promise<Listening[]> {
     return await db.select().from(listenings).where(eq(listenings.category, category));
   }
+
 
 }
 

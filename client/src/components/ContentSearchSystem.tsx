@@ -1,4 +1,16 @@
 /**
+ * ContentSearchSystem - Currently Disabled
+ * 
+ * This component requires refactoring to work with current data structures.
+ * It has been disabled to prevent runtime errors.
+ * 
+ * To re-enable:
+ * 1. Update data structure expectations
+ * 2. Test with current hindiStoriesData, hindiDialoguesData
+ * 3. Remove this notice
+ */
+
+/**
  * DISABLED: ContentSearchSystem
  * This component has incompatible data structure expectations.
  * TODO: Refactor to work with current data structures (hindiStoriesData, hindiDialoguesData, etc.)

@@ -1,10 +1,11 @@
 import memoizee from 'memoizee';
 import { storage } from '../storage';
+import { logger } from './logger';
 
 // Cache lessons for 5 minutes
 export const getCachedLessons = memoizee(
   async () => {
-    console.log('[CACHE] Fetching lessons from database');
+    logger.debug('[CACHE] Fetching lessons from database');
     return await storage.getLessons();
   },
   {
@@ -17,7 +18,7 @@ export const getCachedLessons = memoizee(
 // Cache individual lesson for 10 minutes
 export const getCachedLesson = memoizee(
   async (lessonId: number) => {
-    console.log(`[CACHE] Fetching lesson ${lessonId} from database`);
+    logger.debug(`[CACHE] Fetching lesson ${lessonId} from database`);
     return await storage.getLesson(lessonId);
   },
   {
@@ -30,7 +31,7 @@ export const getCachedLesson = memoizee(
 // Cache user stats for 1 minute
 export const getCachedUserStats = memoizee(
   async (userId: number) => {
-    console.log(`[CACHE] Fetching stats for user ${userId}`);
+    logger.debug(`[CACHE] Fetching stats for user ${userId}`);
     return await storage.getUserStats(userId);
   },
   {
@@ -43,7 +44,7 @@ export const getCachedUserStats = memoizee(
 // Cache vocabulary for lesson for 10 minutes
 export const getCachedVocabulary = memoizee(
   async (lessonId: number) => {
-    console.log(`[CACHE] Fetching vocabulary for lesson ${lessonId}`);
+    logger.debug(`[CACHE] Fetching vocabulary for lesson ${lessonId}`);
     return await storage.getVocabularyForLesson(lessonId);
   },
   {
@@ -56,20 +57,20 @@ export const getCachedVocabulary = memoizee(
 // Cache leaderboard for 30 minutes
 export const getCachedLeaderboard = memoizee(
   async (weekStart?: string) => {
-    console.log('[CACHE] Fetching leaderboard from database');
+    logger.debug('[CACHE] Fetching leaderboard from database');
     return await storage.getLeaderboard(weekStart);
   },
   {
     maxAge: 30 * 60 * 1000, // 30 minutes
     promise: true,
-    normalizer: (args: [string?]) => `leaderboard-${args[0] || 'current'}`,
+    normalizer: (args: [string | undefined]) => `leaderboard-${args[0] || 'current'}`,
   }
 );
 
 // Cache quizzes for 15 minutes
 export const getCachedQuizzes = memoizee(
   async () => {
-    console.log('[CACHE] Fetching quizzes from database');
+    logger.debug('[CACHE] Fetching quizzes from database');
     return await storage.getQuizzes();
   },
   {
@@ -82,7 +83,7 @@ export const getCachedQuizzes = memoizee(
 // Cache individual quiz for 15 minutes
 export const getCachedQuiz = memoizee(
   async (quizId: number) => {
-    console.log(`[CACHE] Fetching quiz ${quizId} from database`);
+    logger.debug(`[CACHE] Fetching quiz ${quizId} from database`);
     return await storage.getQuiz(quizId);
   },
   {
@@ -95,7 +96,7 @@ export const getCachedQuiz = memoizee(
 // Cache stories for 20 minutes
 export const getCachedStories = memoizee(
   async () => {
-    console.log('[CACHE] Fetching stories from database');
+    logger.debug('[CACHE] Fetching stories from database');
     return await storage.getStories();
   },
   {
@@ -108,7 +109,7 @@ export const getCachedStories = memoizee(
 // Cache individual story for 20 minutes
 export const getCachedStory = memoizee(
   async (storyId: number) => {
-    console.log(`[CACHE] Fetching story ${storyId} from database`);
+    logger.debug(`[CACHE] Fetching story ${storyId} from database`);
     return await storage.getStory(storyId);
   },
   {
@@ -121,7 +122,7 @@ export const getCachedStory = memoizee(
 // Cache scenarios for 15 minutes
 export const getCachedScenarios = memoizee(
   async () => {
-    console.log('[CACHE] Fetching scenarios from database');
+    logger.debug('[CACHE] Fetching scenarios from database');
     return await storage.getScenarios();
   },
   {
@@ -134,7 +135,7 @@ export const getCachedScenarios = memoizee(
 // Cache achievements for 1 hour
 export const getCachedAchievements = memoizee(
   async () => {
-    console.log('[CACHE] Fetching achievements from database');
+    logger.debug('[CACHE] Fetching achievements from database');
     return await storage.getAchievements();
   },
   {
@@ -147,7 +148,7 @@ export const getCachedAchievements = memoizee(
 // Cache search results for 5 minutes
 export const getCachedSearchResults = memoizee(
   async (query: string) => {
-    console.log(`[CACHE] Searching for: ${query}`);
+    logger.debug(`[CACHE] Searching for: ${query}`);
     return await storage.search(query);
   },
   {

@@ -7,6 +7,7 @@ import { DailyWordCard } from "@/components/HindiDaily/DailyWordCard";
 import { PhrasesOfDay } from "@/components/HindiDaily/PhrasesOfDay";
 import { VocabularyQuiz } from "@/components/HindiDaily/VocabularyQuiz";
 import { LearningStreak } from "@/components/HindiDaily/LearningStreak";
+import { commonPhrases } from '@/data/hindiCommonPhrasesData';
 
 export default function HindiDaily() {
   const [activeTab, setActiveTab] = useState("word");

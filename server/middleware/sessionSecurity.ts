@@ -1,27 +1,64 @@
 import session from 'express-session';
 import { Express } from 'express';
+import env from '../lib/env-validation';
 import '../types/session'; // Extend session types
 
 // Session security configuration for PREET_ENGLISH
 export function configureSessionSecurity(app: Express) {
+  const isProduction = env.NODE_ENV === 'production';
+  
   // Production-ready session configuration
   app.use(
     session({
-      secret: (process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('SESSION_SECRET required in production') })() : 'dev_secret_only_for_local_testing')),
+      // Use validated environment secret
+      secret: env.SESSION_SECRET,
+      
+      // Don't save session if unmodified
       resave: false,
+      
+      // Don't create session until something stored
       saveUninitialized: false,
 
       cookie: {
-        secure: process.env.NODE_ENV === 'production',  // HTTPS only in production
-        httpOnly: true,  // Prevent XSS attacks
-        maxAge: 24 * 60 * 60 * 1000,  // 24 hours
-        sameSite: 'lax',  // CSRF protection
-        domain: process.env.SESSION_COOKIE_DOMAIN,  // For subdomain sharing
+        // HTTPS only in production
+        secure: isProduction,
+        
+        // Prevent XSS attacks
+        httpOnly: true,
+        
+        // Session expires after 24 hours
+        maxAge: 24 * 60 * 60 * 1000,
+        
+        // CSRF protection (strict for better security)
+        sameSite: 'strict',
+        
+        // Domain for subdomain sharing
+        domain: process.env.SESSION_COOKIE_DOMAIN,
       },
 
-      name: 'preet.sid',  // Custom name (security through obscurity)
+      // Custom name (don't use default 'connect.sid')
+      name: 'preet.sid',
+      
+      // Reset expiry on activity (rolling session)
+      rolling: true,
+      
+      // Trust proxy in production
+      proxy: isProduction,
     })
   );
+
+  // Session rotation on privilege escalation
+  app.use((req, res, next) => {
+    if (req.session && req.user && !(req.session as any).rotated) {
+      req.session.regenerate((err) => {
+        if (err) return next(err);
+        (req.session as any).rotated = true;
+        next();
+      });
+    } else {
+      next();
+    }
+  });
 
   // Session validation middleware
   app.use((req, res, next) => {

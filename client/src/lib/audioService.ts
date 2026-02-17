@@ -7,14 +7,14 @@
 // Network quality detection
 function getNetworkQuality(): 'slow' | 'fast' {
   const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
-  
+
   if (!connection) return 'fast'; // Default to fast if no connection info
-  
+
   // Consider 3G and below as slow
   if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g' || connection.effectiveType === '3g') {
     return 'slow';
   }
-  
+
   return 'fast';
 }
 
@@ -64,7 +64,7 @@ export class AudioService {
    */
   preloadCommonAudio(phrases: string[]) {
     if (this.networkQuality === 'slow') return; // Skip preloading on slow connections
-    
+
     phrases.forEach(phrase => {
       if (!this.preloadedAudio.has(phrase)) {
         // Create utterance for preloading
@@ -97,7 +97,7 @@ export class AudioService {
   /**
    * Generic speak method with performance optimizations
    */
-  speak(text: string, lang: string = 'en-US', rate: number = 0.9) {
+  speak(text: string, lang: string = 'en-US', rate: number = 0.9, options?: { onStart?: () => void, onEnd?: () => void, onError?: (err: any) => void }) {
     // Stop any current speech
     this.stop();
 
@@ -119,10 +119,16 @@ export class AudioService {
     utterance.onstart = () => {
       const loadTime = performance.now() - startTime;
       console.debug(`Audio started in ${loadTime.toFixed(2)}ms`);
+      if (options?.onStart) options.onStart();
     };
+
+    utterance.onend = () => {
+      if (options?.onEnd) options.onEnd();
+    }
 
     utterance.onerror = (event) => {
       console.error('Speech synthesis error:', event.error);
+      if (options?.onError) options.onError(event);
     };
 
     this.currentUtterance = utterance;
@@ -135,24 +141,24 @@ export class AudioService {
   async playAudioFile(url: string, options: { preload?: boolean } = {}) {
     try {
       let audio = audioCache.get(url);
-      
+
       if (!audio) {
         audio = new Audio();
-        
+
         // Adaptive loading based on network quality
         if (this.networkQuality === 'slow') {
           audio.preload = 'none'; // Don't preload on slow connections
         } else {
           audio.preload = options.preload ? 'auto' : 'metadata';
         }
-        
+
         audio.src = url;
         audioCache.set(url, audio);
       }
 
       // Play with error handling
       await audio.play();
-      
+
     } catch (error) {
       console.error('Audio playback failed:', error);
       // Fallback to speech synthesis

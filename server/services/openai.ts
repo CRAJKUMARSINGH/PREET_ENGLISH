@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { logger } from '../lib/logger';
+import env from '../lib/env-validation';
 
 // Enhanced initialization with fallback mode
 let openai: OpenAI | null = null;
@@ -7,7 +8,7 @@ let isAIConfigured = false;
 
 // Initialize OpenAI with graceful fallback
 function initializeOpenAI() {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = env.OPENAI_API_KEY;
 
   if (!apiKey || apiKey === 'fallback-mode' || apiKey.length < 10) {
     logger.warn('OpenAI API key not configured - running in FALLBACK MODE');

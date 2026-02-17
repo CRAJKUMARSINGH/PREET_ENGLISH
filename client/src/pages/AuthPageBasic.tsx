@@ -1,4 +1,5 @@
 import React from "react";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export default function AuthPageBasic() {
     const handleSignup = () => {
@@ -38,8 +39,8 @@ export default function AuthPageBasic() {
                 isAdmin: false
             };
             
-            localStorage.setItem('preet-english-user', JSON.stringify(user));
-            localStorage.setItem('preet-english-auth', 'true');
+            safeLocalStorage.setJSON('preet-english-user', user);
+            safeLocalStorage.setItem('preet-english-auth', 'true');
             
             console.log('✅ User created:', user);
             
@@ -75,8 +76,8 @@ export default function AuthPageBasic() {
                 isAdmin: false
             };
             
-            localStorage.setItem('preet-english-user', JSON.stringify(user));
-            localStorage.setItem('preet-english-auth', 'true');
+            safeLocalStorage.setJSON('preet-english-user', user);
+            safeLocalStorage.setItem('preet-english-auth', 'true');
             
             alert('✅ Login successful! Redirecting...');
             window.location.href = '/dashboard';

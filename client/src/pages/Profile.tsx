@@ -77,11 +77,17 @@ export default function Profile() {
 
             {/* Actions */}
             <div className="flex gap-2">
-              <button className="p-3 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border">
-                <Lucide.Settings className="h-5 w-5" />
+              <button 
+                className="p-3 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border"
+                aria-label="Open settings"
+              >
+                <Lucide.Settings className="h-5 w-5" aria-hidden="true" />
               </button>
-              <button className="p-3 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border">
-                <Lucide.Share2 className="h-5 w-5" />
+              <button 
+                className="p-3 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border"
+                aria-label="Share profile"
+              >
+                <Lucide.Share2 className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </div>

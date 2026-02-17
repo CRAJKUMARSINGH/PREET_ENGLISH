@@ -12,6 +12,8 @@ import { Loader2 } from "lucide-react";
 import "./i18n"; // Initialize i18n
 import { initAnalytics, logEvent } from "./lib/analytics";
 import { initPerformanceMonitoring } from "./lib/performanceMonitoring";
+import { initSentry } from "./lib/sentry";
+import logger from "./lib/productionLogger";
 
 // Lazy load pages with better chunking for English learning app
 const Home = lazy(() => import("@/pages/Home"));
@@ -137,6 +139,9 @@ function Router() {
 
 function App() {
   useEffect(() => {
+    // Initialize Sentry first
+    initSentry();
+    
     // Initialize analytics and performance monitoring
     initAnalytics();
     initPerformanceMonitoring();
@@ -146,28 +151,69 @@ function App() {
       // Preload common audio phrases
       import("@/lib/audioService").then(({ preloadCommonPhrases, COMMON_LEARNING_PHRASES }) => {
         preloadCommonPhrases(COMMON_LEARNING_PHRASES);
+      }).catch((error) => {
+        logger.warn('Failed to preload audio service', error);
       });
 
       // Preload grammar engine for immediate feedback
-      import("@/lib/grammarLogic");
+      import("@/lib/grammarLogic").catch((error) => {
+        logger.warn('Failed to preload grammar logic', error);
+      });
 
       // Preload language utilities
-      import("@/lib/languageUtils");
+      import("@/lib/languageUtils").catch((error) => {
+        logger.warn('Failed to preload language utils', error);
+      });
     };
 
     // Delay preloading to not block initial render
-    setTimeout(preloadCriticalResources, 2000);
+    const preloadTimeout = setTimeout(preloadCriticalResources, 2000);
 
-    // Web Vitals monitoring
+    // Web Vitals monitoring with error handling and cleanup
+    let cleanupFunctions: Array<() => void> = [];
+    
     if (typeof window !== 'undefined') {
       import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
-        onCLS(console.log);
-        onINP(console.log);
-        onFCP(console.log);
-        onLCP(console.log);
-        onTTFB(console.log);
+        // Store cleanup functions to prevent memory leaks
+        const clsCleanup = onCLS((metric) => {
+          logEvent('web_vital_cls', { value: metric.value });
+        });
+        const inpCleanup = onINP((metric) => {
+          logEvent('web_vital_inp', { value: metric.value });
+        });
+        const fcpCleanup = onFCP((metric) => {
+          logEvent('web_vital_fcp', { value: metric.value });
+        });
+        const lcpCleanup = onLCP((metric) => {
+          logEvent('web_vital_lcp', { value: metric.value });
+        });
+        const ttfbCleanup = onTTFB((metric) => {
+          logEvent('web_vital_ttfb', { value: metric.value });
+        });
+        
+        cleanupFunctions = [
+          clsCleanup,
+          inpCleanup,
+          fcpCleanup,
+          lcpCleanup,
+          ttfbCleanup
+        ].filter((fn) => typeof fn === 'function') as Array<() => void>;
+      }).catch((error) => {
+        logger.warn('Failed to load web-vitals', error);
       });
     }
+    
+    // Cleanup on unmount
+    return () => {
+      clearTimeout(preloadTimeout);
+      cleanupFunctions.forEach(cleanup => {
+        try {
+          cleanup();
+        } catch (error) {
+          // Silent fail - app is unmounting
+        }
+      });
+    };
   }, []);
 
   return (

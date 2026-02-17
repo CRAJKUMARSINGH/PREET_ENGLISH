@@ -13,6 +13,7 @@ async function analyzeLessons() {
     fs.writeFileSync(logFile, "Lesson Analysis Report\n======================\n\n");
 
     try {
+        // @ts-ignore
         const allLessons = await db.select().from(lessons);
         log(`Total lessons: ${allLessons.length}\n`);
 
@@ -48,10 +49,11 @@ async function analyzeLessons() {
             /^new lesson/i,
         ];
 
-        const fakeLessons = allLessons.filter(lesson =>
+        const fakeLessons = allLessons.filter((lesson: any) =>
             suspiciousPatterns.some(pattern => pattern.test(lesson.title)) ||
             !lesson.content || lesson.content.length < 50
         );
+
 
         log(`\n--- POTENTIALLY FAKE/PLACEHOLDER LESSONS (${fakeLessons.length}) ---`);
         for (const lesson of fakeLessons.slice(0, 20)) {

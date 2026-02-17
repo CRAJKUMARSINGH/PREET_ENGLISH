@@ -22,8 +22,9 @@ export const isPalindrome = (str: string): boolean => {
 };
 
 export const removeDuplicateChars = (str: string): string => {
-  return [...new Set(str)].join('');
+  return Array.from(new Set(str)).join('');
 };
+
 
 export const getCharFrequency = (str: string): Record<string, number> => {
   return str.split('').reduce((acc, char) => {
@@ -34,12 +35,12 @@ export const getCharFrequency = (str: string): Record<string, number> => {
 
 export const findLongestWord = (str: string): string => {
   const words = str.split(/\s+/);
-  return words.reduce((longest, word) => 
+  return words.reduce((longest, word) =>
     word.length > longest.length ? word : longest, '');
 };
 
 export const capitalizeWords = (str: string): string => {
-  return str.split(' ').map(word => 
+  return str.split(' ').map(word =>
     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   ).join(' ');
 };
@@ -219,17 +220,19 @@ export const swapKeysValues = <T extends string | number>(obj: Record<string, T>
   );
 };
 
-export const pick = <T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> => {
+export const pick = <T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => keys.includes(key as K))
+    (Object.entries(obj) as [string, any][]).filter(([key]) => keys.includes(key as K))
   ) as Pick<T, K>;
 };
 
-export const omit = <T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> => {
+
+export const omit = <T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => !keys.includes(key as K))
+    (Object.entries(obj) as [string, any][]).filter(([key]) => !keys.includes(key as K))
   ) as Omit<T, K>;
 };
+
 
 export const deepFreeze = <T>(obj: T): T => {
   Object.getOwnPropertyNames(obj).forEach(prop => {
@@ -256,7 +259,7 @@ export const flattenObject = (obj: any, prefix = ''): Record<string, any> => {
   for (const key in obj) {
     const value = obj[key];
     const newKey = prefix ? `${prefix}.${key}` : key;
-    
+
     if (value && typeof value === 'object' && !Array.isArray(value)) {
       Object.assign(flattened, flattenObject(value, newKey));
     } else {

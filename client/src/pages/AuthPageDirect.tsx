@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "wouter";
 import { SaraswatiLogo } from "@/components/SaraswatiMascot";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export default function AuthPageDirect() {
     const [, setLocation] = useLocation();
@@ -48,8 +49,8 @@ export default function AuthPageDirect() {
             };
             
             // Store in localStorage
-            localStorage.setItem('preet-english-user', JSON.stringify(mockUser));
-            localStorage.setItem('preet-english-auth', 'true');
+            safeLocalStorage.setJSON('preet-english-user', mockUser);
+            safeLocalStorage.setItem('preet-english-auth', 'true');
             
             console.log('✅ User created and stored:', mockUser);
             
@@ -92,8 +93,8 @@ export default function AuthPageDirect() {
                 loginAt: new Date().toISOString()
             };
             
-            localStorage.setItem('preet-english-user', JSON.stringify(mockUser));
-            localStorage.setItem('preet-english-auth', 'true');
+            safeLocalStorage.setJSON('preet-english-user', mockUser);
+            safeLocalStorage.setItem('preet-english-auth', 'true');
             
             setMessage("✅ Login successful! Redirecting...");
             

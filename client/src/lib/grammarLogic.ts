@@ -61,10 +61,10 @@ export class GrammarEngine {
     let score = 100;
 
     // Check for common errors
-    for (const [incorrect, correct] of this.commonErrors) {
+    this.commonErrors.forEach((correct, incorrect) => {
       const regex = new RegExp(incorrect, 'gi');
       const matches = text.matchAll(regex);
-      
+
       for (const match of matches) {
         if (match.index !== undefined) {
           errors.push({
@@ -77,22 +77,23 @@ export class GrammarEngine {
             },
             severity: 'medium'
           });
-          
+
           correctedText = correctedText.replace(match[0], correct);
           score -= 10;
         }
       }
-    }
+    });
+
 
     // Check grammar rules
-    for (const [ruleName, regex] of this.grammarRules) {
+    this.grammarRules.forEach((regex, ruleName) => {
       const matches = text.matchAll(regex);
-      
+
       for (const match of matches) {
         if (match.index !== undefined) {
           let message = '';
           let suggestion = '';
-          
+
           switch (ruleName) {
             case 'double_comparative':
               message = 'Avoid using double comparatives';
@@ -111,7 +112,7 @@ export class GrammarEngine {
               suggestion = match[0].replace(/\b(go to|at)\s+/gi, '$1 the ');
               break;
           }
-          
+
           errors.push({
             type: 'grammar',
             message,
@@ -122,12 +123,13 @@ export class GrammarEngine {
             },
             severity: 'high'
           });
-          
+
           correctedText = correctedText.replace(match[0], suggestion);
           score -= 15;
         }
       }
-    }
+    });
+
 
     // Check capitalization
     const sentences = text.split(/[.!?]+/);
@@ -181,7 +183,7 @@ export class GrammarEngine {
     if (errorsByType.grammar) {
       suggestions.push('Focus on subject-verb agreement and proper article usage.');
     }
-    
+
     if (errorsByType.spelling) {
       suggestions.push('Double-check your spelling, especially for commonly confused words.');
     }
@@ -269,5 +271,5 @@ export const grammarEngine = new GrammarEngine();
 // Utility functions
 export const analyzeGrammar = (text: string) => grammarEngine.analyzeText(text);
 export const getHindiSpeakerTips = () => grammarEngine.getHindiSpeakerTips();
-export const checkTextDifficulty = (text: string, level: 'beginner' | 'intermediate' | 'advanced') => 
+export const checkTextDifficulty = (text: string, level: 'beginner' | 'intermediate' | 'advanced') =>
   grammarEngine.checkDifficultyLevel(text, level);

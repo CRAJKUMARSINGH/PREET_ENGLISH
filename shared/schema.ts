@@ -218,16 +218,29 @@ export const contentRatings = sqliteTable("content_ratings", {
   createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
 });
 
-// Type exports for components
-export type Scenario = typeof scenarios.$inferSelect;
-// QuizQuestion and QuizAttempt types are now defined above from schema tables
+export const dailyGoals = sqliteTable("daily_goals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull().unique(),
+  lessonsCompleted: integer("lessons_completed").default(0),
+  xpEarned: integer("xp_earned").default(0),
+  minutesSpent: integer("minutes_spent").default(0),
+  lastUpdated: text("last_updated").default("CURRENT_TIMESTAMP"),
+});
 
-export type VocabularyWord = typeof vocabulary.$inferSelect;
-export type Lesson = typeof lessons.$inferSelect;
-export type User = typeof users.$inferSelect;
-export type Progress = typeof progress.$inferSelect;
-export type UserStats = typeof userStats.$inferSelect;
-export type Conversation = typeof conversations.$inferSelect;
+export const quizResults = sqliteTable("quiz_results", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  quizId: integer("quiz_id").references(() => quizzes.id).notNull(),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  passed: integer("passed", { mode: "boolean" }).default(false),
+  completedAt: text("completed_at").default("CURRENT_TIMESTAMP"),
+});
+
+
+// Type exports for components (Internal types used in schema relations/tables)
+// Note: More comprehensive types are exported at the bottom of the file
+
 
 export const speakingSessions = sqliteTable("speaking_sessions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -403,8 +416,20 @@ export const insertContentRatingSchema = createInsertSchema(contentRatings);
 export const insertQuizSchema = createInsertSchema(quizzes);
 export const insertQuizQuestionSchema = createInsertSchema(quizQuestions);
 export const insertQuizAttemptSchema = createInsertSchema(quizAttempts);
+export const insertDailyGoalSchema = createInsertSchema(dailyGoals);
+export const insertQuizResultSchema = createInsertSchema(quizResults);
+export const insertUserStatsSchema = createInsertSchema(userStats);
 
-// Types
+
+// Base types
+export type User = typeof users.$inferSelect;
+export type Lesson = typeof lessons.$inferSelect;
+export type VocabularyWord = typeof vocabulary.$inferSelect;
+export type Progress = typeof progress.$inferSelect;
+export type UserStats = typeof userStats.$inferSelect;
+export type Conversation = typeof conversations.$inferSelect;
+export type Scenario = typeof scenarios.$inferSelect;
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertLesson = z.infer<typeof insertLessonSchema>;
 export type Vocabulary = typeof vocabulary.$inferSelect;
@@ -437,6 +462,14 @@ export type QuizQuestion = typeof quizQuestions.$inferSelect;
 export type InsertQuizQuestion = z.infer<typeof insertQuizQuestionSchema>;
 export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type InsertQuizAttempt = z.infer<typeof insertQuizAttemptSchema>;
+export type QuizResult = typeof quizResults.$inferSelect;
+export type InsertQuizResult = z.infer<typeof insertQuizResultSchema>;
+export type DailyGoal = typeof dailyGoals.$inferSelect;
+export type InsertDailyGoal = z.infer<typeof insertDailyGoalSchema>;
+export type InsertUserStats = z.infer<typeof insertUserStatsSchema>;
+
+
+
 
 // --- Last One Year Revision Engine ---
 
@@ -455,3 +488,22 @@ export const insertRevisionTaskSchema = createInsertSchema(revisionTasks);
 
 export type RevisionTask = typeof revisionTasks.$inferSelect;
 export type InsertRevisionTask = z.infer<typeof insertRevisionTaskSchema>;
+
+// API Request Schemas
+export const chatRequestSchema = z.object({
+  message: z.string().min(1, "Message is required"),
+});
+
+export const videoChatRequestSchema = z.object({
+  message: z.string().min(1, "Message is required"),
+  scenario: z.string().optional(),
+});
+
+export const chaosControlSchema = z.object({
+  enabled: z.boolean(),
+});
+
+export const quizSubmissionSchema = z.object({
+  answers: z.array(z.any()),
+  timeSpent: z.number().optional(),
+});

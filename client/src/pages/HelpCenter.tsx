@@ -160,7 +160,7 @@ export default function HelpCenter() {
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <Phone className="h-5 w-5 text-primary" />
-                                    <span>+91 98XXX XXXXX</span>
+                                    <span>support@preetenglish.com</span>
                                 </div>
                             </div>
                         </div>

@@ -1,68 +1,132 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from './ui/button';
+import * as Sentry from '@sentry/react';
+import logger from '@/lib/productionLogger';
 
 interface Props {
   children: ReactNode;
+  fallback?: ReactNode;
 }
 
 interface State {
   hasError: boolean;
-  error?: Error;
+  error: Error | null;
+  errorInfo: ErrorInfo | null;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
+      error,
+      errorInfo: null,
+    };
   }
 
-  public handleRetry = () => { // Made public for direct testing
-    this.setState({ hasError: false, error: undefined });
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Log error to console in development
+    logger.error('Error caught by boundary', error, {
+      componentStack: errorInfo.componentStack,
+    });
+
+    // Update state with error details
+    this.setState({
+      error,
+      errorInfo,
+    });
+
+    // Send to Sentry
+    Sentry.captureException(error, {
+      contexts: {
+        react: {
+          componentStack: errorInfo.componentStack,
+        },
+      },
+    });
+  }
+
+  handleReset = () => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    });
   };
 
-  public render() {
+  render() {
     if (this.state.hasError) {
+      // Custom fallback UI
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      // Default error UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50">
-          <div className="text-center max-w-md mx-auto p-8">
-            <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 p-4">
+          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
+            <div className="mb-6">
+              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Oops! Something went wrong
             </h1>
-            <p className="text-gray-600 mb-6">
-              We encountered an unexpected error. Please try refreshing the page.
+
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              We encountered an unexpected error. Don't worry, your progress is safe.
             </p>
-            <div className="space-y-3">
-              <Button onClick={this.handleRetry} className="w-full">
-                <RefreshCw className="w-4 h-4 mr-2" />
+
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-left">
+                <p className="text-sm font-mono text-red-800 dark:text-red-300 break-all">
+                  {this.state.error.toString()}
+                </p>
+                {this.state.errorInfo && (
+                  <details className="mt-2">
+                    <summary className="text-xs text-red-600 dark:text-red-400 cursor-pointer">
+                      Stack trace
+                    </summary>
+                    <pre className="text-xs text-red-700 dark:text-red-300 mt-2 overflow-auto max-h-40">
+                      {this.state.errorInfo.componentStack}
+                    </pre>
+                  </details>
+                )}
+              </div>
+            )}
+
+            <div className="flex gap-3 justify-center">
+              <Button
+                onClick={this.handleReset}
+                variant="default"
+                className="gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
                 Try Again
               </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => window.location.assign('/')}
-                className="w-full"
+
+              <Button
+                onClick={() => window.location.href = '/'}
+                variant="outline"
               >
-                Go to Home
+                Go Home
               </Button>
             </div>
-            {this.state.error && (
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500">
-                  Technical Details
-                </summary>
-                <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
-                  {this.state.error.toString()}
-                </pre>
-              </details>
-            )}
+
+            <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
+              If this problem persists, please contact support
+            </p>
           </div>
         </div>
       );

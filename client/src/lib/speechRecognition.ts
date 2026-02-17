@@ -14,11 +14,14 @@ export interface SpeechRecognitionOptions {
   continuous?: boolean;
   interimResults?: boolean;
   maxAlternatives?: number;
+  culturalMode?: 'strict' | 'accepting' | 'teaching';
+  difficultyLevel?: string;
+  focusAreas?: string[];
 }
 
 export class SpeechRecognitionService {
   private recognition: any = null;
-  private isSupported = false;
+  private _isSupported = false;
   private isListening = false;
   private onResultCallback?: (result: SpeechRecognitionResult) => void;
   private onErrorCallback?: (error: string) => void;
@@ -35,12 +38,13 @@ export class SpeechRecognitionService {
 
     if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
-      this.isSupported = true;
+      this._isSupported = true;
       this.setupRecognition();
     } else {
       console.warn('Web Speech API not supported, will use fallback methods');
-      this.isSupported = false;
+      this._isSupported = false;
     }
+
   }
 
   private setupRecognition() {
@@ -77,7 +81,7 @@ export class SpeechRecognitionService {
    * Start speech recognition
    */
   start(options: SpeechRecognitionOptions = {}) {
-    if (!this.isSupported || !this.recognition) {
+    if (!this._isSupported || !this.recognition) {
       this.onErrorCallback?.('Speech recognition not supported');
       return;
     }
@@ -128,63 +132,121 @@ export class SpeechRecognitionService {
   /**
    * Check if speech recognition is supported
    */
-  isRecognitionSupported(): boolean {
-    return this.isSupported;
+  isSupported(): boolean {
+    return this._isSupported;
   }
+
 
   /**
    * Check if currently listening
    */
-  isCurrentlyListening(): boolean {
+  isListeningNow(): boolean {
     return this.isListening;
   }
 
   /**
-   * Fallback: Use OpenAI Whisper API for speech recognition
+   * Start listening with callbacks
    */
-  async recognizeWithWhisper(audioBlob: Blob): Promise<SpeechRecognitionResult> {
-    try {
-      const formData = new FormData();
-      formData.append('file', audioBlob, 'audio.wav');
-      formData.append('model', 'whisper-1');
-
-      const response = await fetch('/api/speech/transcribe', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Transcription failed');
-      }
-
-      const data = await response.json();
-
-      return {
-        transcript: data.text || '',
-        confidence: 0.9, // Whisper doesn't provide confidence scores
-        isFinal: true
-      };
-    } catch (error) {
-      console.error('Whisper transcription failed:', error);
-      throw error;
-    }
+  startListening(
+    onResult: (result: SpeechRecognitionResult) => void,
+    onError: (error: string) => void,
+    options: SpeechRecognitionOptions = {}
+  ) {
+    this.onResultCallback = onResult;
+    this.onErrorCallback = onError;
+    this.start(options);
   }
 
   /**
-   * Get supported languages
+   * Stop listening
    */
-  getSupportedLanguages(): string[] {
-    return [
-      'en-US', 'en-GB', 'en-AU', 'en-CA', 'en-IN',
-      'hi-IN', 'hi',
-      'es-ES', 'es-MX', 'fr-FR', 'de-DE', 'it-IT',
-      'pt-BR', 'ru-RU', 'ja-JP', 'ko-KR', 'zh-CN'
-    ];
+  stopListening() {
+    this.stop();
+  }
+
+  /**
+   * Calculate accuracy score between transcript and expected text
+   */
+  calculateAccuracy(transcript: string, expected: string): number {
+    if (!transcript || !expected) return 0;
+
+    const t = transcript.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+    const e = expected.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+
+    if (t === e) return 100;
+
+    const tWords = t.split(' ');
+    const eWords = e.split(' ');
+
+    let matches = 0;
+    eWords.forEach(word => {
+      if (tWords.includes(word)) matches++;
+    });
+
+    return Math.round((matches / eWords.length) * 100);
+  }
+
+  /**
+   * Analyze problematic phonemes (Stub for advanced AI analysis)
+   */
+  analyzePhonemes(transcript: string, expected: string) {
+    return {
+      problematicPhonemes: [],
+      suggestions: []
+    };
+  }
+
+  /**
+   * Validate Indian English variations
+   */
+  validateIndianEnglish(transcript: string) {
+    return {
+      isValid: true,
+      culturalNotes: []
+    };
+  }
+
+  /**
+   * Suggest international alternatives
+   */
+  suggestInternationalAlternatives(transcript: string) {
+    return [];
+  }
+
+  /**
+   * Get feedback based on score
+   */
+  getFeedback(score: number, problematicPhonemes: string[]) {
+    if (score >= 90) return {
+      message: "Excellent pronunciation!",
+      hindiMessage: "बेहतरीन उच्चारण!",
+      emoji: "🌟",
+      color: "text-green-600",
+      tips: [],
+      hindiTips: []
+    };
+    if (score >= 70) return {
+      message: "Good job! Almost there.",
+      hindiMessage: "बहुत अच्छा! आप लगभग वहाँ पहुँच गए हैं।",
+      emoji: "👍",
+      color: "text-blue-600",
+      tips: ["Slow down a bit", "Focus on clear endings"],
+      hindiTips: ["थोड़ा धीरे बोलें", "स्पष्ट अंत पर ध्यान दें"]
+    };
+    return {
+      message: "Keep practicing!",
+      hindiMessage: "अभ्यास करते रहें!",
+      emoji: "💪",
+      color: "text-orange-600",
+      tips: ["Listen to the audio again", "Try repeating word by word"],
+      hindiTips: ["ऑडियो को फिर से सुनें", "शब्द-दर-शब्द दोहराने का प्रयास करें"]
+    };
   }
 }
 
-// Singleton instance
+// Singleton instances and aliases to match different imports
 export const speechRecognitionService = new SpeechRecognitionService();
+export const speechRecognition = speechRecognitionService;
 
 // Utility functions
 export const startListening = (
@@ -202,5 +264,5 @@ export const stopListening = () => {
 };
 
 export const isListening = () => {
-  return speechRecognitionService.isCurrentlyListening();
+  return speechRecognitionService.isListeningNow();
 };

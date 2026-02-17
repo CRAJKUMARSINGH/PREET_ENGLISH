@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Story } from "@shared/schema";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import { bilingualTexts } from '@/data/bilingualTranslations';
 
 export default function BilingualReader() {
     const [currentSentence, setCurrentSentence] = useState(0);

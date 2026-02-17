@@ -8,6 +8,8 @@ import {
 import { InsertUser, User } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { safeLocalStorage } from "@/lib/safeStorage";
+import { logger } from "@/lib/logger";
 
 type AuthContextType = {
     user: User | null;
@@ -35,10 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         queryFn: async () => {
             try {
                 // First check localStorage for persisted user
-                const storedUser = localStorage.getItem('preet-english-user');
+                const storedUser = safeLocalStorage.getJSON<User>('preet-english-user');
                 if (storedUser) {
-                    console.log('👤 Found stored user:', JSON.parse(storedUser));
-                    return JSON.parse(storedUser);
+                    logger.log('👤 Found stored user:', storedUser);
+                    return storedUser;
                 }
 
                 // Try to fetch from API
@@ -51,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 if (res.status === 401) return undefined;
                 if (!res.ok) {
-                    console.warn(`API user fetch failed: ${res.status} ${res.statusText}`);
+                    logger.warn(`API user fetch failed: ${res.status} ${res.statusText}`);
                     return undefined;
                 }
 
@@ -59,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 return userData;
             } catch (error) {
                 // Don't throw error, just return undefined for unauthenticated state
-                console.log('ℹ️ No user session found or network error:', error);
+                logger.info('ℹ️ No user session found or network error:', error);
                 return undefined;
             }
         },
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const loginMutation = useMutation({
         mutationFn: async (credentials: LoginData) => {
-            console.log('🔐 Login attempt:', credentials.username);
+            logger.log('🔐 Login attempt:', credentials.username);
 
             try {
                 // For production deployment, try API first
@@ -88,15 +90,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 }
 
                 const userData = await response.json();
-                console.log('✅ Login successful:', userData);
+                logger.log('✅ Login successful:', userData);
                 return userData;
 
             } catch (error) {
-                console.error('❌ Login API failed:', error);
+                logger.error('❌ Login API failed:', error);
 
                 // Fallback to mock authentication for frontend-only deployment
                 if (error instanceof TypeError && error.message.includes('fetch')) {
-                    console.log('🌐 Network error, using mock authentication');
+                    logger.log('🌐 Network error, using mock authentication');
 
                     toast({
                         title: "Demo Mode",
@@ -119,11 +121,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         },
         onSuccess: (user: User) => {
-            console.log('🎉 Login successful!', user);
+            logger.log('🎉 Login successful!', user);
             queryClient.setQueryData(["/api/user"], user);
 
             // Store user in localStorage for persistence
-            localStorage.setItem('preet-english-user', JSON.stringify(user));
+            const stored = safeLocalStorage.setJSON('preet-english-user', user);
+            if (!stored) {
+                logger.warn('Failed to persist user to localStorage');
+            }
 
             toast({
                 title: "Welcome back! 🎉",
@@ -133,12 +138,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Force redirect after a short delay
             setTimeout(() => {
-                console.log('🔄 Forcing redirect to dashboard...');
+                logger.log('🔄 Forcing redirect to dashboard...');
                 window.location.href = '/dashboard';
             }, 1000);
         },
         onError: (error: Error) => {
-            console.error('❌ Login error:', error);
+            logger.error('❌ Login error:', error);
             toast({
                 title: "Login failed",
                 description: error.message || "Please check your credentials and try again.",
@@ -149,7 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const registerMutation = useMutation({
         mutationFn: async (credentials: InsertUser) => {
-            console.log('📝 Registration attempt:', credentials.username);
+            logger.log('📝 Registration attempt:', credentials.username);
 
             try {
                 // Try API registration first
@@ -168,15 +173,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 }
 
                 const userData = await response.json();
-                console.log('✅ Registration successful:', userData);
+                logger.log('✅ Registration successful:', userData);
                 return userData;
 
             } catch (error) {
-                console.error('❌ Registration API failed:', error);
+                logger.error('❌ Registration API failed:', error);
 
                 // Fallback to mock authentication for frontend-only deployment
                 if (error instanceof TypeError && error.message.includes('fetch')) {
-                    console.log('🌐 Network error, using mock registration');
+                    logger.log('🌐 Network error, using mock registration');
 
                     toast({
                         title: "Demo Mode",
@@ -199,11 +204,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         },
         onSuccess: (user: User) => {
-            console.log('🎉 Registration successful!', user);
+            logger.log('🎉 Registration successful!', user);
             queryClient.setQueryData(["/api/user"], user);
 
             // Store user in localStorage for persistence
-            localStorage.setItem('preet-english-user', JSON.stringify(user));
+            const stored = safeLocalStorage.setJSON('preet-english-user', user);
+            if (!stored) {
+                logger.warn('Failed to persist user to localStorage');
+            }
 
             toast({
                 title: "🎉 Welcome to PreetEnglish!",
@@ -213,12 +221,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Force redirect after a short delay
             setTimeout(() => {
-                console.log('🔄 Forcing redirect to dashboard...');
+                logger.log('🔄 Forcing redirect to dashboard...');
                 window.location.href = '/dashboard';
             }, 1000);
         },
         onError: (error: Error) => {
-            console.error('❌ Registration error:', error);
+            logger.error('❌ Registration error:', error);
             toast({
                 title: "Registration failed",
                 description: error.message || "Please try again with different credentials.",
@@ -241,7 +249,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             queryClient.clear(); // Clear all cached data on logout
 
             // Clear localStorage
-            localStorage.removeItem('preet-english-user');
+            safeLocalStorage.removeItem('preet-english-user');
 
             toast({
                 title: "Logged out successfully",
@@ -250,10 +258,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
         },
         onError: (error: Error) => {
-            console.error('❌ Logout error:', error);
+            logger.error('❌ Logout error:', error);
             // Still clear local state even if API fails
             queryClient.setQueryData(["/api/user"], null);
-            localStorage.removeItem('preet-english-user');
+            safeLocalStorage.removeItem('preet-english-user');
             toast({
                 title: "Logged out",
                 description: "Session ended (with some issues)",

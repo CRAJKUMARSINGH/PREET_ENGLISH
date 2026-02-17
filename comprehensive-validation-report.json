@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-02-17T05:34:50.648Z",
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "warned": 0,
+    "failed": 0,
+    "passRate": "100.0"
+  },
+  "results": [
+    {
+      "category": "Components",
+      "test": "SaraswatiMascot",
+      "status": "PASS",
+      "message": "Component exists with all exports",
+      "details": {
+        "mainExport": true,
+        "logoExport": true,
+        "image": true
+      }
+    },
+    {
+      "category": "Components",
+      "test": "Home",
+      "status": "PASS",
+      "message": "Home component properly configured",
+      "details": {
+        "defaultExport": true,
+        "saraswatiImport": true,
+        "layoutImport": true,
+        "authHook": true,
+        "lessonsHook": true
+      }
+    },
+    {
+      "category": "Lessons",
+      "test": "All Lessons Validation",
+      "status": "PASS",
+      "message": "1659/1659 lessons valid (100.0%)",
+      "details": {
+        "valid": 1659,
+        "invalid": 0,
+        "issues": []
+      }
+    },
+    {
+      "category": "Data Integration",
+      "test": "Data Files",
+      "status": "PASS",
+      "message": "All 8 data files integrated",
+      "details": {
+        "existing": 8,
+        "integrated": 8
+      }
+    },
+    {
+      "category": "Routes",
+      "test": "Route Configuration",
+      "status": "PASS",
+      "message": "All 5 key routes configured",
+      "details": {
+        "configured": 5,
+        "total": 5
+      }
+    }
+  ]
+}

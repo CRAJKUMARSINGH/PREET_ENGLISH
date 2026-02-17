@@ -30,21 +30,20 @@ export function AudioButton({
       audioService.stop();
       setIsPlaying(false);
     } else {
-      setIsPlaying(true);
-      
-      if (language === 'en') {
-        audioService.speakEnglish(text, rate);
-      } else {
-        audioService.speakHindi(text, rate);
-      }
+      const options = {
+        onStart: () => setIsPlaying(true),
+        onEnd: () => setIsPlaying(false),
+        onError: () => setIsPlaying(false)
+      };
 
-      // Reset after speech ends (estimate based on text length)
-      const estimatedDuration = (text.length / 10) * 1000; // ~10 chars per second
-      setTimeout(() => {
-        setIsPlaying(false);
-      }, estimatedDuration);
+      if (language === 'en') {
+        audioService.speak(text, 'en-US', rate, options);
+      } else {
+        audioService.speak(text, 'hi-IN', rate, options);
+      }
     }
   };
+
 
   const sizeClasses = {
     sm: 'h-8 w-8',

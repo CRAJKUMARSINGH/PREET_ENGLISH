@@ -10,6 +10,7 @@ import { storage } from "./storage";
 import { User } from "../shared/schema";
 import { CircuitBreaker } from "./middleware/monitoring";
 import logger from "./logger.js";
+import env from "./lib/env-validation";
 
 // Production-grade login queue and circuit breaker
 export let chaosEnabled = false;
@@ -137,9 +138,9 @@ async function authenticateUser(username: string, password: string): Promise<Use
 export function setupAuth(app: Express) {
     let sessionStore: session.Store;
 
-    if (app.get("env") === "production" && process.env.DATABASE_URL?.startsWith("postgres")) {
+    if (app.get("env") === "production" && env.DATABASE_URL?.startsWith("postgres")) {
         const pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
+            connectionString: env.DATABASE_URL,
         });
         sessionStore = new PostgresStore({
             pool,
@@ -150,12 +151,7 @@ export function setupAuth(app: Express) {
     }
 
     const sessionSettings: session.SessionOptions = {
-        secret: process.env.SESSION_SECRET || (() => {
-            if (process.env.NODE_ENV === 'production') {
-                throw new Error('SESSION_SECRET must be set in production');
-            }
-            return "dev-fallback-secret-change-in-production";
-        })(),
+        secret: env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         store: sessionStore,
@@ -191,9 +187,19 @@ export function setupAuth(app: Express) {
 
     passport.serializeUser((user, done) => done(null, (user as User).id));
     passport.deserializeUser(async (id: number, done) => {
-        const user = await storage.getUser(id);
-        done(null, user);
+        try {
+            const user = await storage.getUser(id);
+            if (!user) {
+                logger.warn(`Auth failure: User ID ${id} in session no longer exists.`);
+                return done(null, false); // Signal that user session is invalid but not a system error
+            }
+            done(null, user);
+        } catch (error) {
+            logger.error(`Deserialization error for user ${id}:`, error);
+            done(error);
+        }
     });
+
 
     app.post("/api/register", async (req, res, next) => {
         try {

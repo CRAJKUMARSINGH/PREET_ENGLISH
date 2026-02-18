@@ -489,7 +489,6 @@ export async function registerRoutes(_httpServer: Server, app: Express): Promise
       res.status(500).json({ message: "Server error" });
     }
   });
-}
 
   // ============================================
   // CACHE MANAGEMENT ENDPOINTS

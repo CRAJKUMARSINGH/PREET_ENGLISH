@@ -1,11 +1,54 @@
+# Dependencies
 node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
 dist
-test-results
-coverage
+.next
+out
+build
+
+# Development files
 .git
-.env*
-! .env.docker
-.DS_Store
-*.log
-sqlite.db
+.gitignore
+.env
+.env.local
+.env.*.local
+
+# IDE
 .vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.nyc_output
+*.test.ts
+*.spec.ts
+tests/
+
+# Documentation
+*.md
+docs/
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+backups/
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+.cache/

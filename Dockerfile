@@ -1,49 +1,62 @@
-FROM node:20-alpine AS base
+# Multi-stage Dockerfile for PREET ENGLISH
+# Week 1 - Foundation & Infrastructure
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Stage 1: Base
+FROM node:18-alpine AS base
 WORKDIR /app
+RUN apk add --no-cache libc6-compat
 
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
+# Stage 2: Dependencies
+FROM base AS deps
+COPY package*.json ./
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Stage 3: Development Dependencies
+FROM base AS dev-deps
+COPY package*.json ./
 RUN npm ci
 
-# Rebuild the source code only when needed
+# Stage 4: Builder
 FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=dev-deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Generate Prisma Client
+RUN npx prisma generate
 
+# Build application
+ENV NODE_ENV=production
 RUN npm run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
+# Stage 5: Development
+FROM base AS development
+COPY --from=dev-deps /app/node_modules ./node_modules
+COPY . .
+RUN npx prisma generate
+EXPOSE 5000 3000
+CMD ["npm", "run", "dev"]
 
-ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Stage 6: Production
+FROM base AS production
+ENV NODE_ENV=production
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY package*.json ./
+COPY prisma ./prisma
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 reactjs
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nodejs && \
+    chown -R nodejs:nodejs /app
 
-# Copy built artifacts
-COPY --from=builder --chown=reactjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=reactjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=reactjs:nodejs /app/package.json ./package.json
-
-USER reactjs
+USER nodejs
 
 EXPOSE 5000
 
-ENV PORT 5000
-ENV HOST 0.0.0.0
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 CMD ["npm", "start"]

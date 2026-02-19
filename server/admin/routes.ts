@@ -4,7 +4,7 @@ import { User } from '@shared/schema';
 import { z } from 'zod';
 import { clearCache, getCacheStats } from '../lib/cache';
 import { performDatabaseOperation } from '../lib/concurrency';
-import logger from '../logger';
+import logger from '../lib/logger';
 import productionStats from '../lib/production-stats';
 
 // Admin middleware

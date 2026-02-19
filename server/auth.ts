@@ -9,7 +9,7 @@ import { promisify } from "util";
 import { storage } from "./storage";
 import { User } from "../shared/schema";
 import { CircuitBreaker } from "./middleware/monitoring";
-import logger from "./logger.js";
+import logger from "./lib/logger";
 import env from "./lib/env-validation";
 
 // Production-grade login queue and circuit breaker

@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { CircuitBreaker } from '../../middleware/monitoring.js';
-import logger from '../../logger.js';
+import logger from '../../lib/logger';
 
 interface AIServiceConfig {
   maxRetries: number;

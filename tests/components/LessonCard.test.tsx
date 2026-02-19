@@ -1,142 +1,129 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import LessonCard from '@/components/LessonCard'; // Assuming this component exists
+import React from 'react';
+import { screen } from '@testing-library/react';
+import { LessonCard } from '@/components/LessonCard';
+import { renderWithProviders, mockLesson } from '../utils/test-helpers';
 
-const queryClient = new QueryClient();
+// Mock wouter
+jest.mock('wouter', () => ({
+  Link: ({ children, href }: any) => <a href={href}>{children}</a>,
+  useLocation: () => ['/', jest.fn()],
+}));
 
-const renderWithClient = (ui: React.ReactElement) =>
-  render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
-
-// Mock the lesson data
-const mockLesson = {
-  id: 1,
-  title: 'Introduction to English',
-  slug: 'introduction-to-english',
-  description: 'Learn basic English concepts',
-  content: '# Welcome to English Learning',
-  difficulty: 'Beginner',
-  order: 1,
-  imageUrl: null,
-  emojiTheme: '📚',
-  hindiTitle: 'अंग्रेजी सीखने का परिचय',
-  hindiDescription: 'मूल अंग्रेजी अवधारणाएँ सीखें',
-  category: 'Grammar'
-};
+// Mock i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' },
+  }),
+}));
 
 describe('LessonCard Component', () => {
   it('renders lesson title', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
     expect(screen.getByText('Introduction to English')).toBeInTheDocument();
   });
 
   it('renders Hindi title', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
     expect(screen.getByText('अंग्रेजी सीखने का परिचय')).toBeInTheDocument();
   });
 
   it('displays difficulty badge', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
     expect(screen.getByText('Beginner')).toBeInTheDocument();
   });
 
-  it('shows category information', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    expect(screen.getByText('Grammar')).toBeInTheDocument();
-  });
-
-  it('renders emoji theme', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    expect(screen.getByText('📚')).toBeInTheDocument();
-  });
-
   it('displays lesson description', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    expect(screen.getByText('Learn basic English concepts')).toBeInTheDocument();
-  });
-
-  it('renders Hindi description', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
     expect(screen.getByText('मूल अंग्रेजी अवधारणाएँ सीखें')).toBeInTheDocument();
   });
 
   it('has clickable card element', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    const card = screen.getByRole('link'); // Assuming it's a link to the lesson
-    expect(card).toBeInTheDocument();
-    fireEvent.click(card);
-    // Would test navigation if we had a router setup
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    const link = screen.getByRole('link');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/lesson/1');
   });
 
   it('shows lesson order number', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    expect(screen.getByText('#1')).toBeInTheDocument(); // Assuming order is displayed
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    expect(screen.getByText(/LESSON 1/i)).toBeInTheDocument();
   });
 
-  it('has proper accessibility attributes', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    const card = screen.getByRole('link');
-    expect(card).toHaveAttribute('aria-label', 'Introduction to English lesson');
+  it('shows start button for incomplete lessons', () => {
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    expect(screen.getByText('start')).toBeInTheDocument();
+  });
+
+  it('shows review button for completed lessons', () => {
+    const progress = { lessonId: 1, userId: 1, completed: true, score: 100 };
+    renderWithProviders(<LessonCard lesson={mockLesson} progress={progress} />);
+    expect(screen.getByText('review')).toBeInTheDocument();
+  });
+
+  it('displays completion checkmark for completed lessons', () => {
+    const progress = { lessonId: 1, userId: 1, completed: true, score: 100 };
+    const { container } = renderWithProviders(<LessonCard lesson={mockLesson} progress={progress} />);
+    expect(container.querySelector('svg')).toBeInTheDocument();
   });
 
   it('applies correct CSS classes based on difficulty', () => {
-    renderWithClient(<LessonCard lesson={mockLesson} />);
-    const card = screen.getByRole('link');
-    expect(card).toHaveClass('bg-blue-50'); // Assuming beginner gets blue class
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    const badge = screen.getByText('Beginner');
+    expect(badge).toHaveClass('text-emerald-600');
   });
 
-  it('formats title for display', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, title: 'Advanced Grammar Rules'}} />);
-    expect(screen.getByText('Advanced Grammar Rules')).toBeInTheDocument();
+  it('handles intermediate difficulty styling', () => {
+    const intermediateLesson = { ...mockLesson, difficulty: 'Intermediate' as const };
+    renderWithProviders(<LessonCard lesson={intermediateLesson} />);
+    const badge = screen.getByText('Intermediate');
+    expect(badge).toHaveClass('text-blue-600');
   });
 
-  it('handles long titles gracefully', () => {
-    const longTitleLesson = {
-      ...mockLesson,
-      title: 'This is a very long lesson title that should be truncated properly'
-    };
-    renderWithClient(<LessonCard lesson={longTitleLesson} />);
-    expect(screen.getByText('This is a very long lesson title that should be truncated properly')).toBeInTheDocument();
+  it('handles advanced difficulty styling', () => {
+    const advancedLesson = { ...mockLesson, difficulty: 'Advanced' as const };
+    renderWithProviders(<LessonCard lesson={advancedLesson} />);
+    const badge = screen.getByText('Advanced');
+    expect(badge).toHaveClass('text-purple-600');
   });
 
-  it('shows progress indicator when lesson is completed', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, completed: true}} />);
-    expect(screen.getByText('✓ Completed')).toBeInTheDocument(); // Assuming this shows when completed
+  it('displays estimated time', () => {
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    expect(screen.getByText('5m')).toBeInTheDocument();
   });
 
-  it('shows different UI when lesson is in progress', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, inProgress: true}} />);
-    expect(screen.getByText('In Progress')).toBeInTheDocument(); // Assuming this shows when in progress
+  it('uses custom index when provided', () => {
+    renderWithProviders(<LessonCard lesson={mockLesson} index={5} />);
+    // Index 5 means lesson 6 (index + 1), but lesson.order is 1, so it uses order
+    expect(screen.getByText(/LESSON 1/i)).toBeInTheDocument();
   });
 
-  it('handles missing image gracefully', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, imageUrl: null}} />);
-    // Should not break when no image is provided
+  it('uses lesson order when available', () => {
+    const lessonWithOrder = { ...mockLesson, order: 10 };
+    renderWithProviders(<LessonCard lesson={lessonWithOrder} />);
+    expect(screen.getByText(/LESSON 10/i)).toBeInTheDocument();
+  });
+
+  it('renders without progress prop', () => {
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
     expect(screen.getByText('Introduction to English')).toBeInTheDocument();
   });
 
-  it('applies different styles for different categories', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, category: 'Vocabulary'}} />);
-    const card = screen.getByRole('link');
-    expect(card).toHaveClass('border-purple-200'); // Assuming vocabulary gets purple border
+  it('handles missing Hindi title gracefully', () => {
+    const lessonWithoutHindi = { ...mockLesson, hindiTitle: '' };
+    renderWithProviders(<LessonCard lesson={lessonWithoutHindi} />);
+    expect(screen.getByText('Introduction to English')).toBeInTheDocument();
   });
 
-  it('displays estimated reading time', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, estimatedTime: '10 mins'}} />);
-    expect(screen.getByText('10 mins')).toBeInTheDocument();
+  it('handles missing Hindi description gracefully', () => {
+    const lessonWithoutHindiDesc = { ...mockLesson, hindiDescription: '' };
+    renderWithProviders(<LessonCard lesson={lessonWithoutHindiDesc} />);
+    expect(screen.getByText('Learn basic English concepts')).toBeInTheDocument();
   });
 
-  it('shows lesson rating if available', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, rating: 4.5}} />);
-    expect(screen.getByText('4.5 ★')).toBeInTheDocument();
-  });
-
-  it('displays number of students who completed', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, studentsCompleted: 1234}} />);
-    expect(screen.getByText('1234 students')).toBeInTheDocument();
-  });
-
-  it('shows lesson preview content', () => {
-    renderWithClient(<LessonCard lesson={{...mockLesson, preview: 'This is a preview of the lesson'}} />);
-    expect(screen.getByText('This is a preview of the lesson')).toBeInTheDocument();
+  it('renders link with correct href', () => {
+    renderWithProviders(<LessonCard lesson={mockLesson} />);
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/lesson/1');
   });
 });

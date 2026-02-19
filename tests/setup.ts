@@ -1,5 +1,17 @@
 import '@testing-library/jest-dom';
 
+// Polyfill setImmediate for Winston logging
+if (typeof global.setImmediate === 'undefined') {
+  // @ts-ignore
+  global.setImmediate = (callback: (...args: any[]) => void, ...args: any[]) => {
+    return setTimeout(callback, 0, ...args);
+  };
+  // @ts-ignore
+  global.clearImmediate = (handle: any) => {
+    clearTimeout(handle);
+  };
+}
+
 // Polyfill TextEncoder/TextDecoder for Node.js environment
 if (typeof global.TextEncoder === 'undefined') {
   const { TextEncoder, TextDecoder } = require('util');
@@ -71,15 +83,32 @@ Object.defineProperty(global, 'sessionStorage', {
   writable: true
 });
 
-// Mock window.speechSynthesis
+// Mock window.speechSynthesis - Simple approach that works
+const mockVoices = [
+  { name: 'Google US English', lang: 'en-US' },
+  { name: 'Google हिन्दी', lang: 'hi-IN' },
+  { name: 'Microsoft David Desktop', lang: 'en-US' },
+  { name: 'Microsoft Heera Desktop', lang: 'hi-IN' }
+];
+
+// Create a proper array with all methods
+const createMockVoicesArray = (): Array<{name: string, lang: string}> => {
+  const arr: Array<{name: string, lang: string}> = [];
+  mockVoices.forEach(voice => arr.push(voice));
+  return arr;
+};
+
 Object.defineProperty(window, 'speechSynthesis', {
   writable: true,
   value: {
-    speak: jest.fn(),
+    speak: jest.fn().mockImplementation(() => {
+      // Mock successful speech synthesis
+      console.log('Mock speech synthesis called');
+    }),
     cancel: jest.fn(),
     pause: jest.fn(),
     resume: jest.fn(),
-    getVoices: jest.fn(() => []),
+    getVoices: jest.fn(() => createMockVoicesArray()),
     onvoiceschanged: jest.fn(),
     pending: false,
     speaking: false,
@@ -114,18 +143,42 @@ window.IntersectionObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-// Mock matchMedia
+// Mock matchMedia with proper handling for different query types
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-  })),
+  value: jest.fn().mockImplementation(query => {
+    if (query.includes('prefers-reduced-motion')) {
+      return {
+        matches: true,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      };
+    }
+    if (query.includes('prefers-color-scheme: dark')) {
+      return {
+        matches: false, // Default to light theme
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      };
+    }
+    return {
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    };
+  }),
 });
 
 // Mock crypto.getRandomValues for UUID generation
@@ -139,11 +192,52 @@ Object.defineProperty(global.crypto, 'getRandomValues', {
   }),
 });
 
+// Mock Framer Motion to avoid animation-related issues in tests
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: 'div',
+    button: 'button',
+    span: 'span',
+    h1: 'h1',
+    h2: 'h2',
+    h3: 'h3',
+    p: 'p',
+    ul: 'ul',
+    li: 'li',
+    section: 'section',
+    article: 'article',
+    header: 'header',
+    footer: 'footer',
+    main: 'main',
+    nav: 'nav',
+    aside: 'aside',
+  },
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children as JSX.Element,
+  useAnimation: () => ({
+    start: jest.fn(),
+    stop: jest.fn(),
+  }),
+  useInView: () => [null, false],
+  useReducedMotion: () => true,
+}));
+
 // Mock fetch API
-global.fetch = jest.fn();
+global.fetch = jest.fn() as jest.Mock;
 
 // Mock WebSocket
-global.WebSocket = jest.fn();
+global.WebSocket = jest.fn().mockImplementation(() => ({
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
+  CLOSED: 3,
+  readyState: 0,
+  onopen: null,
+  onerror: null,
+  onclose: null,
+  onmessage: null,
+  send: jest.fn(),
+  close: jest.fn()
+})) as unknown as typeof WebSocket;
 
 // Mock structuredClone (available in newer JS environments)
 if (!global.structuredClone) {
@@ -170,8 +264,8 @@ afterEach(() => {
   jest.clearAllTimers();
   
   // Reset fetch mock
-  if (global.fetch && typeof global.fetch.mockClear === 'function') {
-    global.fetch.mockClear();
+  if (global.fetch && (global.fetch as jest.Mock).mockClear) {
+    (global.fetch as jest.Mock).mockClear();
   }
 });
 

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from '@jest/globals'
 import { renderHook, waitFor } from '@testing-library/react'
 
 describe('use-bilingual', () => {

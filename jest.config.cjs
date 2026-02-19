@@ -26,6 +26,8 @@ const config = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^.*\\.lib\\.analytics$': '<rootDir>/tests/mocks/analytics.ts',
     '^.*\\/lib\\/analytics$': '<rootDir>/tests/mocks/analytics.ts',
+    '^.*/logger$': '<rootDir>/tests/mocks/logger.ts',
+    '^../logger$': '<rootDir>/tests/mocks/logger.ts',
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {

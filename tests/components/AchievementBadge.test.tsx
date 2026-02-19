@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from "@testing-library/react";
 import { AchievementBadge } from "../../client/src/components/AchievementBadge";
 import "@testing-library/jest-dom";
@@ -38,4 +39,5 @@ describe("AchievementBadge", () => {
     expect(screen.getByText("पहला पाठ पूरा हुआ")).toBeInTheDocument();
   });
 });
+
 

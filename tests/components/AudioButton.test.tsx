@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AudioButton } from '@/components/AudioButton';
 
@@ -35,3 +36,4 @@ describe('AudioButton', () => {
     expect(window.speechSynthesis.speak).toHaveBeenCalled();
   });
 });
+

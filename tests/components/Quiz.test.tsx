@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Quiz } from '../../client/src/components/Quiz';
@@ -5,11 +6,21 @@ import '@testing-library/jest-dom';
 import { ReactNode } from 'react';
 
 const mockUseQuery = jest.fn();
+const mockInvalidateQueries = jest.fn();
+
 jest.mock('@tanstack/react-query', () => ({
   ...jest.requireActual('@tanstack/react-query'),
   useQuery: (...args: any[]) => mockUseQuery(...args),
   useMutation: () => ({ mutate: jest.fn() }), // Mock useMutation as it's used in Quiz
-  useQueryClient: jest.fn(() => ({ invalidateQueries: jest.fn() })), // Mock useQueryClient
+  useQueryClient: () => ({
+    invalidateQueries: mockInvalidateQueries,
+    refetchQueries: jest.fn(),
+    cancelQueries: jest.fn(),
+    removeQueries: jest.fn(),
+    resetQueries: jest.fn(),
+    isFetching: jest.fn(),
+    isMutating: jest.fn(),
+  }),
 }));
 
 // A custom wrapper for rendering components with QueryClientProvider
@@ -64,8 +75,7 @@ describe('Quiz Component Async Error Handling', () => {
 
     // Rerender the component to apply the new mock value
     rerender(
-      <Quiz quizId={1} />,
-      { wrapper: createWrapper() }
+      <Quiz quizId={1} />
     );
 
     // Wait for the error message to appear
@@ -86,8 +96,7 @@ describe('Quiz Component Async Error Handling', () => {
 
     // Rerender the component to apply the new mock value after retry
     rerender(
-      <Quiz quizId={1} />,
-      { wrapper: createWrapper() }
+      <Quiz quizId={1} />
     );
 
     // Expect the quiz content to be rendered after successful retry
@@ -98,3 +107,4 @@ describe('Quiz Component Async Error Handling', () => {
     expect(screen.queryByText('Error Loading Quiz')).not.toBeInTheDocument();
   });
 });
+

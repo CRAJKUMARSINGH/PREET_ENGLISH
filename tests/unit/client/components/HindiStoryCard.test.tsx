@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent } from '@tests/test-setup/test-utils'
 import { HindiStoryCard } from '@client/components/HindiStoryCard'
 
@@ -55,7 +55,7 @@ describe('HindiStoryCard Component', () => {
 
   describe('Interactions', () => {
     it('should call onClick when clicked', () => {
-      const onClick = vi.fn()
+      const onClick = jest.fn()
       render(<HindiStoryCard story={mockStory} onClick={onClick} />)
       
       fireEvent.click(screen.getByRole('article'))
@@ -65,7 +65,7 @@ describe('HindiStoryCard Component', () => {
     })
 
     it('should be keyboard accessible', () => {
-      const onClick = vi.fn()
+      const onClick = jest.fn()
       render(<HindiStoryCard story={mockStory} onClick={onClick} />)
       
       const card = screen.getByRole('article')
@@ -75,7 +75,7 @@ describe('HindiStoryCard Component', () => {
     })
 
     it('should support Space key', () => {
-      const onClick = vi.fn()
+      const onClick = jest.fn()
       render(<HindiStoryCard story={mockStory} onClick={onClick} />)
       
       const card = screen.getByRole('article')

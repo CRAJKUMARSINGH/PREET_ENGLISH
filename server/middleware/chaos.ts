@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "../logger";
+import logger from "../lib/logger";
 
 // Chandrayaan Chaos Middleware
 // Introduces synthetic latency and failures to verify system resilience.

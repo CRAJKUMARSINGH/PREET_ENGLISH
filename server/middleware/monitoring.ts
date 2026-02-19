@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import logger from '../logger.js';
+import logger from '../lib/logger';
 
 interface CircuitBreakerOptions {
   failureThreshold: number;

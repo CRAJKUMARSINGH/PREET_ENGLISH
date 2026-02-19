@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@tests/test-setup/test-utils'
 
 describe('Tabs', () => {

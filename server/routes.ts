@@ -2,7 +2,7 @@ import "./types";
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
-import logger from "./logger";
+import logger from "./lib/logger";
 import { setChaos } from "./auth";
 import { checkAIServiceHealth } from "./services/openai";
 import {

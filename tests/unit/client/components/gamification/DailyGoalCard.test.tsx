@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent } from '@tests/test-setup/test-utils'
 import { DailyGoalCard } from '@client/components/gamification/DailyGoalCard'
 
@@ -98,7 +98,7 @@ describe('DailyGoalCard Component', () => {
 
   describe('Interactions', () => {
     it('should call onClick when clicked', () => {
-      const onClick = vi.fn()
+      const onClick = jest.fn()
       render(<DailyGoalCard goal={mockGoal} onClick={onClick} />)
       
       fireEvent.click(screen.getByRole('article'))
@@ -107,7 +107,7 @@ describe('DailyGoalCard Component', () => {
     })
 
     it('should be keyboard accessible', () => {
-      const onClick = vi.fn()
+      const onClick = jest.fn()
       render(<DailyGoalCard goal={mockGoal} onClick={onClick} />)
       
       const card = screen.getByRole('article')

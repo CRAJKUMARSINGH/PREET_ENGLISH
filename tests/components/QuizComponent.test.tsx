@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { QuizComponent } from '@/components/QuizComponent';
 
@@ -104,3 +105,4 @@ describe('QuizComponent', () => {
     expect(screen.getByText(/बधाई हो!/)).toBeInTheDocument();
   });
 });
+

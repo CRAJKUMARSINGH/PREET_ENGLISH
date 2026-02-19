@@ -1,75 +1,75 @@
-import React from "react";
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
 import { Link } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ArrowRight, 
-  Play, 
-  CheckCircle, 
-  Star, 
-  Users, 
-  BookOpen, 
-  Mic, 
-  Brain,
-  Globe,
-  Award,
-  Sparkles,
-  MessageCircle,
-  TrendingUp,
-  Shield,
-  Zap
-} from "lucide-react";
-import { SaraswatiMascot } from "@/components/SaraswatiMascot";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { SaraswatiMascot } from "@/components/SaraswatiMascot";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { useTranslation } from "react-i18next";
+import {
+  Sparkles,
+  BookOpen,
+  Mic,
+  Video,
+  Trophy,
+  Users,
+  Globe,
+  Zap,
+  CheckCircle,
+  ArrowRight,
+  Play,
+  Star,
+  TrendingUp,
+  Award,
+  MessageCircle,
+  Brain,
+  Target,
+  Clock,
+  Shield,
+} from "lucide-react";
 
 export default function NewLanding() {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
-  const testimonials = [
-    {
-      name: "Priya Sharma",
-      role: "Software Engineer, Bangalore",
-      content: "Preet English helped me crack my dream job interview at Google. The Hindi-first approach made learning so natural!",
-      rating: 5,
-      image: "👩‍💻"
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "Business Analyst, Mumbai",
-      content: "From struggling with presentations to leading international meetings. This app transformed my career!",
-      rating: 5,
-      image: "👨‍💼"
-    },
-    {
-      name: "Anita Patel",
-      role: "Student, Delhi",
-      content: "Finally, an English learning app that understands Indian culture. My IELTS score improved by 2 bands!",
-      rating: 5,
-      image: "👩‍🎓"
-    }
-  ];
+  const { t } = useTranslation();
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   const features = [
     {
-      icon: Brain,
+      icon: <Brain className="h-6 w-6" />,
       title: "AI-Powered Learning",
-      description: "Personalized lessons that adapt to your Hindi background and learning pace",
-      color: "from-emerald-500 to-teal-600"
+      titleHindi: "AI-संचालित सीखना",
+      description: "Practice with Saraswati AI tutor for personalized feedback",
+      descriptionHindi: "व्यक्तिगत प्रतिक्रिया के लिए सरस्वती AI ट्यूटर के साथ अभ्यास करें",
+      color: "from-purple-500 to-pink-500",
     },
     {
-      icon: Mic,
-      title: "Speaking Confidence",
-      description: "Practice pronunciation with our advanced speech recognition technology",
-      color: "from-blue-500 to-cyan-600"
+      icon: <Video className="h-6 w-6" />,
+      title: "Video Call Practice",
+      titleHindi: "वीडियो कॉल अभ्यास",
+      description: "Face-to-face conversations with AI avatar",
+      descriptionHindi: "AI अवतार के साथ आमने-सामने बातचीत",
+      color: "from-blue-500 to-cyan-500",
     },
     {
-      icon: Globe,
-      title: "Cultural Context",
-      description: "Learn English with examples and scenarios relevant to Indian professionals",
-      color: "from-purple-500 to-pink-600"
+      icon: <Mic className="h-6 w-6" />,
+      title: "Speaking Practice",
+      titleHindi: "बोलने का अभ्यास",
+      description: "Real-time pronunciation feedback and correction",
+      descriptionHindi: "वास्तविक समय उच्चारण प्रतिक्रिया और सुधार",
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      icon: <Trophy className="h-6 w-6" />,
+      title: "Gamification",
+      titleHindi: "गेमिफिकेशन",
+      description: "Earn XP, unlock achievements, compete on leaderboards",
+      descriptionHindi: "XP अर्जित करें, उपलब्धियां अनलॉक करें, लीडरबोर्ड पर प्रतिस्पर्धा करें",
+      color: "from-yellow-500 to-orange-500",
+    },
+    {
+      icon: <BookOpen className="h-6 w-6" />,
+      title: "1625+ Lessons",
+      titleHindi: "1625+ पाठ",
+      description: "Comprehensive curriculum from beginner to advanced",
+      descriptionHindi: "-500 to-pink-600"
     },
     {
       icon: Award,
@@ -427,8 +427,12 @@ export default function NewLanding() {
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold">Preet English Demo</h3>
-                <Button variant="ghost" onClick={() => setIsVideoPlaying(false)}>
-                  <X className="w-6 h-6" />
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setIsVideoPlaying(false)}
+                  aria-label="Close video player"
+                >
+                  <X className="w-6 h-6" aria-hidden="true" />
                 </Button>
               </div>
               <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">

@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import logger from "../logger";
+import logger from "../lib/logger";
 
 // Load environment variables
 config({ path: '.env.local' });

@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import ErrorBoundary from '../../client/src/components/ErrorBoundary';
 import '@testing-library/jest-dom';
@@ -119,3 +120,4 @@ describe('ErrorBoundary', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
+

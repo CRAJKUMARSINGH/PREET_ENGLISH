@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { registerRoutes } from "./routes";
 import rateLimit from "express-rate-limit";
-import logger from "./logger";
+import logger from "./lib/logger";
 import { globalErrorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { HealthMonitor, performanceMonitor } from "./middleware/monitoring.js";
 import { chaosMiddleware } from "./middleware/chaos";
